@@ -1,8 +1,0 @@
-{
-  "is-main": true,
-  "import": [
-    { "path": "mizchi/flame", "alias": "flame" },
-    "moonbitlang/async",
-    "moonbitlang/async/socket"
-  ]
-}

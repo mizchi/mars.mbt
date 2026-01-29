@@ -46,6 +46,7 @@ pub fn Params::is_empty(Self) -> Bool
 pub fn Params::new() -> Self
 pub fn Params::set(Self, String, String) -> Unit
 pub fn Params::to_map(Self) -> Map[String, String]
+pub fn Params::with_param(Self, String, String) -> Self
 pub impl Show for Params
 
 // Type aliases

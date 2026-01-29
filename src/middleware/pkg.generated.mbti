@@ -1,0 +1,452 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/flame/middleware"
+
+import {
+  "mizchi/flame",
+}
+
+// Values
+pub fn assert_body_contains(MockResponse, String) -> Bool
+
+pub fn assert_header(MockResponse, String, String) -> Bool
+
+pub fn assert_status(MockResponse, Int) -> Bool
+
+pub fn basic_auth(BasicAuthOptions) -> @flame.Handler
+
+pub fn char_to_lower(Char) -> Char
+
+pub fn check_timeout(@flame.Context) -> Bool
+
+pub fn compute_hmac_sha256(String, String) -> String
+
+pub fn cors(options? : CorsOptions) -> @flame.Handler
+
+pub fn cors_allow_all() -> @flame.Handler
+
+pub fn get_auth_user(@flame.Context) -> String?
+
+pub fn get_request_id(@flame.Context) -> String?
+
+pub fn get_session(@flame.Context, SessionOptions) -> SessionData
+
+pub fn ip_blacklist(Array[String], ip_header? : String) -> @flame.Handler
+
+pub fn ip_filter(IpFilterOptions) -> @flame.Handler
+
+pub fn ip_whitelist(Array[String], ip_header? : String) -> @flame.Handler
+
+pub fn log_response(@flame.Context, Int, options? : LoggerOptions) -> Unit
+
+pub fn logger(options? : LoggerOptions) -> @flame.Handler
+
+pub fn logger_simple() -> @flame.Handler
+
+pub fn not_found_handler((@flame.Context) -> String) -> @flame.Handler
+
+pub fn not_found_json() -> @flame.Handler
+
+pub fn not_found_simple(message? : String) -> @flame.Handler
+
+pub fn oauth2_authorization_url(OAuth2Config, state? : String) -> String
+
+pub fn oauth2_bearer((String) -> Bool) -> @flame.Handler
+
+pub fn oauth2_github(String, String, String, scopes? : Array[String]) -> OAuth2Config
+
+pub fn oauth2_google(String, String, String, scopes? : Array[String]) -> OAuth2Config
+
+pub fn oauth2_parse_token(String) -> Result[OAuth2Token, OAuth2Error]
+
+pub fn oauth2_refresh_request_body(OAuth2Config, String) -> String
+
+pub fn oauth2_token_request_body(OAuth2Config, String) -> String
+
+pub async fn parse_form(@flame.Context) -> FormData
+
+pub fn parse_form_urlencoded(String) -> FormData
+
+pub fn parse_multipart(String, String) -> FormData
+
+pub fn rate_limit((@flame.Context) -> String, options? : RateLimitOptions) -> @flame.Handler
+
+pub fn rate_limit_by_auth(options? : RateLimitOptions) -> @flame.Handler
+
+pub fn rate_limit_by_ip(options? : RateLimitOptions) -> @flame.Handler
+
+pub fn rate_limit_clear() -> Unit
+
+pub fn rate_limit_info(String) -> (Int, Int, Bool)
+
+pub fn rate_limit_tick() -> Unit
+
+pub fn request_id(options? : RequestIdOptions) -> @flame.Handler
+
+pub fn request_id_reset() -> Unit
+
+pub fn safe_substring(String, Int, Int) -> String
+
+pub fn safe_substring_from(String, Int) -> String
+
+pub fn safe_trim(String) -> String
+
+pub fn secure_headers(options? : SecureHeadersOptions) -> @flame.Handler
+
+pub fn secure_headers_default() -> @flame.Handler
+
+pub fn secure_headers_strict() -> @flame.Handler
+
+pub async fn send_error(@flame.Context, HttpError, options? : ErrorHandlerOptions) -> Unit
+
+pub async fn send_timeout_if_needed(@flame.Context) -> Bool
+
+pub fn session_clear() -> Unit
+
+pub fn session_cookie_header(SessionOptions, String) -> String
+
+pub fn session_destroy(SessionOptions) -> String
+
+pub fn session_middleware(SessionOptions) -> @flame.Handler
+
+pub fn string_to_lower(String) -> String
+
+pub fn timeout(options? : TimeoutOptions) -> @flame.Handler
+
+pub fn timeout_timer_advance(Int) -> Unit
+
+pub fn timeout_timer_reset() -> Unit
+
+pub fn validate_body((Validator) -> Validator) -> @flame.Handler
+
+pub fn verify_github_webhook(String, String, String) -> WebhookResult
+
+pub fn verify_stripe_webhook(String, String, String) -> WebhookResult
+
+pub fn verify_webhook_hmac(String, String, String) -> WebhookResult
+
+// Errors
+
+// Types and methods
+pub(all) struct BasicAuthOptions {
+  realm : String
+  validate : (String, String) -> Bool
+}
+pub fn BasicAuthOptions::custom((String, String) -> Bool, realm? : String) -> Self
+pub fn BasicAuthOptions::simple(String, String, realm? : String) -> Self
+
+pub(all) struct CorsOptions {
+  origin : String
+  methods : Array[String]
+  allowed_headers : Array[String]
+  exposed_headers : Array[String]
+  credentials : Bool
+  max_age : Int
+}
+pub fn CorsOptions::allow_origin(String) -> Self
+pub fn CorsOptions::default() -> Self
+pub fn CorsOptions::with_credentials(String) -> Self
+
+pub(all) struct ErrorHandlerOptions {
+  show_details : Bool
+  render : (HttpError) -> String
+  json : Bool
+}
+pub fn ErrorHandlerOptions::default() -> Self
+pub fn ErrorHandlerOptions::development() -> Self
+pub fn ErrorHandlerOptions::json_api() -> Self
+
+pub(all) struct FormData {
+  fields : Map[String, Array[FormValue]]
+}
+pub fn FormData::add(Self, String, String) -> Unit
+pub fn FormData::add_file(Self, String, FormFile) -> Unit
+pub fn FormData::get(Self, String) -> String?
+pub fn FormData::get_all(Self, String) -> Array[String]
+pub fn FormData::get_file(Self, String) -> FormFile?
+pub fn FormData::get_files(Self, String) -> Array[FormFile]
+pub fn FormData::new() -> Self
+
+pub(all) struct FormFile {
+  filename : String
+  content_type : String
+  data : Bytes
+}
+
+pub(all) enum FormValue {
+  Text(String)
+  File(FormFile)
+}
+
+pub(all) struct HttpError {
+  status : Int
+  message : String
+  details : String
+}
+pub fn HttpError::bad_request(message? : String) -> Self
+pub fn HttpError::conflict(message? : String) -> Self
+pub fn HttpError::forbidden(message? : String) -> Self
+pub fn HttpError::internal(message? : String) -> Self
+pub fn HttpError::method_not_allowed(message? : String) -> Self
+pub fn HttpError::new(Int, String) -> Self
+pub fn HttpError::not_found(message? : String) -> Self
+pub fn HttpError::service_unavailable(message? : String) -> Self
+pub fn HttpError::unauthorized(message? : String) -> Self
+pub fn HttpError::unprocessable(message? : String) -> Self
+pub fn HttpError::with_details(Int, String, String) -> Self
+
+pub(all) struct IpFilterOptions {
+  ips : Array[String]
+  ip_header : String
+  whitelist : Bool
+}
+
+pub(all) enum LogLevel {
+  Debug
+  Info
+  Warn
+  Error
+}
+pub impl Eq for LogLevel
+pub impl Show for LogLevel
+
+pub(all) struct LoggerOptions {
+  level : LogLevel
+  headers : Bool
+  query : Bool
+}
+pub fn LoggerOptions::default() -> Self
+
+pub(all) struct MockContext {
+  request : MockRequest
+  response : MockResponse
+  data : Map[String, String]
+  params : Map[String, String]
+}
+pub fn MockContext::body(Self) -> String
+pub fn MockContext::from_request(MockRequest) -> Self
+pub fn MockContext::get(Self, String) -> String?
+pub fn MockContext::get_response(Self) -> MockResponse
+pub fn MockContext::header(Self, String) -> String?
+pub fn MockContext::is_response_sent(Self) -> Bool
+pub fn MockContext::json_response(Self, Json, status? : Int) -> Unit
+pub fn MockContext::meth(Self) -> String
+pub fn MockContext::param(Self, String) -> String?
+pub fn MockContext::path(Self) -> String
+pub fn MockContext::query(Self, String) -> String?
+pub fn MockContext::set(Self, String, String) -> Unit
+pub fn MockContext::set_header(Self, String, String) -> Unit
+pub fn MockContext::set_param(Self, String, String) -> Self
+pub fn MockContext::set_status(Self, Int) -> Unit
+pub fn MockContext::text(Self, String, status? : Int) -> Unit
+
+pub(all) struct MockRequest {
+  meth : String
+  path : String
+  headers : Map[String, String]
+  mut body : String
+  query : Map[String, String]
+}
+pub fn MockRequest::auth(Self, String) -> Self
+pub fn MockRequest::basic_auth(Self, String, String) -> Self
+pub fn MockRequest::delete(String) -> Self
+pub fn MockRequest::form(Self, Map[String, String]) -> Self
+pub fn MockRequest::get(String) -> Self
+pub fn MockRequest::header(Self, String, String) -> Self
+pub fn MockRequest::json(Self, Json) -> Self
+pub fn MockRequest::new(String, String) -> Self
+pub fn MockRequest::post(String) -> Self
+pub fn MockRequest::put(String) -> Self
+pub fn MockRequest::query(Self, String, String) -> Self
+pub fn MockRequest::with_body(Self, String) -> Self
+
+pub(all) struct MockResponse {
+  mut status : Int
+  mut headers : Map[String, String]
+  mut body : String
+  mut sent : Bool
+}
+pub fn MockResponse::get_body(Self) -> String
+pub fn MockResponse::get_header(Self, String) -> String?
+pub fn MockResponse::get_status(Self) -> Int
+pub fn MockResponse::is_sent(Self) -> Bool
+pub fn MockResponse::json(Self) -> Json?
+pub fn MockResponse::new() -> Self
+
+pub(all) struct OAuth2Config {
+  client_id : String
+  client_secret : String
+  redirect_uri : String
+  authorize_url : String
+  token_url : String
+  scopes : Array[String]
+}
+
+pub(all) enum OAuth2Error {
+  InvalidResponse(String)
+  MissingField(String)
+}
+pub impl Eq for OAuth2Error
+pub impl Show for OAuth2Error
+
+pub(all) struct OAuth2Token {
+  access_token : String
+  token_type : String
+  expires_in : Int
+  refresh_token : String
+  scope : String
+}
+
+pub(all) struct RateLimitOptions {
+  limit : Int
+  window_size : Int
+}
+pub fn RateLimitOptions::default() -> Self
+
+pub(all) struct RequestIdOptions {
+  header_name : String
+  prefix : String
+  use_existing : Bool
+}
+pub fn RequestIdOptions::default() -> Self
+
+pub(all) struct RouteDefinition {
+  meth : String
+  path : String
+  handler : @flame.Handler
+}
+
+pub(all) struct RouterGroup {
+  prefix : String
+  middlewares : Array[@flame.Handler]
+  routes : Array[RouteDefinition]
+  groups : Array[RouterGroup]
+}
+pub fn RouterGroup::apply(Self, @flame.Flame) -> Unit
+pub fn RouterGroup::delete(Self, String, @flame.Handler) -> Self
+pub fn RouterGroup::get(Self, String, @flame.Handler) -> Self
+pub fn RouterGroup::group(Self, String) -> Self
+pub fn RouterGroup::new(String) -> Self
+pub fn RouterGroup::patch(Self, String, @flame.Handler) -> Self
+pub fn RouterGroup::post(Self, String, @flame.Handler) -> Self
+pub fn RouterGroup::put(Self, String, @flame.Handler) -> Self
+pub fn RouterGroup::use_(Self, @flame.Handler) -> Self
+
+pub(all) struct SecureHeadersOptions {
+  hsts : Bool
+  hsts_max_age : Int
+  hsts_include_subdomains : Bool
+  no_sniff : Bool
+  frame_options : String
+  xss_protection : Bool
+  csp : String
+  referrer_policy : String
+  permissions_policy : String
+}
+pub fn SecureHeadersOptions::default() -> Self
+pub fn SecureHeadersOptions::minimal() -> Self
+pub fn SecureHeadersOptions::strict() -> Self
+
+pub(all) struct SessionData {
+  // private fields
+}
+pub fn SessionData::clear_all(Self) -> Unit
+pub fn SessionData::delete(Self, String) -> Unit
+pub fn SessionData::get(Self, String) -> String?
+pub fn SessionData::set(Self, String, String) -> Unit
+
+pub(all) struct SessionOptions {
+  secret : String
+  cookie_name : String
+  max_age : Int
+}
+pub fn SessionOptions::default(String) -> Self
+
+pub(all) struct SseEvent {
+  event : String
+  data : String
+  id : String
+  retry : Int
+}
+pub fn SseEvent::data(String) -> Self
+pub fn SseEvent::format(Self) -> String
+pub fn SseEvent::full(String, String, String, Int) -> Self
+pub fn SseEvent::new(String, String) -> Self
+
+pub(all) struct SseStream {
+  // private fields
+}
+pub fn SseStream::close(Self) -> Unit
+pub fn SseStream::is_closed(Self) -> Bool
+pub fn SseStream::new(@flame.Context) -> Self
+pub async fn SseStream::ping(Self) -> Unit
+pub async fn SseStream::send(Self, SseEvent) -> Unit
+pub async fn SseStream::send_comment(Self, String) -> Unit
+pub async fn SseStream::send_data(Self, String) -> Unit
+pub async fn SseStream::send_event(Self, String, String) -> Unit
+pub async fn SseStream::send_json(Self, String, Json) -> Unit
+
+pub(all) struct TimeoutContext {
+  start_time : Int
+  timeout_ms : Int
+  mut timed_out : Bool
+}
+pub fn TimeoutContext::elapsed(Self) -> Int
+pub fn TimeoutContext::is_timed_out(Self) -> Bool
+pub fn TimeoutContext::mark_timed_out(Self) -> Unit
+pub fn TimeoutContext::new(Int) -> Self
+
+pub(all) struct TimeoutOptions {
+  timeout_ms : Int
+  message : String
+  status : Int
+}
+pub fn TimeoutOptions::default() -> Self
+pub fn TimeoutOptions::new(Int) -> Self
+
+pub(all) enum ValidationError {
+  Required(String)
+  InvalidType(String, String)
+  MinLength(String, Int)
+  MaxLength(String, Int)
+  Pattern(String, String)
+  Range(String, Double, Double)
+  Custom(String, String)
+}
+pub impl Eq for ValidationError
+pub impl Show for ValidationError
+
+pub(all) struct ValidationResult {
+  errors : Array[ValidationError]
+}
+pub fn ValidationResult::add_error(Self, ValidationError) -> Unit
+pub fn ValidationResult::is_valid(Self) -> Bool
+pub fn ValidationResult::messages(Self) -> Array[String]
+pub fn ValidationResult::new() -> Self
+
+pub(all) struct Validator {
+  result : ValidationResult
+  data : Json
+}
+pub fn Validator::custom(Self, String, (Json) -> Bool, String) -> Self
+pub fn Validator::email(Self, String) -> Self
+pub fn Validator::max_length(Self, String, Int) -> Self
+pub fn Validator::min_length(Self, String, Int) -> Self
+pub fn Validator::new(Json) -> Self
+pub fn Validator::range(Self, String, Double, Double) -> Self
+pub fn Validator::required_array(Self, String) -> Self
+pub fn Validator::required_bool(Self, String) -> Self
+pub fn Validator::required_number(Self, String) -> Self
+pub fn Validator::required_string(Self, String) -> Self
+pub fn Validator::validate(Self) -> ValidationResult
+
+pub(all) enum WebhookResult {
+  Valid
+  Invalid(String)
+}
+pub impl Eq for WebhookResult
+pub impl Show for WebhookResult
+
+// Type aliases
+
+// Traits
+

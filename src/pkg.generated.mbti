@@ -5,6 +5,7 @@ import {
   "mizchi/flame/router",
   "mizchi/flame/router/trie",
   "moonbitlang/async/http",
+  "moonbitlang/async/io",
   "moonbitlang/async/socket",
 }
 
@@ -21,20 +22,32 @@ pub(all) struct Context {
   params : @router.Params
   // private fields
 }
+pub async fn Context::body(Self) -> String
+pub async fn Context::body_json(Self) -> Json?
+pub fn Context::cookie(Self, String) -> String?
+pub fn Context::cookies(Self) -> Map[String, String]
+pub fn Context::delete_cookie(Self, String) -> Unit
+pub async fn Context::end_response(Self) -> Unit
 pub fn Context::get(Self, String) -> String?
 pub fn Context::header(Self, String) -> String?
 pub async fn Context::html(Self, String, status? : Int) -> Unit
 pub fn Context::is_response_sent(Self) -> Bool
 pub async fn Context::json(Self, Json, status? : Int) -> Unit
 pub fn Context::meth(Self) -> @http.RequestMethod
-pub fn Context::new(@http.Request, @router.Params, @http.ServerConnection) -> Self
+pub fn Context::new(@http.Request, @router.Params, @http.ServerConnection, &@io.Reader) -> Self
 pub async fn Context::not_found(Self) -> Unit
 pub fn Context::param(Self, String) -> String?
 pub fn Context::path(Self) -> String
+pub fn Context::queries(Self) -> Map[String, String]
+pub fn Context::query(Self, String) -> String?
 pub async fn Context::redirect(Self, String) -> Unit
 pub fn Context::set(Self, String, String) -> Unit
+pub fn Context::set_cookie(Self, String, String, max_age? : Int, path? : String, http_only? : Bool, same_site? : String) -> Unit
+pub fn Context::set_header(Self, String, String) -> Unit
 pub fn Context::set_status(Self, Int) -> Unit
+pub async fn Context::sse_start(Self) -> Unit
 pub async fn Context::text(Self, String, status? : Int) -> Unit
+pub async fn Context::write_raw(Self, String) -> Unit
 
 pub(all) struct Flame {
   router : @trie.TrieRouter

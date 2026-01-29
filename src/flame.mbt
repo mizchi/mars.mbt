@@ -94,7 +94,7 @@ fn request_method_to_method(meth : @http.RequestMethod) -> @router.Method {
 /// Start the HTTP server
 pub async fn Flame::serve(self : Flame, addr : @socket.Addr) -> Unit {
   let server = @http.Server::new(addr)
-  server.run_forever(fn(request, _body, conn) {
+  server.run_forever(fn(request, body, conn) {
     let meth = request_method_to_method(request.meth)
     let result = self.router.match_(meth, request.path)
     if result.handlers.is_empty() {
@@ -104,7 +104,7 @@ pub async fn Flame::serve(self : Flame, addr : @socket.Addr) -> Unit {
     } else {
       // Get first matching handler
       let (@router.HandlerId(id), params) = result.handlers[0]
-      let ctx = Context::new(request, params, conn)
+      let ctx = Context::new(request, params, conn, body)
 
       // Run middlewares first
       for middleware in self.middlewares {

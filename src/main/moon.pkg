@@ -1,0 +1,9 @@
+import {
+  "mizchi/flame" as @flame,
+  "moonbitlang/async",
+  "moonbitlang/async/socket",
+}
+
+options(
+  "is-main": true,
+)
