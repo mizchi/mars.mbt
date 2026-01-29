@@ -1,4 +1,4 @@
-# Flame
+# Mars
 
 A Hono-inspired HTTP framework for MoonBit.
 
@@ -7,7 +7,7 @@ A Hono-inspired HTTP framework for MoonBit.
 ```json
 {
   "deps": {
-    "mizchi/flame": "0.1.0"
+    "mizchi/mars": "0.1.0"
   }
 }
 ```
@@ -16,10 +16,10 @@ A Hono-inspired HTTP framework for MoonBit.
 
 ```moonbit
 async fn main {
-  let app = @flame.Flame::new()
+  let app = @mars.Mars::new()
 
   app
-    .get("/", async fn(ctx) { ctx.text("Hello, Flame!") })
+    .get("/", async fn(ctx) { ctx.text("Hello, Mars!") })
     .get("/users/:id", async fn(ctx) {
       let id = ctx.param("id").unwrap()
       ctx.json({ "id": id })
@@ -194,7 +194,7 @@ app.use_(@middleware.cors(options=cors_opts))
 ### Environment Variables
 
 ```moonbit
-let env = @flame.MapEnv::new()
+let env = @mars.MapEnv::new()
   .with_var("API_KEY", "secret")
   .with_var("ENV", "production")
 
@@ -207,7 +207,7 @@ ctx.env_var("API_KEY")  // -> String?
 ### Cloudflare Workers Adapter
 
 ```moonbit
-import { CloudflareEnv, KVNamespace } from "mizchi/flame/adapters"
+import { CloudflareEnv, KVNamespace } from "mizchi/mars/adapters"
 
 let cf_env = CloudflareEnv::new()
   .with_var("SECRET", "value")
@@ -222,7 +222,7 @@ app.serve_with_env(addr, map_env)
 Generate type-safe API clients from route specifications:
 
 ```moonbit
-import { RouteSpec, generate_client, ClientOptions } from "mizchi/flame/codegen"
+import { RouteSpec, generate_client, ClientOptions } from "mizchi/mars/codegen"
 
 let routes = [
   RouteSpec::get("/users", "get_users", "Array[User]"),
@@ -270,7 +270,7 @@ app.get("/events", async fn(ctx) {
 
 ```
 src/
-├── flame.mbt           # Flame app and routing
+├── mars.mbt           # Mars app and routing
 ├── context.mbt         # Request/Response context
 ├── handler.mbt         # Handler type
 ├── compose.mbt         # Middleware composition

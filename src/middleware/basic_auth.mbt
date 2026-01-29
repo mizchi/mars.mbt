@@ -54,8 +54,8 @@ pub fn BasicAuthOptions::custom(
 
 ///|
 /// Basic auth middleware
-pub fn basic_auth(options : BasicAuthOptions) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn basic_auth(options : BasicAuthOptions) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     guard ctx.header("Authorization") is Some(auth) else {
       send_auth_required(ctx, options.realm)
       return
@@ -80,7 +80,7 @@ pub fn basic_auth(options : BasicAuthOptions) -> @flame.Handler {
 
 ///|
 /// Send 401 response with WWW-Authenticate header
-async fn send_auth_required(ctx : @flame.Context, realm : String) -> Unit {
+async fn send_auth_required(ctx : @mars.Context, realm : String) -> Unit {
   ctx.set_header("WWW-Authenticate", "Basic realm=\"\{realm}\"")
   ctx.text("Unauthorized", status=401)
 }
@@ -188,6 +188,6 @@ fn base64_char_value(c : Char, table : String) -> Int {
 
 ///|
 /// Get authenticated username from context
-pub fn get_auth_user(ctx : @flame.Context) -> String? {
+pub fn get_auth_user(ctx : @mars.Context) -> String? {
   ctx.get("auth_user")
 }

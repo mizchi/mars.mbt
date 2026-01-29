@@ -46,7 +46,7 @@ fn format_log_entry(
   status : Int,
   duration_ms : Int,
   options : LoggerOptions,
-  ctx : @flame.Context,
+  ctx : @mars.Context,
 ) -> String {
   let buf = StringBuilder::new()
   buf.write_string("[")
@@ -113,8 +113,8 @@ fn timer_now() -> Int {
 /// Logger middleware
 pub fn logger(
   _options? : LoggerOptions = LoggerOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let start = timer_now()
     let meth = ctx.meth().to_string()
     let path = ctx.path()
@@ -130,7 +130,7 @@ pub fn logger(
 ///|
 /// Log after response (call manually or use with after-middleware pattern)
 pub fn log_response(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   status : Int,
   options? : LoggerOptions = LoggerOptions::default(),
 ) -> Unit {
@@ -159,8 +159,8 @@ fn parse_int_simple(s : String) -> Int {
 
 ///|
 /// Simple logger that logs immediately (for debugging)
-pub fn logger_simple() -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn logger_simple() -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let meth = ctx.meth().to_string()
     let path = ctx.path()
     println("--> \{meth} \{path}")

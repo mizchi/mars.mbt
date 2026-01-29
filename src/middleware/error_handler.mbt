@@ -122,7 +122,7 @@ fn default_error_render(err : HttpError) -> String {
 ///|
 /// Send HTTP error response
 pub async fn send_error(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   err : HttpError,
   options? : ErrorHandlerOptions = ErrorHandlerOptions::default(),
 ) -> Unit {
@@ -152,8 +152,8 @@ pub async fn send_error(
 
 ///|
 /// Custom not found handler
-pub fn not_found_handler(render : (@flame.Context) -> String) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn not_found_handler(render : (@mars.Context) -> String) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let body = render(ctx)
     ctx.html(body, status=404)
   }
@@ -161,14 +161,14 @@ pub fn not_found_handler(render : (@flame.Context) -> String) -> @flame.Handler 
 
 ///|
 /// Simple not found handler
-pub fn not_found_simple(message? : String = "Not Found") -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error { ctx.text(message, status=404) }
+pub fn not_found_simple(message? : String = "Not Found") -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error { ctx.text(message, status=404) }
 }
 
 ///|
 /// JSON not found handler
-pub fn not_found_json() -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn not_found_json() -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     ctx.json(
       Json::object({
         "error": Json::string("Not Found"),

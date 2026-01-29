@@ -47,8 +47,8 @@ pub fn CorsOptions::with_credentials(origin : String) -> CorsOptions {
 ///|
 /// CORS middleware
 /// WARNING: Using credentials=true with origin="*" is insecure and will be rejected
-pub fn cors(options? : CorsOptions = CorsOptions::default()) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn cors(options? : CorsOptions = CorsOptions::default()) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let request_origin = ctx.header("Origin").unwrap_or("")
 
     // Security check: reject dangerous combination
@@ -100,7 +100,7 @@ pub fn cors(options? : CorsOptions = CorsOptions::default()) -> @flame.Handler {
 
 ///|
 /// Simple CORS middleware (allow all)
-pub fn cors_allow_all() -> @flame.Handler {
+pub fn cors_allow_all() -> @mars.Handler {
   cors()
 }
 

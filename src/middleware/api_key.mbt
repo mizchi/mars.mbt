@@ -82,7 +82,7 @@ fn constant_time_compare_api(a : String, b : String) -> Bool {
 
 ///|
 /// Extract API key from request
-fn extract_api_key(ctx : @flame.Context, location : ApiKeyLocation) -> String? {
+fn extract_api_key(ctx : @mars.Context, location : ApiKeyLocation) -> String? {
   match location {
     Header(header_name) => ctx.header(header_name)
     Query(param_name) => ctx.query(param_name)
@@ -96,8 +96,8 @@ fn extract_api_key(ctx : @flame.Context, location : ApiKeyLocation) -> String? {
 
 ///|
 /// API key authentication middleware
-pub fn api_key_auth(options : ApiKeyOptions) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn api_key_auth(options : ApiKeyOptions) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let key = match extract_api_key(ctx, options.location) {
       Some(k) => k
       None => {
@@ -116,7 +116,7 @@ pub fn api_key_auth(options : ApiKeyOptions) -> @flame.Handler {
 
 ///|
 /// Get authenticated API key from context
-pub fn get_api_key(ctx : @flame.Context) -> String? {
+pub fn get_api_key(ctx : @mars.Context) -> String? {
   ctx.get("api_key")
 }
 
@@ -125,7 +125,7 @@ pub fn get_api_key(ctx : @flame.Context) -> String? {
 pub fn api_key_header(
   keys : Array[String],
   header_name? : String = "X-API-Key",
-) -> @flame.Handler {
+) -> @mars.Handler {
   api_key_auth(
     ApiKeyOptions::simple(keys, location=ApiKeyLocation::Header(header_name)),
   )
@@ -136,7 +136,7 @@ pub fn api_key_header(
 pub fn api_key_query(
   keys : Array[String],
   param_name? : String = "api_key",
-) -> @flame.Handler {
+) -> @mars.Handler {
   api_key_auth(
     ApiKeyOptions::simple(keys, location=ApiKeyLocation::Query(param_name)),
   )
@@ -148,7 +148,7 @@ pub fn api_key_both(
   keys : Array[String],
   header_name? : String = "X-API-Key",
   param_name? : String = "api_key",
-) -> @flame.Handler {
+) -> @mars.Handler {
   api_key_auth(
     ApiKeyOptions::simple(
       keys,

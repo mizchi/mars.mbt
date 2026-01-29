@@ -1,10 +1,10 @@
 ///|
-/// Flame - A Hono-inspired HTTP framework for MoonBit
+/// Mars - A Hono-inspired HTTP framework for MoonBit
 ///
 /// Example usage:
 /// ```moonbit
 /// async fn main {
-///   let app = Flame::new()
+///   let app = Mars::new()
 ///   app
 ///     .get("/", handler(async fn(ctx) { ctx.text("Hello, World!") }))
 ///     .get("/users/:id", handler(async fn(ctx) {

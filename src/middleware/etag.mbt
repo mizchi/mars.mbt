@@ -144,7 +144,7 @@ fn trim_etag(s : String) -> String {
 ///|
 /// ETag response helper - sets ETag header and handles 304
 pub fn set_etag(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   content : String,
   options? : ETagOptions = ETagOptions::default(),
 ) -> Bool {

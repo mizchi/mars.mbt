@@ -472,7 +472,7 @@ fn string_to_bytes_form(s : String) -> Bytes {
 
 ///|
 /// Parse form from context
-pub async fn parse_form(ctx : @flame.Context) -> FormData {
+pub async fn parse_form(ctx : @mars.Context) -> FormData {
   let content_type = ctx.header("Content-Type").unwrap_or("")
   let body = ctx.body()
   if content_type.contains("multipart/form-data") {

@@ -75,8 +75,8 @@ pub fn SecureHeadersOptions::strict() -> SecureHeadersOptions {
 /// Secure headers middleware
 pub fn secure_headers(
   options? : SecureHeadersOptions = SecureHeadersOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     // HSTS
     if options.hsts {
       let mut hsts_value = "max-age=" + options.hsts_max_age.to_string()
@@ -114,12 +114,12 @@ pub fn secure_headers(
 
 ///|
 /// Shorthand for default secure headers
-pub fn secure_headers_default() -> @flame.Handler {
+pub fn secure_headers_default() -> @mars.Handler {
   secure_headers()
 }
 
 ///|
 /// Shorthand for strict secure headers
-pub fn secure_headers_strict() -> @flame.Handler {
+pub fn secure_headers_strict() -> @mars.Handler {
   secure_headers(options=SecureHeadersOptions::strict())
 }

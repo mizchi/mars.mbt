@@ -1,5 +1,5 @@
 import {
-  "mizchi/flame/router",
+  "mizchi/mars/router",
   "moonbitlang/regexp",
   "moonbitlang/core/bench",
 }

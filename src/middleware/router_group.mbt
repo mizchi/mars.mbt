@@ -7,14 +7,14 @@
 pub(all) struct RouteDefinition {
   meth : String
   path : String
-  handler : @flame.Handler
+  handler : @mars.Handler
 }
 
 ///|
 /// Router group
 pub(all) struct RouterGroup {
   prefix : String
-  middlewares : Array[@flame.Handler]
+  middlewares : Array[@mars.Handler]
   routes : Array[RouteDefinition]
   groups : Array[RouterGroup]
 }
@@ -29,7 +29,7 @@ pub fn RouterGroup::new(prefix : String) -> RouterGroup {
 /// Add middleware to group
 pub fn RouterGroup::use_(
   self : RouterGroup,
-  handler : @flame.Handler,
+  handler : @mars.Handler,
 ) -> RouterGroup {
   self.middlewares.push(handler)
   self
@@ -40,7 +40,7 @@ pub fn RouterGroup::use_(
 pub fn RouterGroup::get(
   self : RouterGroup,
   path : String,
-  handler : @flame.Handler,
+  handler : @mars.Handler,
 ) -> RouterGroup {
   self.routes.push({ meth: "GET", path, handler })
   self
@@ -51,7 +51,7 @@ pub fn RouterGroup::get(
 pub fn RouterGroup::post(
   self : RouterGroup,
   path : String,
-  handler : @flame.Handler,
+  handler : @mars.Handler,
 ) -> RouterGroup {
   self.routes.push({ meth: "POST", path, handler })
   self
@@ -62,7 +62,7 @@ pub fn RouterGroup::post(
 pub fn RouterGroup::put(
   self : RouterGroup,
   path : String,
-  handler : @flame.Handler,
+  handler : @mars.Handler,
 ) -> RouterGroup {
   self.routes.push({ meth: "PUT", path, handler })
   self
@@ -73,7 +73,7 @@ pub fn RouterGroup::put(
 pub fn RouterGroup::delete(
   self : RouterGroup,
   path : String,
-  handler : @flame.Handler,
+  handler : @mars.Handler,
 ) -> RouterGroup {
   self.routes.push({ meth: "DELETE", path, handler })
   self
@@ -84,7 +84,7 @@ pub fn RouterGroup::delete(
 pub fn RouterGroup::patch(
   self : RouterGroup,
   path : String,
-  handler : @flame.Handler,
+  handler : @mars.Handler,
 ) -> RouterGroup {
   self.routes.push({ meth: "PATCH", path, handler })
   self
@@ -99,21 +99,21 @@ pub fn RouterGroup::group(self : RouterGroup, prefix : String) -> RouterGroup {
 }
 
 ///|
-/// Apply group to Flame app
-pub fn RouterGroup::apply(self : RouterGroup, app : @flame.Flame) -> Unit {
+/// Apply group to Mars app
+pub fn RouterGroup::apply(self : RouterGroup, app : @mars.Mars) -> Unit {
   apply_group(app, self, self.prefix, self.middlewares)
 }
 
 ///|
 /// Apply group recursively
 fn apply_group(
-  app : @flame.Flame,
+  app : @mars.Mars,
   group : RouterGroup,
   prefix : String,
-  parent_middlewares : Array[@flame.Handler],
+  parent_middlewares : Array[@mars.Handler],
 ) -> Unit {
   // Combine parent and current middlewares
-  let middlewares : Array[@flame.Handler] = []
+  let middlewares : Array[@mars.Handler] = []
   for mw in parent_middlewares {
     middlewares.push(mw)
   }
@@ -197,24 +197,24 @@ fn skip_first_char(s : String) -> String {
 ///|
 /// Wrap handler with middlewares
 fn wrap_with_middlewares(
-  handler : @flame.Handler,
-  middlewares : Array[@flame.Handler],
-) -> @flame.Handler {
+  handler : @mars.Handler,
+  middlewares : Array[@mars.Handler],
+) -> @mars.Handler {
   if middlewares.is_empty() {
     return handler
   }
-  @flame.handler(async fn(ctx) {
+  @mars.handler(async fn(ctx) {
     // Run middlewares
     for mw in middlewares {
       if ctx.is_response_sent() {
         return
       }
-      let @flame.Handler(mw_fn) = mw
+      let @mars.Handler(mw_fn) = mw
       mw_fn(ctx)
     }
     // Run handler
     if not(ctx.is_response_sent()) {
-      let @flame.Handler(h) = handler
+      let @mars.Handler(h) = handler
       h(ctx)
     }
   })

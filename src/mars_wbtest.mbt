@@ -1,69 +1,69 @@
 ///|
-test "Flame new creates empty app" {
-  let app = Flame::new()
+test "Mars new creates empty app" {
+  let app = Mars::new()
   inspect(app.handlers.length(), content="0")
   inspect(app.middlewares.length(), content="0")
 }
 
 ///|
-test "Flame get registers route" {
-  let app = Flame::new()
+test "Mars get registers route" {
+  let app = Mars::new()
   let _ = app.get("/", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame post registers route" {
-  let app = Flame::new()
+test "Mars post registers route" {
+  let app = Mars::new()
   let _ = app.post("/users", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame put registers route" {
-  let app = Flame::new()
+test "Mars put registers route" {
+  let app = Mars::new()
   let _ = app.put("/users/:id", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame delete registers route" {
-  let app = Flame::new()
+test "Mars delete registers route" {
+  let app = Mars::new()
   let _ = app.delete("/users/:id", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame patch registers route" {
-  let app = Flame::new()
+test "Mars patch registers route" {
+  let app = Mars::new()
   let _ = app.patch("/users/:id", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame query registers route" {
-  let app = Flame::new()
+test "Mars query registers route" {
+  let app = Mars::new()
   let _ = app.query("/search", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame all registers route for all methods" {
-  let app = Flame::new()
+test "Mars all registers route for all methods" {
+  let app = Mars::new()
   let _ = app.all("/health", async fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
-test "Flame use_ adds middleware" {
-  let app = Flame::new()
+test "Mars use_ adds middleware" {
+  let app = Mars::new()
   let _ = app.use_(async fn(_ctx) { () })
   inspect(app.middlewares.length(), content="1")
 }
 
 ///|
-test "Flame multiple middlewares" {
-  let app = Flame::new()
+test "Mars multiple middlewares" {
+  let app = Mars::new()
   let _ = app
     .use_(async fn(_ctx) { () })
     .use_(async fn(_ctx) { () })
@@ -72,8 +72,8 @@ test "Flame multiple middlewares" {
 }
 
 ///|
-test "Flame chained routes" {
-  let app = Flame::new()
+test "Mars chained routes" {
+  let app = Mars::new()
   let _ = app
     .get("/", async fn(_ctx) { () })
     .post("/users", async fn(_ctx) { () })

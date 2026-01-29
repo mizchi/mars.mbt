@@ -225,8 +225,8 @@ pub fn oauth2_google(
 
 ///|
 /// Bearer token middleware - validates Authorization header
-pub fn oauth2_bearer(validate : (String) -> Bool) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn oauth2_bearer(validate : (String) -> Bool) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     guard ctx.header("Authorization") is Some(auth) else {
       ctx.text("Unauthorized", status=401)
       return

@@ -1,5 +1,5 @@
 import {
-  "mizchi/flame" as @flame,
+  "mizchi/mars" as @mars,
   "moonbitlang/async",
   "moonbitlang/async/socket",
 }

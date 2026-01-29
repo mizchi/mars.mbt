@@ -1,75 +1,75 @@
 ///|
-/// Flame HTTP Framework
+/// Mars HTTP Framework
 /// A Hono-inspired HTTP framework for MoonBit
-pub(all) struct Flame {
+pub(all) struct Mars {
   router : @trie.TrieRouter
   handlers : Array[Handler]
   middlewares : Array[Handler]
 }
 
 ///|
-/// Create a new Flame application
-pub fn Flame::new() -> Flame {
+/// Create a new Mars application
+pub fn Mars::new() -> Mars {
   { router: @trie.TrieRouter::new(), handlers: [], middlewares: [] }
 }
 
 ///|
 /// Add a middleware to the application
-pub fn Flame::use_(self : Flame, handler : Handler) -> Flame {
+pub fn Mars::use_(self : Mars, handler : Handler) -> Mars {
   self.middlewares.push(handler)
   self
 }
 
 ///|
 /// Register a GET route
-pub fn Flame::get(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::get(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::Get, path, handler)
 }
 
 ///|
 /// Register a POST route
-pub fn Flame::post(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::post(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::Post, path, handler)
 }
 
 ///|
 /// Register a PUT route
-pub fn Flame::put(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::put(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::Put, path, handler)
 }
 
 ///|
 /// Register a DELETE route
-pub fn Flame::delete(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::delete(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::Delete, path, handler)
 }
 
 ///|
 /// Register a PATCH route
-pub fn Flame::patch(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::patch(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::Patch, path, handler)
 }
 
 ///|
 /// Register a QUERY route (RFC 9110)
-pub fn Flame::query(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::query(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::Query, path, handler)
 }
 
 ///|
 /// Register a route for all HTTP methods
-pub fn Flame::all(self : Flame, path : String, handler : Handler) -> Flame {
+pub fn Mars::all(self : Mars, path : String, handler : Handler) -> Mars {
   self.add_route(@router.Method::All, path, handler)
 }
 
 ///|
 /// Internal: Add a route with method
-fn Flame::add_route(
-  self : Flame,
+fn Mars::add_route(
+  self : Mars,
   meth : @router.Method,
   path : String,
   handler : Handler,
-) -> Flame {
+) -> Mars {
   let @router.HandlerId(id) = self.router.add(meth, path)
   // Ensure handlers array is large enough
   while self.handlers.length() <= id {
@@ -98,14 +98,14 @@ fn request_method_to_method(meth : @http.RequestMethod) -> @router.Method {
 
 ///|
 /// Start the HTTP server
-pub async fn Flame::serve(self : Flame, addr : @socket.Addr) -> Unit {
+pub async fn Mars::serve(self : Mars, addr : @socket.Addr) -> Unit {
   self.serve_with_env(addr, MapEnv::new())
 }
 
 ///|
 /// Start the HTTP server with environment bindings
-pub async fn Flame::serve_with_env(
-  self : Flame,
+pub async fn Mars::serve_with_env(
+  self : Mars,
   addr : @socket.Addr,
   env : MapEnv,
 ) -> Unit {

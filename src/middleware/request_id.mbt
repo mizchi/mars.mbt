@@ -37,8 +37,8 @@ fn generate_request_id(prefix : String) -> String {
 /// Request ID middleware
 pub fn request_id(
   options? : RequestIdOptions = RequestIdOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let id = if options.use_existing {
       match ctx.header(options.header_name) {
         Some(existing) => existing
@@ -56,7 +56,7 @@ pub fn request_id(
 
 ///|
 /// Get request ID from context
-pub fn get_request_id(ctx : @flame.Context) -> String? {
+pub fn get_request_id(ctx : @mars.Context) -> String? {
   ctx.get("request_id")
 }
 

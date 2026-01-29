@@ -1,5 +1,5 @@
 {
-  "name": "mizchi/flame",
+  "name": "mizchi/mars",
   "version": "0.1.0",
   "deps": {
     "moonbitlang/async": "0.16.2",
@@ -9,7 +9,7 @@
   "source": "src",
   "preferred-target": "native",
   "readme": "README.mbt.md",
-  "repository": "https://github.com/mizchi/flame",
+  "repository": "https://github.com/mizchi/mars.mbt",
   "license": "MIT",
   "keywords": ["http", "router", "web-framework"],
   "description": "Hono-inspired HTTP framework for MoonBit"

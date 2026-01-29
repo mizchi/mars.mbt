@@ -89,13 +89,13 @@ fn split_lines(s : String) -> Array[String] {
 /// SSE Stream writer
 /// Allows sending events to a connected client
 pub(all) struct SseStream {
-  priv ctx : @flame.Context
+  priv ctx : @mars.Context
   priv mut closed : Bool
 }
 
 ///|
 /// Create a new SSE stream
-pub fn SseStream::new(ctx : @flame.Context) -> SseStream {
+pub fn SseStream::new(ctx : @mars.Context) -> SseStream {
   { ctx, closed: false }
 }
 

@@ -165,8 +165,8 @@ fn join_cache_parts(parts : Array[String]) -> String {
 
 ///|
 /// Cache-Control middleware
-pub fn cache_control(options : CacheOptions) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn cache_control(options : CacheOptions) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let header = build_cache_control(options)
     if not(header.is_empty()) {
       ctx.set_header("Cache-Control", header)
@@ -180,13 +180,13 @@ pub fn cache_control(options : CacheOptions) -> @flame.Handler {
 
 ///|
 /// No-cache middleware (for API responses, sensitive data)
-pub fn no_cache_middleware() -> @flame.Handler {
+pub fn no_cache_middleware() -> @mars.Handler {
   cache_control(CacheOptions::no_cache())
 }
 
 ///|
 /// Set cache headers on context
-pub fn set_cache_headers(ctx : @flame.Context, options : CacheOptions) -> Unit {
+pub fn set_cache_headers(ctx : @mars.Context, options : CacheOptions) -> Unit {
   let header = build_cache_control(options)
   if not(header.is_empty()) {
     ctx.set_header("Cache-Control", header)

@@ -128,8 +128,8 @@ fn ends_with_star(s : String) -> Bool {
 /// Trailing slash middleware
 pub fn trailing_slash(
   options? : TrailingSlashOptions = TrailingSlashOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let path = ctx.path()
     // Skip root path
     if path == "/" {
@@ -180,12 +180,12 @@ fn has_extension(path : String) -> Bool {
 
 ///|
 /// Remove trailing slash middleware (convenience)
-pub fn remove_trailing_slash() -> @flame.Handler {
+pub fn remove_trailing_slash() -> @mars.Handler {
   trailing_slash(options=TrailingSlashOptions::remove())
 }
 
 ///|
 /// Add trailing slash middleware (convenience)
-pub fn add_trailing_slash() -> @flame.Handler {
+pub fn add_trailing_slash() -> @mars.Handler {
   trailing_slash(options=TrailingSlashOptions::add())
 }

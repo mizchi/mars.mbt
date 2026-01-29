@@ -109,8 +109,8 @@ fn apply_redirect_transform(
 
 ///|
 /// Redirect middleware with rules
-pub fn redirect_rules(options : RedirectOptions) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn redirect_rules(options : RedirectOptions) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let path = ctx.path()
     for rule in options.rules {
       if path_matches_redirect(path, rule.from) {
@@ -126,7 +126,7 @@ pub fn redirect_rules(options : RedirectOptions) -> @flame.Handler {
 ///|
 /// Simple redirect handler
 pub async fn redirect(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   url : String,
   status? : RedirectStatus = Found,
 ) -> Unit {
@@ -136,20 +136,20 @@ pub async fn redirect(
 
 ///|
 /// Permanent redirect (301)
-pub async fn redirect_permanent(ctx : @flame.Context, url : String) -> Unit {
+pub async fn redirect_permanent(ctx : @mars.Context, url : String) -> Unit {
   redirect(ctx, url, status=MovedPermanently)
 }
 
 ///|
 /// Temporary redirect (302)
-pub async fn redirect_temporary(ctx : @flame.Context, url : String) -> Unit {
+pub async fn redirect_temporary(ctx : @mars.Context, url : String) -> Unit {
   redirect(ctx, url, status=Found)
 }
 
 ///|
 /// HTTPS redirect middleware
-pub fn https_redirect() -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn https_redirect() -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     // Check X-Forwarded-Proto header
     let proto = ctx.header("X-Forwarded-Proto").unwrap_or("http")
     if proto == "http" {
@@ -164,8 +164,8 @@ pub fn https_redirect() -> @flame.Handler {
 
 ///|
 /// WWW redirect middleware (add or remove www)
-pub fn www_redirect(add_www : Bool) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn www_redirect(add_www : Bool) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let host = ctx.header("Host").unwrap_or("")
     if host.is_empty() {
       return
@@ -191,8 +191,8 @@ pub fn www_redirect(add_www : Bool) -> @flame.Handler {
 pub fn domain_redirect(
   from_domain : String,
   to_domain : String,
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let host = ctx.header("Host").unwrap_or("")
     if host == from_domain || host.has_prefix(from_domain + ":") {
       let path = ctx.path()

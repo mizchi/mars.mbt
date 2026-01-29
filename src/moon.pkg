@@ -1,6 +1,6 @@
 import {
-  "mizchi/flame/router",
-  "mizchi/flame/router/trie",
+  "mizchi/mars/router",
+  "mizchi/mars/router/trie",
   "moonbitlang/async/http",
   "moonbitlang/async/io" as @async_io,
   "moonbitlang/async/socket",

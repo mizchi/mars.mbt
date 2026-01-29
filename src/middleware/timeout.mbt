@@ -83,8 +83,8 @@ pub fn TimeoutContext::mark_timed_out(self : TimeoutContext) -> Unit {
 /// Sets up timeout context in request data
 pub fn timeout(
   options? : TimeoutOptions = TimeoutOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     ctx.set("_timeout_start", timeout_now().to_string())
     ctx.set("_timeout_ms", options.timeout_ms.to_string())
     ctx.set("_timeout_message", options.message)
@@ -94,7 +94,7 @@ pub fn timeout(
 
 ///|
 /// Check if request should timeout (call in long-running handlers)
-pub fn check_timeout(ctx : @flame.Context) -> Bool {
+pub fn check_timeout(ctx : @mars.Context) -> Bool {
   let start = match ctx.get("_timeout_start") {
     Some(s) => parse_timeout_int(s)
     None => return false
@@ -109,7 +109,7 @@ pub fn check_timeout(ctx : @flame.Context) -> Bool {
 
 ///|
 /// Send timeout response if timed out
-pub async fn send_timeout_if_needed(ctx : @flame.Context) -> Bool {
+pub async fn send_timeout_if_needed(ctx : @mars.Context) -> Bool {
   if check_timeout(ctx) {
     let message = ctx.get("_timeout_message").unwrap_or("Request Timeout")
     let status = match ctx.get("_timeout_status") {

@@ -279,7 +279,7 @@ pub fn session_destroy(options : SessionOptions) -> String {
 ///|
 /// Get or create session from context
 pub fn get_session(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   options : SessionOptions,
 ) -> SessionData {
   let cookie_header = ctx.header("Cookie").unwrap_or("")
@@ -298,8 +298,8 @@ pub fn get_session(
 
 ///|
 /// Session middleware - sets up session and stores ID in context
-pub fn session_middleware(options : SessionOptions) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn session_middleware(options : SessionOptions) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let cookie_header = ctx.header("Cookie").unwrap_or("")
     let session_id = match parse_cookie(cookie_header, options.cookie_name) {
       Some(cookie_value) =>

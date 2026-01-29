@@ -150,8 +150,8 @@ pub fn should_compress_type(content_type : String) -> Bool {
 /// should be done by the response handler or reverse proxy
 pub fn compress(
   options? : CompressOptions = CompressOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let accept_header = ctx.header("Accept-Encoding").unwrap_or("")
     if accept_header.is_empty() {
       return
@@ -168,7 +168,7 @@ pub fn compress(
 
 ///|
 /// Get negotiated compression encoding from context
-pub fn get_compression_encoding(ctx : @flame.Context) -> CompressionEncoding {
+pub fn get_compression_encoding(ctx : @mars.Context) -> CompressionEncoding {
   match ctx.get("_compress_encoding") {
     Some("gzip") => Gzip
     Some("deflate") => Deflate
@@ -180,7 +180,7 @@ pub fn get_compression_encoding(ctx : @flame.Context) -> CompressionEncoding {
 ///|
 /// Set Content-Encoding header if compression was applied
 pub fn set_content_encoding(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   encoding : CompressionEncoding,
 ) -> Unit {
   if encoding != Identity {

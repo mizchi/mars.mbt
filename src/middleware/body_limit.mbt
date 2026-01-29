@@ -61,8 +61,8 @@ fn parse_content_length(s : String) -> Int {
 /// Checks Content-Length header and rejects oversized requests
 pub fn body_limit(
   options? : BodyLimitOptions = BodyLimitOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     // Check Content-Length header
     match ctx.header("Content-Length") {
       Some(length_str) => {
@@ -79,19 +79,19 @@ pub fn body_limit(
 
 ///|
 /// Body limit middleware with size in bytes
-pub fn body_limit_bytes(size : Int) -> @flame.Handler {
+pub fn body_limit_bytes(size : Int) -> @mars.Handler {
   body_limit(options=BodyLimitOptions::bytes(size))
 }
 
 ///|
 /// Body limit middleware with size in kilobytes
-pub fn body_limit_kb(size : Int) -> @flame.Handler {
+pub fn body_limit_kb(size : Int) -> @mars.Handler {
   body_limit(options=BodyLimitOptions::kb(size))
 }
 
 ///|
 /// Body limit middleware with size in megabytes
-pub fn body_limit_mb(size : Int) -> @flame.Handler {
+pub fn body_limit_mb(size : Int) -> @mars.Handler {
   body_limit(options=BodyLimitOptions::mb(size))
 }
 

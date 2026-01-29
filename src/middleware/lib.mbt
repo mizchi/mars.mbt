@@ -1,7 +1,7 @@
 ///|
-/// Flame Middleware Collection
+/// Mars Middleware Collection
 ///
-/// This package provides common middleware for the Flame HTTP framework:
+/// This package provides common middleware for the Mars HTTP framework:
 /// - Rate limiting (fixed window algorithm)
 /// - IP filtering (whitelist/blacklist with wildcard and CIDR support)
 /// - Session management (signed cookie sessions)

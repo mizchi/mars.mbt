@@ -1,25 +1,25 @@
 ///|
 async fn main {
-  let app = @flame.Flame::new()
+  let app = @mars.Mars::new()
   // Add routes
   let _ = app
-    .get("/", @flame.handler(async fn(ctx) { ctx.text("Hello, Flame!") }))
+    .get("/", @mars.handler(async fn(ctx) { ctx.text("Hello, Mars!") }))
     .get(
       "/users/:id",
-      @flame.handler(async fn(ctx) {
+      @mars.handler(async fn(ctx) {
         let id = ctx.param("id").unwrap_or("unknown")
         ctx.json({ "id": id, "type": "user" })
       }),
     )
     .post(
       "/users",
-      @flame.handler(async fn(ctx) {
+      @mars.handler(async fn(ctx) {
         ctx.json({ "status": "created" }, status=201)
       }),
     )
     .get(
       "/api/*",
-      @flame.handler(async fn(ctx) {
+      @mars.handler(async fn(ctx) {
         ctx.json({ "path": ctx.path(), "message": "API wildcard" })
       }),
     )

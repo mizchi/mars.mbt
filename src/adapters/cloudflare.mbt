@@ -152,8 +152,8 @@ pub fn CloudflareEnv::get_r2(self : CloudflareEnv, name : String) -> R2Bucket? {
 
 ///|
 /// Convert CloudflareEnv to MapEnv for use with Context
-pub fn CloudflareEnv::to_map_env(self : CloudflareEnv) -> @flame.MapEnv {
-  let env = @flame.MapEnv::new()
+pub fn CloudflareEnv::to_map_env(self : CloudflareEnv) -> @mars.MapEnv {
+  let env = @mars.MapEnv::new()
   for name, value in self.vars {
     env.vars.set(name, value)
   }
@@ -176,15 +176,15 @@ pub fn CloudflareEnv::to_map_env(self : CloudflareEnv) -> @flame.MapEnv {
 
 ///|
 /// Cloudflare Workers fetch handler type
-pub struct FetchHandler(async (@flame.Context) -> Unit raise Error)
+pub struct FetchHandler(async (@mars.Context) -> Unit raise Error)
 
 ///|
 /// Create a Cloudflare Workers compatible handler
 pub fn cloudflare_handler(
-  app : @flame.Flame,
+  app : @mars.Mars,
   env : CloudflareEnv,
 ) -> FetchHandler {
-  FetchHandler(async fn(ctx : @flame.Context) raise Error {
+  FetchHandler(async fn(ctx : @mars.Context) raise Error {
     // This is a placeholder - actual CF Workers integration
     // would require WASM-specific bindings
     ignore(app)

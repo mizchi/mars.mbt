@@ -253,8 +253,8 @@ fn get_json_field(data : Json, field : String) -> Json? {
 
 ///|
 /// Validation middleware - validates request body and adds errors to context
-pub fn validate_body(validator_fn : (Validator) -> Validator) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn validate_body(validator_fn : (Validator) -> Validator) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     guard ctx.body_json() is Some(json) else {
       ctx.json(
         Json::object({ "error": Json::string("Invalid JSON body") }),

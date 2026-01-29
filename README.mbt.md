@@ -1,4 +1,4 @@
-# Flame
+# Mars
 
 A Hono-inspired HTTP framework for MoonBit.
 
@@ -20,7 +20,7 @@ Add to your `moon.mod.json`:
 ```json
 {
   "deps": {
-    "mizchi/flame": "0.1.0"
+    "mizchi/mars": "0.1.0"
   }
 }
 ```
@@ -29,26 +29,26 @@ Add to your `moon.mod.json`:
 
 ```moonbit
 async fn main {
-  let app = @flame.Flame::new()
+  let app = @mars.Mars::new()
 
   // Static route
-  let _ = app.get("/", @flame.handler(async fn(ctx) {
-    ctx.text("Hello, Flame!")
+  let _ = app.get("/", @mars.handler(async fn(ctx) {
+    ctx.text("Hello, Mars!")
   }))
 
   // Dynamic parameter
-  let _ = app.get("/users/:id", @flame.handler(async fn(ctx) {
+  let _ = app.get("/users/:id", @mars.handler(async fn(ctx) {
     let id = ctx.param("id").unwrap_or("unknown")
     ctx.json({ "id": id })
   }))
 
   // Wildcard
-  let _ = app.get("/files/*", @flame.handler(async fn(ctx) {
+  let _ = app.get("/files/*", @mars.handler(async fn(ctx) {
     ctx.text("File path: " + ctx.path())
   }))
 
   // Multiple methods
-  let _ = app.post("/users", @flame.handler(async fn(ctx) {
+  let _ = app.post("/users", @mars.handler(async fn(ctx) {
     ctx.json({ "status": "created" }, status=201)
   }))
 
@@ -59,17 +59,17 @@ async fn main {
 
 ## API
 
-### Flame
+### Mars
 
-- `Flame::new() -> Flame` - Create new application
-- `Flame::get(path, handler) -> Flame` - Register GET route
-- `Flame::post(path, handler) -> Flame` - Register POST route
-- `Flame::put(path, handler) -> Flame` - Register PUT route
-- `Flame::delete(path, handler) -> Flame` - Register DELETE route
-- `Flame::patch(path, handler) -> Flame` - Register PATCH route
-- `Flame::all(path, handler) -> Flame` - Register route for all methods
-- `Flame::use_(middleware) -> Flame` - Add middleware
-- `Flame::serve(addr)` - Start HTTP server
+- `Mars::new() -> Mars` - Create new application
+- `Mars::get(path, handler) -> Mars` - Register GET route
+- `Mars::post(path, handler) -> Mars` - Register POST route
+- `Mars::put(path, handler) -> Mars` - Register PUT route
+- `Mars::delete(path, handler) -> Mars` - Register DELETE route
+- `Mars::patch(path, handler) -> Mars` - Register PATCH route
+- `Mars::all(path, handler) -> Mars` - Register route for all methods
+- `Mars::use_(middleware) -> Mars` - Add middleware
+- `Mars::serve(addr)` - Start HTTP server
 
 ### Context
 

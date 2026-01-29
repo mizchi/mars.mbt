@@ -64,10 +64,10 @@ pub fn rate_limit_info(key : String) -> (Int, Int, Bool) {
 ///|
 /// Rate limit middleware with custom key extractor
 pub fn rate_limit(
-  key_extractor : (@flame.Context) -> String,
+  key_extractor : (@mars.Context) -> String,
   options? : RateLimitOptions = RateLimitOptions::default(),
-) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let key = key_extractor(ctx)
     let store = rate_limit_store.val
     let current_window = rate_limit_window.val
@@ -92,7 +92,7 @@ pub fn rate_limit(
 /// Use rate_limit_by_ip_secure for production
 pub fn rate_limit_by_ip(
   options? : RateLimitOptions = RateLimitOptions::default(),
-) -> @flame.Handler {
+) -> @mars.Handler {
   rate_limit(
     fn(ctx) {
       match ctx.header("X-Forwarded-For") {
@@ -143,7 +143,7 @@ fn safe_substring_rate(s : String, start : Int, end : Int) -> String {
 /// Rate limit by authorization header
 pub fn rate_limit_by_auth(
   options? : RateLimitOptions = RateLimitOptions::default(),
-) -> @flame.Handler {
+) -> @mars.Handler {
   rate_limit(
     fn(ctx) { ctx.header("Authorization").unwrap_or("anonymous") },
     options~,
@@ -156,7 +156,7 @@ pub fn rate_limit_by_auth(
 pub fn rate_limit_by_ip_secure(
   trusted_proxies : TrustedProxyConfig,
   options? : RateLimitOptions = RateLimitOptions::default(),
-) -> @flame.Handler {
+) -> @mars.Handler {
   rate_limit(
     fn(ctx) { get_client_ip_for_rate_limit(ctx, trusted_proxies) },
     options~,
@@ -166,7 +166,7 @@ pub fn rate_limit_by_ip_secure(
 ///|
 /// Get client IP for rate limiting with trusted proxy validation
 fn get_client_ip_for_rate_limit(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   trusted_proxies : TrustedProxyConfig,
 ) -> String {
   if not(trusted_proxies.enabled) {

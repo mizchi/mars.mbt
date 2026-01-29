@@ -178,7 +178,7 @@ fn ip_matches_any(ip : String, patterns : Array[String]) -> Bool {
 ///|
 /// Get client IP from context with trusted proxy validation
 fn get_client_ip_secure(
-  ctx : @flame.Context,
+  ctx : @mars.Context,
   header : String,
   trusted_proxies : TrustedProxyConfig,
 ) -> String {
@@ -231,8 +231,8 @@ fn split_ip_header(header : String) -> Array[String] {
 
 ///|
 /// IP filter middleware
-pub fn ip_filter(options : IpFilterOptions) -> @flame.Handler {
-  async fn(ctx : @flame.Context) raise Error {
+pub fn ip_filter(options : IpFilterOptions) -> @mars.Handler {
+  async fn(ctx : @mars.Context) raise Error {
     let ip = get_client_ip_secure(
       ctx,
       options.ip_header,
@@ -257,7 +257,7 @@ pub fn ip_whitelist(
   ips : Array[String],
   ip_header? : String = "X-Forwarded-For",
   trusted_proxies? : TrustedProxyConfig = TrustedProxyConfig::none(),
-) -> @flame.Handler {
+) -> @mars.Handler {
   ip_filter({ ips, ip_header, whitelist: true, trusted_proxies })
 }
 
@@ -267,6 +267,6 @@ pub fn ip_blacklist(
   ips : Array[String],
   ip_header? : String = "X-Forwarded-For",
   trusted_proxies? : TrustedProxyConfig = TrustedProxyConfig::none(),
-) -> @flame.Handler {
+) -> @mars.Handler {
   ip_filter({ ips, ip_header, whitelist: false, trusted_proxies })
 }
