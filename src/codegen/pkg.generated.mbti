@@ -1,0 +1,51 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/mars/codegen"
+
+// Values
+pub fn extract_path_params(String) -> Array[PathParam]
+
+pub fn generate_client(Array[RouteSpec], options? : ClientOptions) -> String
+
+pub fn generate_types_doc(Array[RouteSpec]) -> String
+
+pub fn validate_routes(Array[RouteSpec]) -> Array[String]
+
+// Errors
+
+// Types and methods
+pub(all) struct ClientOptions {
+  name : String
+  base_url_field : String
+  async_functions : Bool
+  package_prefix : String?
+}
+pub fn ClientOptions::default() -> Self
+pub fn ClientOptions::new(String) -> Self
+pub impl Show for ClientOptions
+
+pub(all) struct PathParam {
+  name : String
+  position : Int
+}
+pub impl Show for PathParam
+
+pub(all) struct RouteSpec {
+  http_method : String
+  path : String
+  input_type : String?
+  output_type : String
+  name : String
+  description : String?
+}
+pub fn RouteSpec::delete(String, String, String, description? : String) -> Self
+pub fn RouteSpec::get(String, String, String, description? : String) -> Self
+pub fn RouteSpec::patch(String, String, String, String, description? : String) -> Self
+pub fn RouteSpec::post(String, String, String, String, description? : String) -> Self
+pub fn RouteSpec::put(String, String, String, String, description? : String) -> Self
+pub fn RouteSpec::query(String, String, String, String, description? : String) -> Self
+pub impl Show for RouteSpec
+
+// Type aliases
+
+// Traits
+

@@ -114,7 +114,7 @@ fn timer_now() -> Int {
 pub fn logger(
   _options? : LoggerOptions = LoggerOptions::default(),
 ) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     let start = timer_now()
     let meth = ctx.meth().to_string()
     let path = ctx.path()
@@ -160,7 +160,7 @@ fn parse_int_simple(s : String) -> Int {
 ///|
 /// Simple logger that logs immediately (for debugging)
 pub fn logger_simple() -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     let meth = ctx.meth().to_string()
     let path = ctx.path()
     println("--> \{meth} \{path}")

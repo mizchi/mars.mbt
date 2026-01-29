@@ -151,7 +151,7 @@ pub fn should_compress_type(content_type : String) -> Bool {
 pub fn compress(
   options? : CompressOptions = CompressOptions::default(),
 ) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     let accept_header = ctx.header("Accept-Encoding").unwrap_or("")
     if accept_header.is_empty() {
       return

@@ -1,9 +1,9 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/flame"
+package "mizchi/mars"
 
 import {
-  "mizchi/flame/router",
-  "mizchi/flame/router/trie",
+  "mizchi/mars/router",
+  "mizchi/mars/router/trie",
   "moonbitlang/async/http",
   "moonbitlang/async/io",
   "moonbitlang/async/socket",
@@ -17,9 +17,16 @@ pub fn handler(async (Context) -> Unit) -> Handler
 // Errors
 
 // Types and methods
+pub(all) struct BackgroundTask {
+  task : async () -> Unit
+  name : String
+}
+
 pub(all) struct Context {
   request : @http.Request
   params : @router.Params
+  vars : Variables
+  execution_ctx : ExecutionContext
   // private fields
 }
 pub async fn Context::body(Self) -> String
@@ -28,6 +35,8 @@ pub fn Context::cookie(Self, String) -> String?
 pub fn Context::cookies(Self) -> Map[String, String]
 pub fn Context::delete_cookie(Self, String) -> Unit
 pub async fn Context::end_response(Self) -> Unit
+pub fn Context::env_binding(Self, String) -> Json?
+pub fn Context::env_var(Self, String) -> String?
 pub fn Context::get(Self, String) -> String?
 pub fn Context::header(Self, String) -> String?
 pub async fn Context::html(Self, String, status? : Int) -> Unit
@@ -47,28 +56,77 @@ pub fn Context::set_header(Self, String, String) -> Unit
 pub fn Context::set_status(Self, Int) -> Unit
 pub async fn Context::sse_start(Self) -> Unit
 pub async fn Context::text(Self, String, status? : Int) -> Unit
+pub fn Context::wait_until(Self, async () -> Unit, name? : String) -> Unit
+pub fn Context::with_env(@http.Request, @router.Params, @http.ServerConnection, &@io.Reader, MapEnv) -> Self
 pub async fn Context::write_raw(Self, String) -> Unit
 
-pub(all) struct Flame {
-  router : @trie.TrieRouter
-  handlers : Array[Handler]
-  middlewares : Array[Handler]
+pub(all) struct EmptyEnv {
 }
-pub fn Flame::all(Self, String, Handler) -> Self
-pub fn Flame::delete(Self, String, Handler) -> Self
-pub fn Flame::get(Self, String, Handler) -> Self
-pub fn Flame::new() -> Self
-pub fn Flame::patch(Self, String, Handler) -> Self
-pub fn Flame::post(Self, String, Handler) -> Self
-pub fn Flame::put(Self, String, Handler) -> Self
-pub async fn Flame::serve(Self, @socket.Addr) -> Unit
-pub fn Flame::use_(Self, Handler) -> Self
+pub fn EmptyEnv::new() -> Self
+pub impl Env for EmptyEnv
+
+pub(all) struct ExecutionContext {
+  // private fields
+}
+pub fn ExecutionContext::deactivate(Self) -> Unit
+pub fn ExecutionContext::get_tasks(Self) -> Array[BackgroundTask]
+pub fn ExecutionContext::is_active(Self) -> Bool
+pub fn ExecutionContext::new() -> Self
+pub fn ExecutionContext::pending_count(Self) -> Int
+pub async fn ExecutionContext::run_tasks(Self) -> Unit
+pub fn ExecutionContext::wait_until(Self, async () -> Unit, name? : String) -> Unit
 
 pub(all) struct Handler(async (Context) -> Unit)
 #deprecated
 pub fn Handler::inner(Self) -> async (Context) -> Unit
 
+pub(all) struct MapEnv {
+  vars : Map[String, String]
+  bindings : Map[String, Json]
+}
+pub fn MapEnv::new() -> Self
+pub fn MapEnv::with_binding(Self, String, Json) -> Self
+pub fn MapEnv::with_var(Self, String, String) -> Self
+pub impl Env for MapEnv
+
+pub(all) struct Mars {
+  router : @trie.TrieRouter
+  handlers : Array[Handler]
+  middlewares : Array[Handler]
+}
+pub fn Mars::all(Self, String, Handler) -> Self
+pub fn Mars::delete(Self, String, Handler) -> Self
+pub fn Mars::get(Self, String, Handler) -> Self
+pub fn Mars::new() -> Self
+pub fn Mars::patch(Self, String, Handler) -> Self
+pub fn Mars::post(Self, String, Handler) -> Self
+pub fn Mars::put(Self, String, Handler) -> Self
+pub fn Mars::query(Self, String, Handler) -> Self
+pub async fn Mars::serve(Self, @socket.Addr) -> Unit
+pub async fn Mars::serve_with_env(Self, @socket.Addr, MapEnv) -> Unit
+pub fn Mars::use_(Self, Handler) -> Self
+
+pub(all) struct Variables {
+  data : Map[String, Json]
+}
+pub fn Variables::get_bool(Self, String) -> Bool?
+pub fn Variables::get_json(Self, String) -> Json?
+pub fn Variables::get_number(Self, String) -> Double?
+pub fn Variables::get_string(Self, String) -> String?
+pub fn Variables::has(Self, String) -> Bool
+pub fn Variables::keys(Self) -> Array[String]
+pub fn Variables::new() -> Self
+pub fn Variables::remove(Self, String) -> Unit
+pub fn Variables::set_bool(Self, String, Bool) -> Unit
+pub fn Variables::set_json(Self, String, Json) -> Unit
+pub fn Variables::set_number(Self, String, Double) -> Unit
+pub fn Variables::set_string(Self, String, String) -> Unit
+
 // Type aliases
 
 // Traits
+pub(open) trait Env {
+  get_var(Self, String) -> String?
+  get_binding(Self, String) -> Json?
+}
 

@@ -166,7 +166,7 @@ fn join_cache_parts(parts : Array[String]) -> String {
 ///|
 /// Cache-Control middleware
 pub fn cache_control(options : CacheOptions) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     let header = build_cache_control(options)
     if not(header.is_empty()) {
       ctx.set_header("Cache-Control", header)

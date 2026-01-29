@@ -299,7 +299,7 @@ pub fn get_session(
 ///|
 /// Session middleware - sets up session and stores ID in context
 pub fn session_middleware(options : SessionOptions) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     let cookie_header = ctx.header("Cookie").unwrap_or("")
     let session_id = match parse_cookie(cookie_header, options.cookie_name) {
       Some(cookie_value) =>

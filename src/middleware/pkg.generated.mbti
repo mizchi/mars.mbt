@@ -1,56 +1,118 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/flame/middleware"
+package "mizchi/mars/middleware"
 
 import {
-  "mizchi/flame",
+  "mizchi/mars",
 }
 
 // Values
+pub fn add_trailing_slash() -> @mars.Handler
+
+pub fn api_key_auth(ApiKeyOptions) -> @mars.Handler
+
+pub fn api_key_both(Array[String], header_name? : String, param_name? : String) -> @mars.Handler
+
+pub fn api_key_header(Array[String], header_name? : String) -> @mars.Handler
+
+pub fn api_key_query(Array[String], param_name? : String) -> @mars.Handler
+
 pub fn assert_body_contains(MockResponse, String) -> Bool
 
 pub fn assert_header(MockResponse, String, String) -> Bool
 
 pub fn assert_status(MockResponse, Int) -> Bool
 
-pub fn basic_auth(BasicAuthOptions) -> @flame.Handler
+pub fn basic_auth(BasicAuthOptions) -> @mars.Handler
+
+pub fn body_limit(options? : BodyLimitOptions) -> @mars.Handler
+
+pub fn body_limit_bytes(Int) -> @mars.Handler
+
+pub fn body_limit_kb(Int) -> @mars.Handler
+
+pub fn body_limit_mb(Int) -> @mars.Handler
+
+pub fn build_cache_control(CacheOptions) -> String
+
+pub fn cache_1_day() -> CacheOptions
+
+pub fn cache_1_hour() -> CacheOptions
+
+pub fn cache_1_minute() -> CacheOptions
+
+pub fn cache_1_week() -> CacheOptions
+
+pub fn cache_1_year() -> CacheOptions
+
+pub fn cache_control(CacheOptions) -> @mars.Handler
 
 pub fn char_to_lower(Char) -> Char
 
-pub fn check_timeout(@flame.Context) -> Bool
+pub fn check_content_length(String, Int) -> Bool
+
+pub fn check_timeout(@mars.Context) -> Bool
+
+pub fn compress(options? : CompressOptions) -> @mars.Handler
 
 pub fn compute_hmac_sha256(String, String) -> String
 
-pub fn cors(options? : CorsOptions) -> @flame.Handler
+pub fn cors(options? : CorsOptions) -> @mars.Handler
 
-pub fn cors_allow_all() -> @flame.Handler
+pub fn cors_allow_all() -> @mars.Handler
 
-pub fn get_auth_user(@flame.Context) -> String?
+pub fn domain_redirect(String, String) -> @mars.Handler
 
-pub fn get_request_id(@flame.Context) -> String?
+pub fn encoding_to_header(CompressionEncoding) -> String
 
-pub fn get_session(@flame.Context, SessionOptions) -> SessionData
+pub fn etag_matches(String, String) -> Bool
 
-pub fn ip_blacklist(Array[String], ip_header? : String) -> @flame.Handler
+pub fn format_size(Int) -> String
 
-pub fn ip_filter(IpFilterOptions) -> @flame.Handler
+pub fn generate_api_key(prefix? : String) -> String
 
-pub fn ip_whitelist(Array[String], ip_header? : String) -> @flame.Handler
+pub fn generate_etag(String, Bool) -> String
 
-pub fn log_response(@flame.Context, Int, options? : LoggerOptions) -> Unit
+pub fn get_api_key(@mars.Context) -> String?
 
-pub fn logger(options? : LoggerOptions) -> @flame.Handler
+pub fn get_auth_user(@mars.Context) -> String?
 
-pub fn logger_simple() -> @flame.Handler
+pub fn get_compression_encoding(@mars.Context) -> CompressionEncoding
 
-pub fn not_found_handler((@flame.Context) -> String) -> @flame.Handler
+pub fn get_request_id(@mars.Context) -> String?
 
-pub fn not_found_json() -> @flame.Handler
+pub fn get_session(@mars.Context, SessionOptions) -> SessionData
 
-pub fn not_found_simple(message? : String) -> @flame.Handler
+pub fn https_redirect() -> @mars.Handler
 
-pub fn oauth2_authorization_url(OAuth2Config, state? : String) -> String
+pub fn ip_blacklist(Array[String], ip_header? : String, trusted_proxies? : TrustedProxyConfig) -> @mars.Handler
 
-pub fn oauth2_bearer((String) -> Bool) -> @flame.Handler
+pub fn ip_filter(IpFilterOptions) -> @mars.Handler
+
+pub fn ip_whitelist(Array[String], ip_header? : String, trusted_proxies? : TrustedProxyConfig) -> @mars.Handler
+
+pub fn is_within_limit(String, Int) -> Bool
+
+pub fn log_response(@mars.Context, Int, options? : LoggerOptions) -> Unit
+
+pub fn logger(_options? : LoggerOptions) -> @mars.Handler
+
+pub fn logger_simple() -> @mars.Handler
+
+pub fn negotiate_encoding(Array[CompressionEncoding], Array[CompressionEncoding]) -> CompressionEncoding
+
+pub fn no_cache_middleware() -> @mars.Handler
+
+pub fn not_found_handler((@mars.Context) -> String) -> @mars.Handler
+
+pub fn not_found_json() -> @mars.Handler
+
+pub fn not_found_simple(message? : String) -> @mars.Handler
+
+pub fn oauth2_authorization_url(OAuth2Config, String) -> String
+
+pub fn oauth2_bearer((String) -> Bool) -> @mars.Handler
+
+pub fn oauth2_generate_state() -> String
 
 pub fn oauth2_github(String, String, String, scopes? : Array[String]) -> OAuth2Config
 
@@ -62,17 +124,21 @@ pub fn oauth2_refresh_request_body(OAuth2Config, String) -> String
 
 pub fn oauth2_token_request_body(OAuth2Config, String) -> String
 
-pub async fn parse_form(@flame.Context) -> FormData
+pub fn parse_accept_encoding(String) -> Array[CompressionEncoding]
+
+pub async fn parse_form(@mars.Context) -> FormData
 
 pub fn parse_form_urlencoded(String) -> FormData
 
 pub fn parse_multipart(String, String) -> FormData
 
-pub fn rate_limit((@flame.Context) -> String, options? : RateLimitOptions) -> @flame.Handler
+pub fn rate_limit((@mars.Context) -> String, options? : RateLimitOptions) -> @mars.Handler
 
-pub fn rate_limit_by_auth(options? : RateLimitOptions) -> @flame.Handler
+pub fn rate_limit_by_auth(options? : RateLimitOptions) -> @mars.Handler
 
-pub fn rate_limit_by_ip(options? : RateLimitOptions) -> @flame.Handler
+pub fn rate_limit_by_ip(options? : RateLimitOptions) -> @mars.Handler
+
+pub fn rate_limit_by_ip_secure(TrustedProxyConfig, options? : RateLimitOptions) -> @mars.Handler
 
 pub fn rate_limit_clear() -> Unit
 
@@ -80,7 +146,17 @@ pub fn rate_limit_info(String) -> (Int, Int, Bool)
 
 pub fn rate_limit_tick() -> Unit
 
-pub fn request_id(options? : RequestIdOptions) -> @flame.Handler
+pub async fn redirect(@mars.Context, String, status? : RedirectStatus) -> Unit
+
+pub async fn redirect_permanent(@mars.Context, String) -> Unit
+
+pub fn redirect_rules(RedirectOptions) -> @mars.Handler
+
+pub async fn redirect_temporary(@mars.Context, String) -> Unit
+
+pub fn remove_trailing_slash() -> @mars.Handler
+
+pub fn request_id(options? : RequestIdOptions) -> @mars.Handler
 
 pub fn request_id_reset() -> Unit
 
@@ -90,15 +166,15 @@ pub fn safe_substring_from(String, Int) -> String
 
 pub fn safe_trim(String) -> String
 
-pub fn secure_headers(options? : SecureHeadersOptions) -> @flame.Handler
+pub fn secure_headers(options? : SecureHeadersOptions) -> @mars.Handler
 
-pub fn secure_headers_default() -> @flame.Handler
+pub fn secure_headers_default() -> @mars.Handler
 
-pub fn secure_headers_strict() -> @flame.Handler
+pub fn secure_headers_strict() -> @mars.Handler
 
-pub async fn send_error(@flame.Context, HttpError, options? : ErrorHandlerOptions) -> Unit
+pub async fn send_error(@mars.Context, HttpError, options? : ErrorHandlerOptions) -> Unit
 
-pub async fn send_timeout_if_needed(@flame.Context) -> Bool
+pub async fn send_timeout_if_needed(@mars.Context) -> Bool
 
 pub fn session_clear() -> Unit
 
@@ -106,17 +182,41 @@ pub fn session_cookie_header(SessionOptions, String) -> String
 
 pub fn session_destroy(SessionOptions) -> String
 
-pub fn session_middleware(SessionOptions) -> @flame.Handler
+pub fn session_middleware(SessionOptions) -> @mars.Handler
+
+pub fn set_cache_headers(@mars.Context, CacheOptions) -> Unit
+
+pub fn set_content_encoding(@mars.Context, CompressionEncoding) -> Unit
+
+pub fn set_etag(@mars.Context, String, options? : ETagOptions) -> Bool
+
+pub fn should_compress_type(String) -> Bool
+
+pub fn simple_compress(String) -> String
+
+pub fn size_100kb() -> Int
+
+pub fn size_100mb() -> Int
+
+pub fn size_10kb() -> Int
+
+pub fn size_10mb() -> Int
+
+pub fn size_1kb() -> Int
+
+pub fn size_1mb() -> Int
 
 pub fn string_to_lower(String) -> String
 
-pub fn timeout(options? : TimeoutOptions) -> @flame.Handler
+pub fn timeout(options? : TimeoutOptions) -> @mars.Handler
 
 pub fn timeout_timer_advance(Int) -> Unit
 
 pub fn timeout_timer_reset() -> Unit
 
-pub fn validate_body((Validator) -> Validator) -> @flame.Handler
+pub fn trailing_slash(options? : TrailingSlashOptions) -> @mars.Handler
+
+pub fn validate_body((Validator) -> Validator) -> @mars.Handler
 
 pub fn verify_github_webhook(String, String, String) -> WebhookResult
 
@@ -124,15 +224,82 @@ pub fn verify_stripe_webhook(String, String, String) -> WebhookResult
 
 pub fn verify_webhook_hmac(String, String, String) -> WebhookResult
 
+pub fn www_redirect(Bool) -> @mars.Handler
+
 // Errors
 
 // Types and methods
+pub(all) enum ApiKeyLocation {
+  Header(String)
+  Query(String)
+  Both(String, String)
+}
+
+pub(all) struct ApiKeyOptions {
+  location : ApiKeyLocation
+  validate : (String) -> ApiKeyResult
+  error_message : String
+  error_status : Int
+}
+pub fn ApiKeyOptions::custom((String) -> ApiKeyResult, location? : ApiKeyLocation) -> Self
+pub fn ApiKeyOptions::simple(Array[String], location? : ApiKeyLocation) -> Self
+
+pub(all) enum ApiKeyResult {
+  Valid(String)
+  Invalid
+}
+pub impl Eq for ApiKeyResult
+pub impl Show for ApiKeyResult
+
 pub(all) struct BasicAuthOptions {
   realm : String
   validate : (String, String) -> Bool
 }
 pub fn BasicAuthOptions::custom((String, String) -> Bool, realm? : String) -> Self
 pub fn BasicAuthOptions::simple(String, String, realm? : String) -> Self
+
+pub(all) struct BodyLimitOptions {
+  max_size : Int
+  message : String
+  status : Int
+}
+pub fn BodyLimitOptions::bytes(Int) -> Self
+pub fn BodyLimitOptions::default() -> Self
+pub fn BodyLimitOptions::kb(Int) -> Self
+pub fn BodyLimitOptions::mb(Int) -> Self
+
+pub(all) struct CacheOptions {
+  max_age : Int
+  s_maxage : Int
+  public_ : Bool
+  private_ : Bool
+  no_cache : Bool
+  no_store : Bool
+  must_revalidate : Bool
+  immutable : Bool
+}
+pub fn CacheOptions::cdn(Int, Int) -> Self
+pub fn CacheOptions::immutable(Int) -> Self
+pub fn CacheOptions::no_cache() -> Self
+pub fn CacheOptions::private_(Int) -> Self
+pub fn CacheOptions::public_(Int) -> Self
+pub fn CacheOptions::stale_while_revalidate(Int, Int) -> Self
+
+pub(all) struct CompressOptions {
+  threshold : Int
+  encodings : Array[CompressionEncoding]
+}
+pub fn CompressOptions::default() -> Self
+pub fn CompressOptions::gzip_only() -> Self
+
+pub(all) enum CompressionEncoding {
+  Gzip
+  Deflate
+  Br
+  Identity
+}
+pub impl Eq for CompressionEncoding
+pub impl Show for CompressionEncoding
 
 pub(all) struct CorsOptions {
   origin : String
@@ -145,6 +312,12 @@ pub(all) struct CorsOptions {
 pub fn CorsOptions::allow_origin(String) -> Self
 pub fn CorsOptions::default() -> Self
 pub fn CorsOptions::with_credentials(String) -> Self
+
+pub(all) struct ETagOptions {
+  weak : Bool
+}
+pub fn ETagOptions::default() -> Self
+pub fn ETagOptions::strong() -> Self
 
 pub(all) struct ErrorHandlerOptions {
   show_details : Bool
@@ -198,6 +371,7 @@ pub(all) struct IpFilterOptions {
   ips : Array[String]
   ip_header : String
   whitelist : Bool
+  trusted_proxies : TrustedProxyConfig
 }
 
 pub(all) enum LogLevel {
@@ -302,6 +476,27 @@ pub(all) struct RateLimitOptions {
 }
 pub fn RateLimitOptions::default() -> Self
 
+pub(all) struct RedirectOptions {
+  rules : Array[RedirectRule]
+}
+
+pub(all) struct RedirectRule {
+  from : String
+  to : String
+  status : RedirectStatus
+}
+pub fn RedirectRule::permanent(String, String) -> Self
+pub fn RedirectRule::temporary(String, String) -> Self
+
+pub(all) enum RedirectStatus {
+  MovedPermanently
+  Found
+  SeeOther
+  TemporaryRedirect
+  PermanentRedirect
+}
+pub fn RedirectStatus::to_code(Self) -> Int
+
 pub(all) struct RequestIdOptions {
   header_name : String
   prefix : String
@@ -312,24 +507,24 @@ pub fn RequestIdOptions::default() -> Self
 pub(all) struct RouteDefinition {
   meth : String
   path : String
-  handler : @flame.Handler
+  handler : @mars.Handler
 }
 
 pub(all) struct RouterGroup {
   prefix : String
-  middlewares : Array[@flame.Handler]
+  middlewares : Array[@mars.Handler]
   routes : Array[RouteDefinition]
   groups : Array[RouterGroup]
 }
-pub fn RouterGroup::apply(Self, @flame.Flame) -> Unit
-pub fn RouterGroup::delete(Self, String, @flame.Handler) -> Self
-pub fn RouterGroup::get(Self, String, @flame.Handler) -> Self
+pub fn RouterGroup::apply(Self, @mars.Mars) -> Unit
+pub fn RouterGroup::delete(Self, String, @mars.Handler) -> Self
+pub fn RouterGroup::get(Self, String, @mars.Handler) -> Self
 pub fn RouterGroup::group(Self, String) -> Self
 pub fn RouterGroup::new(String) -> Self
-pub fn RouterGroup::patch(Self, String, @flame.Handler) -> Self
-pub fn RouterGroup::post(Self, String, @flame.Handler) -> Self
-pub fn RouterGroup::put(Self, String, @flame.Handler) -> Self
-pub fn RouterGroup::use_(Self, @flame.Handler) -> Self
+pub fn RouterGroup::patch(Self, String, @mars.Handler) -> Self
+pub fn RouterGroup::post(Self, String, @mars.Handler) -> Self
+pub fn RouterGroup::put(Self, String, @mars.Handler) -> Self
+pub fn RouterGroup::use_(Self, @mars.Handler) -> Self
 
 pub(all) struct SecureHeadersOptions {
   hsts : Bool
@@ -358,8 +553,10 @@ pub(all) struct SessionOptions {
   secret : String
   cookie_name : String
   max_age : Int
+  secure : Bool
 }
 pub fn SessionOptions::default(String) -> Self
+pub fn SessionOptions::production(String) -> Self
 
 pub(all) struct SseEvent {
   event : String
@@ -377,7 +574,7 @@ pub(all) struct SseStream {
 }
 pub fn SseStream::close(Self) -> Unit
 pub fn SseStream::is_closed(Self) -> Bool
-pub fn SseStream::new(@flame.Context) -> Self
+pub fn SseStream::new(@mars.Context) -> Self
 pub async fn SseStream::ping(Self) -> Unit
 pub async fn SseStream::send(Self, SseEvent) -> Unit
 pub async fn SseStream::send_comment(Self, String) -> Unit
@@ -402,6 +599,32 @@ pub(all) struct TimeoutOptions {
 }
 pub fn TimeoutOptions::default() -> Self
 pub fn TimeoutOptions::new(Int) -> Self
+
+pub(all) enum TrailingSlashMode {
+  Add
+  Remove
+  Keep
+}
+pub impl Eq for TrailingSlashMode
+pub impl Show for TrailingSlashMode
+
+pub(all) struct TrailingSlashOptions {
+  mode : TrailingSlashMode
+  redirect : Bool
+  exclude : Array[String]
+}
+pub fn TrailingSlashOptions::add() -> Self
+pub fn TrailingSlashOptions::default() -> Self
+pub fn TrailingSlashOptions::remove() -> Self
+
+pub(all) struct TrustedProxyConfig {
+  proxies : Array[String]
+  enabled : Bool
+}
+pub fn TrustedProxyConfig::localhost() -> Self
+pub fn TrustedProxyConfig::none() -> Self
+pub fn TrustedProxyConfig::trust(Array[String]) -> Self
+pub fn TrustedProxyConfig::trust_all() -> Self
 
 pub(all) enum ValidationError {
   Required(String)

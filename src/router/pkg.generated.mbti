@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/flame/router"
+package "mizchi/mars/router"
 
 // Values
 
@@ -29,6 +29,7 @@ pub(all) enum Method {
   Options
   Connect
   Trace
+  Query
   All
 }
 pub fn Method::from_string(String) -> Self?

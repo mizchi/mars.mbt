@@ -84,7 +84,7 @@ pub fn TimeoutContext::mark_timed_out(self : TimeoutContext) -> Unit {
 pub fn timeout(
   options? : TimeoutOptions = TimeoutOptions::default(),
 ) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     ctx.set("_timeout_start", timeout_now().to_string())
     ctx.set("_timeout_ms", options.timeout_ms.to_string())
     ctx.set("_timeout_message", options.message)

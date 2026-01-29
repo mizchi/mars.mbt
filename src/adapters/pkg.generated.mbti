@@ -1,0 +1,60 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/mars/adapters"
+
+import {
+  "mizchi/mars",
+}
+
+// Values
+pub fn cloudflare_handler(@mars.Mars, CloudflareEnv) -> FetchHandler
+
+// Errors
+
+// Types and methods
+pub(all) struct CloudflareEnv {
+  vars : Map[String, String]
+  kv : Map[String, KVNamespace]
+  d1 : Map[String, D1Database]
+  r2 : Map[String, R2Bucket]
+}
+pub fn CloudflareEnv::get_d1(Self, String) -> D1Database?
+pub fn CloudflareEnv::get_kv(Self, String) -> KVNamespace?
+pub fn CloudflareEnv::get_r2(Self, String) -> R2Bucket?
+pub fn CloudflareEnv::get_var(Self, String) -> String?
+pub fn CloudflareEnv::new() -> Self
+pub fn CloudflareEnv::to_map_env(Self) -> @mars.MapEnv
+pub fn CloudflareEnv::with_d1(Self, String, D1Database) -> Self
+pub fn CloudflareEnv::with_kv(Self, String, KVNamespace) -> Self
+pub fn CloudflareEnv::with_r2(Self, String, R2Bucket) -> Self
+pub fn CloudflareEnv::with_var(Self, String, String) -> Self
+
+pub(all) struct D1Database {
+  name : String
+}
+pub fn D1Database::new(String) -> Self
+pub impl Show for D1Database
+
+pub struct FetchHandler(async (@mars.Context) -> Unit)
+#deprecated
+pub fn FetchHandler::inner(Self) -> async (@mars.Context) -> Unit
+
+pub(all) struct KVNamespace {
+  name : String
+  // private fields
+}
+pub fn KVNamespace::delete(Self, String) -> Unit
+pub fn KVNamespace::get(Self, String) -> String?
+pub fn KVNamespace::new(String) -> Self
+pub fn KVNamespace::put(Self, String, String) -> Unit
+pub impl Show for KVNamespace
+
+pub(all) struct R2Bucket {
+  name : String
+}
+pub fn R2Bucket::new(String) -> Self
+pub impl Show for R2Bucket
+
+// Type aliases
+
+// Traits
+

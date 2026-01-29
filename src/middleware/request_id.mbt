@@ -38,7 +38,7 @@ fn generate_request_id(prefix : String) -> String {
 pub fn request_id(
   options? : RequestIdOptions = RequestIdOptions::default(),
 ) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     let id = if options.use_existing {
       match ctx.header(options.header_name) {
         Some(existing) => existing

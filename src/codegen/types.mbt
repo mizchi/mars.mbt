@@ -23,14 +23,7 @@ pub fn RouteSpec::get(
   output_type : String,
   description? : String,
 ) -> RouteSpec {
-  {
-    http_method: "GET",
-    path,
-    input_type: None,
-    output_type,
-    name,
-    description,
-  }
+  { http_method: "GET", path, input_type: None, output_type, name, description }
 }
 
 ///|
@@ -154,7 +147,7 @@ pub fn ClientOptions::default() -> ClientOptions {
 ///|
 /// Create custom client options
 pub fn ClientOptions::new(name : String) -> ClientOptions {
-  { ..ClientOptions::default(), name }
+  { ..ClientOptions::default(), name, }
 }
 
 ///|

@@ -32,7 +32,9 @@ test "RouteSpec::get" {
 
 ///|
 test "RouteSpec::post" {
-  let route = RouteSpec::post("/users", "create_user", "CreateUserInput", "User")
+  let route = RouteSpec::post(
+    "/users", "create_user", "CreateUserInput", "User",
+  )
   inspect(route.http_method, content="POST")
   inspect(route.input_type, content="Some(\"CreateUserInput\")")
   inspect(route.output_type, content="User")
@@ -47,7 +49,9 @@ test "RouteSpec::delete" {
 
 ///|
 test "RouteSpec::query" {
-  let route = RouteSpec::query("/search", "search", "SearchQuery", "SearchResult")
+  let route = RouteSpec::query(
+    "/search", "search", "SearchQuery", "SearchResult",
+  )
   inspect(route.http_method, content="QUERY")
   inspect(route.input_type, content="Some(\"SearchQuery\")")
 }
@@ -126,7 +130,9 @@ test "generate_client with path params" {
 
 ///|
 test "generate_client with body" {
-  let routes = [RouteSpec::post("/users", "create_user", "CreateUserInput", "User")]
+  let routes = [
+    RouteSpec::post("/users", "create_user", "CreateUserInput", "User"),
+  ]
   let code = generate_client(routes)
   inspect(code.contains("body : CreateUserInput"), content="true")
 }

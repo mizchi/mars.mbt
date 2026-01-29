@@ -140,4 +140,5 @@ test "handler helper creates Handler" {
   let h = handler(async fn(_ctx) { () })
   // Just verify it compiles and can be created
   let Handler(_) = h
+
 }

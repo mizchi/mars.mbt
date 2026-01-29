@@ -76,7 +76,7 @@ pub fn SecureHeadersOptions::strict() -> SecureHeadersOptions {
 pub fn secure_headers(
   options? : SecureHeadersOptions = SecureHeadersOptions::default(),
 ) -> @mars.Handler {
-  async fn(ctx : @mars.Context) raise Error {
+  async fn(ctx : @mars.Context) {
     // HSTS
     if options.hsts {
       let mut hsts_value = "max-age=" + options.hsts_max_age.to_string()

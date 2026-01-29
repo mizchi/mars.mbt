@@ -1,6 +1,6 @@
 {
   "name": "mizchi/mars",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "deps": {
     "moonbitlang/async": "0.16.2",
     "moonbitlang/x": "0.4.38",

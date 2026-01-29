@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/flame/router/trie"
+package "mizchi/mars/router/trie"
 
 import {
-  "mizchi/flame/router",
+  "mizchi/mars/router",
   "moonbitlang/regexp",
 }
 

@@ -76,7 +76,14 @@ test "parse_cookies with spaces" {
 
 ///|
 test "build_set_cookie basic" {
-  let cookie = build_set_cookie("session", "abc123", max_age=3600, path="/", http_only=true, same_site="Lax")
+  let cookie = build_set_cookie(
+    "session",
+    "abc123",
+    max_age=3600,
+    path="/",
+    http_only=true,
+    same_site="Lax",
+  )
   inspect(cookie.contains("session=abc123"), content="true")
   inspect(cookie.contains("Path=/"), content="true")
   inspect(cookie.contains("Max-Age=3600"), content="true")
@@ -86,7 +93,14 @@ test "build_set_cookie basic" {
 
 ///|
 test "build_set_cookie without http_only" {
-  let cookie = build_set_cookie("token", "xyz", max_age=86400, path="/api", http_only=false, same_site="Strict")
+  let cookie = build_set_cookie(
+    "token",
+    "xyz",
+    max_age=86400,
+    path="/api",
+    http_only=false,
+    same_site="Strict",
+  )
   inspect(cookie.contains("token=xyz"), content="true")
   inspect(cookie.contains("Path=/api"), content="true")
   inspect(cookie.contains("HttpOnly"), content="false")
