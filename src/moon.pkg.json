@@ -3,6 +3,7 @@
     "mizchi/flame/router",
     "mizchi/flame/router/trie",
     "moonbitlang/async/http",
-    "moonbitlang/async/socket"
+    "moonbitlang/async/socket",
+    "moonbitlang/x/encoding"
   ]
 }

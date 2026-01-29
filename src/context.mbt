@@ -76,7 +76,7 @@ pub async fn Context::text(
 ) -> Unit {
   let status = status.unwrap_or(self.status)
   self.conn.send_response(status, reason_for_status(status))
-  self.conn.write(body.to_bytes())
+  self.conn.write(@encoding.encode(@encoding.UTF8, body))
   self.conn.end_response()
   self.response_sent = true
 }
@@ -88,7 +88,7 @@ pub async fn Context::json(self : Context, data : Json, status? : Int) -> Unit {
   self.conn.send_response(status, reason_for_status(status), extra_headers={
     "Content-Type": "application/json",
   })
-  self.conn.write(data.stringify().to_bytes())
+  self.conn.write(@encoding.encode(@encoding.UTF8, data.stringify()))
   self.conn.end_response()
   self.response_sent = true
 }
@@ -104,7 +104,7 @@ pub async fn Context::html(
   self.conn.send_response(status, reason_for_status(status), extra_headers={
     "Content-Type": "text/html; charset=utf-8",
   })
-  self.conn.write(body.to_bytes())
+  self.conn.write(@encoding.encode(@encoding.UTF8, body))
   self.conn.end_response()
   self.response_sent = true
 }
