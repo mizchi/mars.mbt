@@ -94,6 +94,7 @@ pub(all) enum Method {
   Options
   Connect
   Trace
+  Query
   All
 } derive(Eq, Hash)
 
@@ -109,6 +110,7 @@ pub impl Show for Method with output(self, logger) {
     Options => "OPTIONS"
     Connect => "CONNECT"
     Trace => "TRACE"
+    Query => "QUERY"
     All => "ALL"
   }
   logger.write_string(s)
@@ -127,6 +129,7 @@ pub fn Method::to_string(self : Method) -> String {
     Options => "OPTIONS"
     Connect => "CONNECT"
     Trace => "TRACE"
+    Query => "QUERY"
     All => "ALL"
   }
 }
@@ -144,6 +147,7 @@ pub fn Method::from_string(s : String) -> Method? {
     "OPTIONS" => Some(Options)
     "CONNECT" => Some(Connect)
     "TRACE" => Some(Trace)
+    "QUERY" => Some(Query)
     "ALL" => Some(All)
     _ => None
   }

@@ -41,6 +41,13 @@ test "Flame patch registers route" {
 }
 
 ///|
+test "Flame query registers route" {
+  let app = Flame::new()
+  let _ = app.query("/search", async fn(_ctx) { () })
+  inspect(app.handlers.length() > 0, content="true")
+}
+
+///|
 test "Flame all registers route for all methods" {
   let app = Flame::new()
   let _ = app.all("/health", async fn(_ctx) { () })

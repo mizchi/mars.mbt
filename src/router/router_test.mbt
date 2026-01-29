@@ -2,6 +2,7 @@
 test "Method::to_string" {
   inspect(Method::Get.to_string(), content="GET")
   inspect(Method::Post.to_string(), content="POST")
+  inspect(Method::Query.to_string(), content="QUERY")
   inspect(Method::All.to_string(), content="ALL")
 }
 
@@ -9,6 +10,7 @@ test "Method::to_string" {
 test "Method::from_string" {
   inspect(Method::from_string("GET"), content="Some(GET)")
   inspect(Method::from_string("POST"), content="Some(POST)")
+  inspect(Method::from_string("QUERY"), content="Some(QUERY)")
   inspect(Method::from_string("INVALID"), content="None")
 }
 

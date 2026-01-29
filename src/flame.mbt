@@ -51,6 +51,12 @@ pub fn Flame::patch(self : Flame, path : String, handler : Handler) -> Flame {
 }
 
 ///|
+/// Register a QUERY route (RFC 9110)
+pub fn Flame::query(self : Flame, path : String, handler : Handler) -> Flame {
+  self.add_route(@router.Method::Query, path, handler)
+}
+
+///|
 /// Register a route for all HTTP methods
 pub fn Flame::all(self : Flame, path : String, handler : Handler) -> Flame {
   self.add_route(@router.Method::All, path, handler)
