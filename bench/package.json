@@ -1,0 +1,10 @@
+{
+  "name": "flame-bench",
+  "type": "module",
+  "scripts": {
+    "bench": "node --expose-gc bench.mjs"
+  },
+  "dependencies": {
+    "hono": "^4.0.0"
+  }
+}

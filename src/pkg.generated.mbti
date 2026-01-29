@@ -1,0 +1,61 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/flame"
+
+import {
+  "mizchi/flame/router",
+  "mizchi/flame/router/trie",
+  "moonbitlang/async/http",
+  "moonbitlang/async/socket",
+}
+
+// Values
+pub fn compose(Array[Handler]) -> Handler
+
+pub fn handler(async (Context) -> Unit) -> Handler
+
+// Errors
+
+// Types and methods
+pub(all) struct Context {
+  request : @http.Request
+  params : @router.Params
+  // private fields
+}
+pub fn Context::get(Self, String) -> String?
+pub fn Context::header(Self, String) -> String?
+pub async fn Context::html(Self, String, status? : Int) -> Unit
+pub fn Context::is_response_sent(Self) -> Bool
+pub async fn Context::json(Self, Json, status? : Int) -> Unit
+pub fn Context::meth(Self) -> @http.RequestMethod
+pub fn Context::new(@http.Request, @router.Params, @http.ServerConnection) -> Self
+pub async fn Context::not_found(Self) -> Unit
+pub fn Context::param(Self, String) -> String?
+pub fn Context::path(Self) -> String
+pub async fn Context::redirect(Self, String) -> Unit
+pub fn Context::set(Self, String, String) -> Unit
+pub fn Context::set_status(Self, Int) -> Unit
+pub async fn Context::text(Self, String, status? : Int) -> Unit
+
+pub(all) struct Flame {
+  router : @trie.TrieRouter
+  handlers : Array[Handler]
+  middlewares : Array[Handler]
+}
+pub fn Flame::all(Self, String, Handler) -> Self
+pub fn Flame::delete(Self, String, Handler) -> Self
+pub fn Flame::get(Self, String, Handler) -> Self
+pub fn Flame::new() -> Self
+pub fn Flame::patch(Self, String, Handler) -> Self
+pub fn Flame::post(Self, String, Handler) -> Self
+pub fn Flame::put(Self, String, Handler) -> Self
+pub async fn Flame::serve(Self, @socket.Addr) -> Unit
+pub fn Flame::use_(Self, Handler) -> Self
+
+pub(all) struct Handler(async (Context) -> Unit)
+#deprecated
+pub fn Handler::inner(Self) -> async (Context) -> Unit
+
+// Type aliases
+
+// Traits
+

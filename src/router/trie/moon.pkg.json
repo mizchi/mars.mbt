@@ -1,0 +1,7 @@
+{
+  "import": [
+    "mizchi/flame/router",
+    "moonbitlang/regexp",
+    "moonbitlang/core/bench"
+  ]
+}

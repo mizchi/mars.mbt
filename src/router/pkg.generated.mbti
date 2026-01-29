@@ -1,0 +1,59 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/flame/router"
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) struct HandlerId(Int)
+#deprecated
+pub fn HandlerId::inner(Self) -> Int
+pub impl Eq for HandlerId
+pub impl Hash for HandlerId
+pub impl Show for HandlerId
+
+pub(all) struct MatchResult[H] {
+  handlers : Array[(H, Params)]
+}
+pub fn[H] MatchResult::empty() -> Self[H]
+pub fn[H] MatchResult::is_empty(Self[H]) -> Bool
+
+pub(all) enum Method {
+  Get
+  Post
+  Put
+  Delete
+  Patch
+  Head
+  Options
+  Connect
+  Trace
+  All
+}
+pub fn Method::from_string(String) -> Self?
+pub fn Method::to_string(Self) -> String
+pub impl Eq for Method
+pub impl Hash for Method
+pub impl Show for Method
+
+pub(all) struct Params {
+  // private fields
+}
+pub fn Params::clone(Self) -> Self
+pub fn Params::get(Self, String) -> String?
+pub fn Params::is_empty(Self) -> Bool
+pub fn Params::new() -> Self
+pub fn Params::set(Self, String, String) -> Unit
+pub fn Params::to_map(Self) -> Map[String, String]
+pub impl Show for Params
+
+// Type aliases
+
+// Traits
+pub(open) trait Router {
+  name(Self) -> String
+  add(Self, Method, String) -> HandlerId
+  match_(Self, Method, String) -> MatchResult[HandlerId]
+}
+

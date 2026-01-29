@@ -1,0 +1,64 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/flame/router/trie"
+
+import {
+  "mizchi/flame/router",
+}
+
+// Values
+pub fn check_optional_parameter(String) -> Array[String]?
+
+pub fn get_pattern(String) -> Pattern?
+
+pub fn split_path(String) -> Array[String]
+
+pub fn split_routing_path(String) -> Array[String]
+
+// Errors
+
+// Types and methods
+pub(all) struct HandlerParamsSet {
+  handler_id : Int
+  params : @router.Params
+  score : Int
+  possible_keys : Array[String]
+}
+
+pub(all) struct HandlerSet {
+  handler_id : Int
+  possible_keys : Array[String]
+  score : Int
+}
+
+pub(all) struct Node {
+  methods : Map[String, Array[HandlerSet]]
+  children : Map[String, Node]
+  patterns : Array[Pattern]
+}
+pub fn Node::insert(Self, String, String, Int, Int) -> Int
+pub fn Node::new() -> Self
+pub fn Node::search(Self, String, String) -> Array[HandlerParamsSet]
+pub fn Node::with_handler(String, Int) -> Self
+
+pub(all) enum Pattern {
+  Wildcard
+  Param(String)
+  ParamWithRegex(String, String)
+}
+pub impl Eq for Pattern
+pub impl Show for Pattern
+
+pub(all) struct TrieRouter {
+  root : Node
+  mut order : Int
+}
+pub fn TrieRouter::add(Self, @router.Method, String) -> @router.HandlerId
+pub fn TrieRouter::match_(Self, @router.Method, String) -> @router.MatchResult[@router.HandlerId]
+pub fn TrieRouter::name(Self) -> String
+pub fn TrieRouter::new() -> Self
+pub impl @router.Router for TrieRouter
+
+// Type aliases
+
+// Traits
+
