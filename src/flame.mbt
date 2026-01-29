@@ -93,6 +93,16 @@ fn request_method_to_method(meth : @http.RequestMethod) -> @router.Method {
 ///|
 /// Start the HTTP server
 pub async fn Flame::serve(self : Flame, addr : @socket.Addr) -> Unit {
+  self.serve_with_env(addr, MapEnv::new())
+}
+
+///|
+/// Start the HTTP server with environment bindings
+pub async fn Flame::serve_with_env(
+  self : Flame,
+  addr : @socket.Addr,
+  env : MapEnv,
+) -> Unit {
   let server = @http.Server::new(addr)
   server.run_forever(fn(request, body, conn) {
     let meth = request_method_to_method(request.meth)
@@ -104,7 +114,7 @@ pub async fn Flame::serve(self : Flame, addr : @socket.Addr) -> Unit {
     } else {
       // Get first matching handler
       let (@router.HandlerId(id), params) = result.handlers[0]
-      let ctx = Context::new(request, params, conn, body)
+      let ctx = Context::with_env(request, params, conn, body, env)
 
       // Run middlewares first
       for middleware in self.middlewares {
@@ -138,6 +148,13 @@ pub async fn Flame::serve(self : Flame, addr : @socket.Addr) -> Unit {
       if not(ctx.is_response_sent()) {
         conn.send_response(404, "Not Found")
         conn.end_response()
+      }
+
+      // Run background tasks after response is sent
+      if ctx.execution_ctx.pending_count() > 0 {
+        ctx.execution_ctx.run_tasks() catch {
+          e => println("Background tasks error: \{e}")
+        }
       }
     }
   })

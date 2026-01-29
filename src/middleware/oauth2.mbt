@@ -66,7 +66,10 @@ fn hex_char(n : Int) -> Char {
 ///|
 /// Build OAuth2 authorization URL
 /// state parameter is REQUIRED for CSRF protection
-pub fn oauth2_authorization_url(config : OAuth2Config, state : String) -> String {
+pub fn oauth2_authorization_url(
+  config : OAuth2Config,
+  state : String,
+) -> String {
   let scope = join_strings(config.scopes, " ")
   let url = StringBuilder::new()
   url.write_string(config.authorize_url)

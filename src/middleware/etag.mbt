@@ -38,7 +38,7 @@ pub fn generate_etag(content : String, weak : Bool) -> String {
 fn simple_hash(s : String) -> Int {
   let mut hash = 0
   for c in s {
-    hash = ((hash << 5) - hash) + c.to_int()
+    hash = (hash << 5) - hash + c.to_int()
     hash = hash & 0x7FFFFFFF // Keep positive
   }
   hash

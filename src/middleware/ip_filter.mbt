@@ -205,7 +205,11 @@ fn get_client_ip_secure(
     }
   }
   // All IPs are trusted proxies, return the leftmost (original client)
-  if ips.length() > 0 { safe_trim(ips[0]) } else { "unknown" }
+  if ips.length() > 0 {
+    safe_trim(ips[0])
+  } else {
+    "unknown"
+  }
 }
 
 ///|
@@ -250,7 +254,9 @@ fn get_client_ip(ctx : @flame.Context, header : String) -> String {
 pub fn ip_filter(options : IpFilterOptions) -> @flame.Handler {
   async fn(ctx : @flame.Context) raise Error {
     let ip = get_client_ip_secure(
-      ctx, options.ip_header, options.trusted_proxies,
+      ctx,
+      options.ip_header,
+      options.trusted_proxies,
     )
     let matches = ip_matches_any(ip, options.ips)
     if options.whitelist {

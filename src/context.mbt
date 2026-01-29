@@ -9,8 +9,14 @@ pub(all) struct Context {
   priv conn : @http.ServerConnection
   /// Request body reader
   priv body_reader : &@async_io.Reader
-  /// Custom data storage
+  /// Custom data storage (string only, legacy)
   priv data : Map[String, String]
+  /// Typed variables storage
+  vars : Variables
+  /// Execution context for background tasks
+  execution_ctx : ExecutionContext
+  /// Environment bindings (platform-specific)
+  priv env_bindings : MapEnv
   /// Cached request body (lazy loaded)
   priv mut cached_body : String?
   /// Cached query parameters (lazy loaded)
@@ -39,6 +45,36 @@ pub fn Context::new(
     conn,
     body_reader,
     data: Map::new(),
+    vars: Variables::new(),
+    execution_ctx: ExecutionContext::new(),
+    env_bindings: MapEnv::new(),
+    cached_body: None,
+    cached_query: None,
+    cached_cookies: None,
+    response_headers: {},
+    status: 200,
+    response_sent: false,
+  }
+}
+
+///|
+/// Create a new Context with environment bindings
+pub fn Context::with_env(
+  request : @http.Request,
+  params : @router.Params,
+  conn : @http.ServerConnection,
+  body_reader : &@async_io.Reader,
+  env : MapEnv,
+) -> Context {
+  {
+    request,
+    params,
+    conn,
+    body_reader,
+    data: Map::new(),
+    vars: Variables::new(),
+    execution_ctx: ExecutionContext::new(),
+    env_bindings: env,
     cached_body: None,
     cached_query: None,
     cached_cookies: None,
@@ -82,6 +118,28 @@ pub fn Context::set(self : Context, key : String, value : String) -> Unit {
 /// Get custom data
 pub fn Context::get(self : Context, key : String) -> String? {
   self.data.get(key)
+}
+
+///|
+/// Get environment variable
+pub fn Context::env_var(self : Context, name : String) -> String? {
+  self.env_bindings.get_var(name)
+}
+
+///|
+/// Get environment binding as JSON
+pub fn Context::env_binding(self : Context, name : String) -> Json? {
+  self.env_bindings.get_binding(name)
+}
+
+///|
+/// Schedule a background task (like Cloudflare's waitUntil)
+pub fn Context::wait_until(
+  self : Context,
+  task : async () -> Unit,
+  name? : String = "background",
+) -> Unit {
+  self.execution_ctx.wait_until(task, name~)
 }
 
 ///|

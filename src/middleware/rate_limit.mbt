@@ -189,7 +189,11 @@ fn get_client_ip_for_rate_limit(
       return ip
     }
   }
-  if ips.length() > 0 { trim_ip(ips[0]) } else { "unknown" }
+  if ips.length() > 0 {
+    trim_ip(ips[0])
+  } else {
+    "unknown"
+  }
 }
 
 ///|
@@ -233,10 +237,7 @@ fn trim_ip(s : String) -> String {
 
 ///|
 /// Check if IP is trusted proxy for rate limit
-fn is_trusted_proxy_rate(
-  ip : String,
-  config : TrustedProxyConfig,
-) -> Bool {
+fn is_trusted_proxy_rate(ip : String, config : TrustedProxyConfig) -> Bool {
   for proxy in config.proxies {
     if ip_matches_pattern_rate(ip, proxy) {
       return true

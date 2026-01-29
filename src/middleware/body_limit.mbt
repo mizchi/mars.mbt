@@ -39,10 +39,7 @@ pub fn BodyLimitOptions::mb(size : Int) -> BodyLimitOptions {
 
 ///|
 /// Check Content-Length header against limit
-pub fn check_content_length(
-  content_length : String,
-  max_size : Int,
-) -> Bool {
+pub fn check_content_length(content_length : String, max_size : Int) -> Bool {
   let length = parse_content_length(content_length)
   length <= max_size
 }

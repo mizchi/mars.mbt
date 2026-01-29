@@ -106,10 +106,9 @@ pub fn api_key_auth(options : ApiKeyOptions) -> @flame.Handler {
       }
     }
     match (options.validate)(key) {
-      Valid(validated_key) => {
+      Valid(validated_key) =>
         // Store validated key in context
         ctx.set("api_key", validated_key)
-      }
       Invalid => ctx.text(options.error_message, status=options.error_status)
     }
   }
@@ -127,7 +126,9 @@ pub fn api_key_header(
   keys : Array[String],
   header_name? : String = "X-API-Key",
 ) -> @flame.Handler {
-  api_key_auth(ApiKeyOptions::simple(keys, location=ApiKeyLocation::Header(header_name)))
+  api_key_auth(
+    ApiKeyOptions::simple(keys, location=ApiKeyLocation::Header(header_name)),
+  )
 }
 
 ///|
@@ -136,7 +137,9 @@ pub fn api_key_query(
   keys : Array[String],
   param_name? : String = "api_key",
 ) -> @flame.Handler {
-  api_key_auth(ApiKeyOptions::simple(keys, location=ApiKeyLocation::Query(param_name)))
+  api_key_auth(
+    ApiKeyOptions::simple(keys, location=ApiKeyLocation::Query(param_name)),
+  )
 }
 
 ///|
@@ -147,7 +150,10 @@ pub fn api_key_both(
   param_name? : String = "api_key",
 ) -> @flame.Handler {
   api_key_auth(
-    ApiKeyOptions::simple(keys, location=ApiKeyLocation::Both(header_name, param_name)),
+    ApiKeyOptions::simple(
+      keys,
+      location=ApiKeyLocation::Both(header_name, param_name),
+    ),
   )
 }
 

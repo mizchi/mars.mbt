@@ -37,9 +37,8 @@ pub fn BasicAuthOptions::simple(
   {
     realm,
     validate: fn(u, p) {
-      constant_time_compare_auth(u, username) && constant_time_compare_auth(
-        p, password,
-      )
+      constant_time_compare_auth(u, username) &&
+      constant_time_compare_auth(p, password)
     },
   }
 }

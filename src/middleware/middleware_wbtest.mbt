@@ -511,10 +511,22 @@ test "cache_control_cdn" {
 
 ///|
 test "cache_control_presets" {
-  inspect(build_cache_control(cache_1_minute()).contains("max-age=60"), content="true")
-  inspect(build_cache_control(cache_1_hour()).contains("max-age=3600"), content="true")
-  inspect(build_cache_control(cache_1_day()).contains("max-age=86400"), content="true")
-  inspect(build_cache_control(cache_1_week()).contains("max-age=604800"), content="true")
+  inspect(
+    build_cache_control(cache_1_minute()).contains("max-age=60"),
+    content="true",
+  )
+  inspect(
+    build_cache_control(cache_1_hour()).contains("max-age=3600"),
+    content="true",
+  )
+  inspect(
+    build_cache_control(cache_1_day()).contains("max-age=86400"),
+    content="true",
+  )
+  inspect(
+    build_cache_control(cache_1_week()).contains("max-age=604800"),
+    content="true",
+  )
 }
 
 ///|
@@ -546,7 +558,7 @@ test "compress_negotiate_no_match" {
 ///|
 test "compress_negotiate_priority" {
   let accepted = [Gzip, Br, Deflate]
-  let supported = [Deflate, Gzip]  // Server prefers Deflate
+  let supported = [Deflate, Gzip] // Server prefers Deflate
   let result = negotiate_encoding(accepted, supported)
   inspect(result, content="Deflate")
 }
@@ -726,7 +738,7 @@ test "form_data_empty" {
 
 ///|
 test "form_data_special_chars" {
-  let form = parse_form_urlencoded("msg=Hello%2BWorld")  // + encoded as %2B
+  let form = parse_form_urlencoded("msg=Hello%2BWorld") // + encoded as %2B
   inspect(form.get("msg"), content="Some(\"Hello+World\")")
 }
 
@@ -748,7 +760,7 @@ test "form_data_add_and_get" {
   let form = FormData::new()
   form.add("color", "red")
   form.add("color", "blue")
-  inspect(form.get("color"), content="Some(\"red\")")  // First value
+  inspect(form.get("color"), content="Some(\"red\")") // First value
   let all = form.get_all("color")
   inspect(all.length(), content="2")
 }
@@ -961,7 +973,10 @@ test "assert_body_contains" {
 test "assert_header" {
   let res = MockResponse::new()
   res.headers.set("Content-Type", "application/json")
-  inspect(assert_header(res, "Content-Type", "application/json"), content="true")
+  inspect(
+    assert_header(res, "Content-Type", "application/json"),
+    content="true",
+  )
   inspect(assert_header(res, "Content-Type", "text/plain"), content="false")
 }
 
@@ -976,7 +991,7 @@ test "timeout_context" {
   inspect(ctx.is_timed_out(), content="false")
   timeout_timer_advance(500)
   inspect(ctx.is_timed_out(), content="false")
-  timeout_timer_advance(600)  // Total 1100ms
+  timeout_timer_advance(600) // Total 1100ms
   inspect(ctx.is_timed_out(), content="true")
 }
 
@@ -1010,7 +1025,7 @@ test "request_id_custom_prefix" {
 ///|
 test "body_limit_options_default" {
   let opts = BodyLimitOptions::default()
-  inspect(opts.max_size, content="1048576")  // 1MB
+  inspect(opts.max_size, content="1048576") // 1MB
   inspect(opts.status, content="413")
 }
 
@@ -1030,7 +1045,7 @@ test "body_limit_options_mb" {
 test "body_limit_check_content_length" {
   inspect(check_content_length("1000", 2000), content="true")
   inspect(check_content_length("3000", 2000), content="false")
-  inspect(check_content_length("2000", 2000), content="true")  // Equal is OK
+  inspect(check_content_length("2000", 2000), content="true") // Equal is OK
 }
 
 ///|

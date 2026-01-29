@@ -188,7 +188,10 @@ pub fn www_redirect(add_www : Bool) -> @flame.Handler {
 
 ///|
 /// Domain redirect middleware
-pub fn domain_redirect(from_domain : String, to_domain : String) -> @flame.Handler {
+pub fn domain_redirect(
+  from_domain : String,
+  to_domain : String,
+) -> @flame.Handler {
   async fn(ctx : @flame.Context) raise Error {
     let host = ctx.header("Host").unwrap_or("")
     if host == from_domain || host.has_prefix(from_domain + ":") {

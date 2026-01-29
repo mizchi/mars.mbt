@@ -145,10 +145,8 @@ pub fn trailing_slash(
     }
     let has_slash = ends_with_slash(path)
     let new_path = match options.mode {
-      Add =>
-        if has_slash { path } else { add_slash(path) }
-      Remove =>
-        if has_slash { remove_slash(path) } else { path }
+      Add => if has_slash { path } else { add_slash(path) }
+      Remove => if has_slash { remove_slash(path) } else { path }
       Keep => path
     }
     if new_path != path && options.redirect {
