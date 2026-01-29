@@ -1,0 +1,259 @@
+///|
+/// Generate a type-safe API client from route specifications
+pub fn generate_client(
+  routes : Array[RouteSpec],
+  options? : ClientOptions = ClientOptions::default(),
+) -> String {
+  let buf = StringBuilder::new()
+
+  // Generate client struct
+  generate_struct(buf, options)
+  buf.write_string("\n")
+
+  // Generate constructor
+  generate_constructor(buf, options)
+  buf.write_string("\n")
+
+  // Generate methods for each route
+  for route in routes {
+    generate_method(buf, route, options)
+    buf.write_string("\n")
+  }
+
+  buf.to_string()
+}
+
+///|
+/// Generate the client struct
+fn generate_struct(buf : StringBuilder, options : ClientOptions) -> Unit {
+  buf.write_string("///|\n")
+  buf.write_string("/// Type-safe API client\n")
+  buf.write_string("pub(all) struct ")
+  buf.write_string(options.name)
+  buf.write_string(" {\n")
+  buf.write_string("  ")
+  buf.write_string(options.base_url_field)
+  buf.write_string(" : String\n")
+  buf.write_string("}\n")
+}
+
+///|
+/// Generate the constructor
+fn generate_constructor(buf : StringBuilder, options : ClientOptions) -> Unit {
+  buf.write_string("///|\n")
+  buf.write_string("/// Create a new ")
+  buf.write_string(options.name)
+  buf.write_string("\n")
+  buf.write_string("pub fn ")
+  buf.write_string(options.name)
+  buf.write_string("::new(")
+  buf.write_string(options.base_url_field)
+  buf.write_string(" : String) -> ")
+  buf.write_string(options.name)
+  buf.write_string(" {\n")
+  buf.write_string("  { ")
+  buf.write_string(options.base_url_field)
+  buf.write_string(" }\n")
+  buf.write_string("}\n")
+}
+
+///|
+/// Generate a method for a route
+fn generate_method(
+  buf : StringBuilder,
+  route : RouteSpec,
+  options : ClientOptions,
+) -> Unit {
+  let params = extract_path_params(route.path)
+
+  // Documentation
+  buf.write_string("///|\n")
+  match route.description {
+    Some(desc) => {
+      buf.write_string("/// ")
+      buf.write_string(desc)
+      buf.write_string("\n")
+    }
+    None => {
+      buf.write_string("/// ")
+      buf.write_string(route.http_method)
+      buf.write_string(" ")
+      buf.write_string(route.path)
+      buf.write_string("\n")
+    }
+  }
+
+  // Function signature
+  buf.write_string("pub ")
+  if options.async_functions {
+    buf.write_string("async ")
+  }
+  buf.write_string("fn ")
+  buf.write_string(options.name)
+  buf.write_string("::")
+  buf.write_string(route.name)
+  buf.write_string("(\n")
+  buf.write_string("  self : ")
+  buf.write_string(options.name)
+  buf.write_string(",\n")
+
+  // Path parameters
+  for param in params {
+    buf.write_string("  ")
+    buf.write_string(param.name)
+    buf.write_string(" : String,\n")
+  }
+
+  // Input body parameter
+  match route.input_type {
+    Some(input_type) => {
+      buf.write_string("  body : ")
+      buf.write_string(input_type)
+      buf.write_string(",\n")
+    }
+    None => ()
+  }
+
+  buf.write_string(") -> ")
+  buf.write_string(route.output_type)
+  buf.write_string(" raise {\n")
+
+  // Method body - build URL
+  buf.write_string("  let url = self.")
+  buf.write_string(options.base_url_field)
+  if params.is_empty() {
+    buf.write_string(" + \"")
+    buf.write_string(route.path)
+    buf.write_string("\"\n")
+  } else {
+    buf.write_string("\n")
+    generate_url_building(buf, route.path, params)
+  }
+
+  // Placeholder for actual HTTP call
+  buf.write_string("  // TODO: Implement HTTP request\n")
+  buf.write_string("  // Method: ")
+  buf.write_string(route.http_method)
+  buf.write_string("\n")
+  buf.write_string("  // URL: url\n")
+  match route.input_type {
+    Some(_) => buf.write_string("  // Body: body\n")
+    None => ()
+  }
+  buf.write_string("  ignore(url)\n")
+  match route.input_type {
+    Some(_) => buf.write_string("  ignore(body)\n")
+    None => ()
+  }
+  buf.write_string("  raise Failure(\"Not implemented\")\n")
+  buf.write_string("}\n")
+}
+
+///|
+/// Generate URL building code with path parameter substitution
+fn generate_url_building(
+  buf : StringBuilder,
+  path : String,
+  _params : Array[PathParam],
+) -> Unit {
+  let segments = split_path_keep_prefix(path)
+  buf.write_string("    ")
+  for i, segment in segments {
+    if i > 0 {
+      buf.write_string(" + ")
+    }
+    if segment.length() > 0 && segment[0] == ':' {
+      let param_name = substring(segment, 1, segment.length())
+      buf.write_string("\"/\" + ")
+      buf.write_string(param_name)
+    } else if segment.length() > 0 {
+      buf.write_string("\"/")
+      buf.write_string(segment)
+      buf.write_string("\"")
+    }
+  }
+  buf.write_string("\n")
+}
+
+///|
+/// Split path keeping leading slash info
+fn split_path_keep_prefix(path : String) -> Array[String] {
+  split_path(path)
+}
+
+///|
+/// Generate TypeScript-style type definitions for documentation
+pub fn generate_types_doc(routes : Array[RouteSpec]) -> String {
+  let buf = StringBuilder::new()
+  buf.write_string("// API Type Definitions\n")
+  buf.write_string("// Generated by Flame codegen\n\n")
+
+  let seen_types : Map[String, Bool] = {}
+
+  for route in routes {
+    match route.input_type {
+      Some(t) =>
+        if not(seen_types.contains(t)) {
+          seen_types.set(t, true)
+          buf.write_string("// Input type: ")
+          buf.write_string(t)
+          buf.write_string("\n")
+        }
+      None => ()
+    }
+    if not(seen_types.contains(route.output_type)) {
+      seen_types.set(route.output_type, true)
+      buf.write_string("// Output type: ")
+      buf.write_string(route.output_type)
+      buf.write_string("\n")
+    }
+  }
+
+  buf.to_string()
+}
+
+///|
+/// Validate route specifications
+pub fn validate_routes(routes : Array[RouteSpec]) -> Array[String] {
+  let errors : Array[String] = []
+
+  for route in routes {
+    // Check method is valid
+    let valid_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "QUERY", "HEAD", "OPTIONS"]
+    let mut method_valid = false
+    for m in valid_methods {
+      if route.http_method == m {
+        method_valid = true
+        break
+      }
+    }
+    if not(method_valid) {
+      errors.push("Invalid method: " + route.http_method + " for route " + route.name)
+    }
+
+    // Check path starts with /
+    if route.path.length() == 0 || route.path[0] != '/' {
+      errors.push("Path must start with /: " + route.path)
+    }
+
+    // Check name is not empty
+    if route.name.length() == 0 {
+      errors.push("Route name cannot be empty")
+    }
+
+    // Check output_type is not empty
+    if route.output_type.length() == 0 {
+      errors.push("Output type cannot be empty for route " + route.name)
+    }
+
+    // Check POST/PUT/PATCH have input_type
+    if (route.http_method == "POST" || route.http_method == "PUT" || route.http_method == "PATCH" || route.http_method == "QUERY") &&
+       route.input_type is None {
+      errors.push(
+        route.http_method + " route " + route.name + " should have an input_type",
+      )
+    }
+  }
+
+  errors
+}
