@@ -112,7 +112,7 @@ fn timer_now() -> Int {
 ///|
 /// Logger middleware
 pub fn logger(
-  options? : LoggerOptions = LoggerOptions::default(),
+  _options? : LoggerOptions = LoggerOptions::default(),
 ) -> @flame.Handler {
   async fn(ctx : @flame.Context) raise Error {
     let start = timer_now()

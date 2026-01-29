@@ -191,7 +191,7 @@ fn generate_session_id_secure(secret : String) -> String {
   let buf = StringBuilder::new()
   buf.write_string("sess_")
   for i = 0; i < 16; i = i + 1 {
-    let byte = rng.uint(limit=256).to_int()
+    let byte = rng.uint(limit=256).reinterpret_as_int()
     buf.write_char(session_hex_chars[byte >> 4])
     buf.write_char(session_hex_chars[byte & 0x0F])
   }
@@ -199,13 +199,6 @@ fn generate_session_id_secure(secret : String) -> String {
   buf.write_char('_')
   buf.write_string(session_counter.val.to_string())
   buf.to_string()
-}
-
-///|
-/// Legacy: Generate simple session ID (for testing only)
-fn generate_session_id() -> String {
-  session_counter.val = session_counter.val + 1
-  "sess_" + session_counter.val.to_string()
 }
 
 ///|

@@ -94,7 +94,7 @@ pub fn oauth2_generate_state() -> String {
   let rng = @random.Rand::chacha8()
   let buf = StringBuilder::new()
   for i = 0; i < 16; i = i + 1 {
-    let byte = rng.uint(limit=256).to_int()
+    let byte = rng.uint(limit=256).reinterpret_as_int()
     buf.write_char(hex_char(byte >> 4))
     buf.write_char(hex_char(byte & 0x0F))
   }

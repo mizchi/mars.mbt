@@ -121,7 +121,6 @@ fn split_etags(s : String) -> Array[String] {
 /// Trim whitespace from ETag
 fn trim_etag(s : String) -> String {
   let buf = StringBuilder::new()
-  let mut started = false
   let chars : Array[Char] = []
   for c in s {
     chars.push(c)

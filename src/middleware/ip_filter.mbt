@@ -230,26 +230,6 @@ fn split_ip_header(header : String) -> Array[String] {
 }
 
 ///|
-/// Legacy: Get client IP from context (trusts all proxies - INSECURE)
-fn get_client_ip(ctx : @flame.Context, header : String) -> String {
-  let ip_header = match ctx.header(header) {
-    Some(v) => v
-    None =>
-      match ctx.header("X-Real-IP") {
-        Some(v) => v
-        None => "unknown"
-      }
-  }
-  // X-Forwarded-For may contain multiple IPs, get the first one
-  let comma_idx = find_char(ip_header, ',')
-  if comma_idx >= 0 {
-    safe_trim(safe_substring(ip_header, 0, comma_idx))
-  } else {
-    safe_trim(ip_header)
-  }
-}
-
-///|
 /// IP filter middleware
 pub fn ip_filter(options : IpFilterOptions) -> @flame.Handler {
   async fn(ctx : @flame.Context) raise Error {

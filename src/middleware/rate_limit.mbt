@@ -219,7 +219,7 @@ fn trim_ip(s : String) -> String {
   let buf = StringBuilder::new()
   let mut started = false
   let mut end_pos = 0
-  for i, c in s {
+  for c in s {
     if c != ' ' && c != '\t' {
       if not(started) {
         started = true
