@@ -377,15 +377,19 @@ fn hex_to_int(c : Char) -> Int {
 
 ///|
 /// Merge response headers
+/// base: user-set headers (via set_header), these take precedence
+/// extra: default headers, only applied if not already set
 fn merge_headers(
   base : Map[String, String],
   extra : Map[String, String],
 ) -> Map[String, String] {
   let result : Map[String, String] = {}
-  for key, value in base {
+  // First, add defaults
+  for key, value in extra {
     result.set(key, value)
   }
-  for key, value in extra {
+  // Then, add user-set headers (overriding defaults)
+  for key, value in base {
     result.set(key, value)
   }
   result

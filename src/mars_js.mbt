@@ -17,19 +17,15 @@ fn js_method_to_router_method(meth : String) -> @router.Method {
 }
 
 ///|
-/// Build response headers as JSON for JS Response constructor
-fn build_not_found_headers() -> Json {
-  let obj : Map[String, Json] = {}
-  obj.set("Content-Type", Json::string("text/plain"))
-  Json::object(obj)
+/// Build default headers for not found responses
+fn build_not_found_headers() -> Map[String, String] {
+  { "Content-Type": "text/plain" }
 }
 
 ///|
-/// Build response headers as JSON for JS Response constructor
-fn build_error_headers() -> Json {
-  let obj : Map[String, Json] = {}
-  obj.set("Content-Type", Json::string("text/plain"))
-  Json::object(obj)
+/// Build default headers for error responses
+fn build_error_headers() -> Map[String, String] {
+  { "Content-Type": "text/plain" }
 }
 
 ///|
@@ -47,30 +43,8 @@ pub fn Mars::to_fetch_handler(
 /// so we need to manually trigger it for JS target
 extern "js" fn ffi_reschedule() -> Unit =
   #| () => {
-  #|   const processQueue = () => {
-  #|     const scheduler = moonbitlang$async$internal$coroutine$$scheduler;
-  #|     if (!scheduler || !scheduler.run_later) return;
-  #|     const queue = scheduler.run_later;
-  #|     // Deque internal structure: { buf, len, head }
-  #|     while (queue.len > 0) {
-  #|       const idx = queue.head;
-  #|       const coro = queue.buf[idx];
-  #|       queue.buf[idx] = undefined;
-  #|       queue.head = (idx + 1) % queue.buf.length;
-  #|       queue.len--;
-  #|       if (coro && coro.ready && coro.state && coro.state.$tag === 3) {
-  #|         // Suspend state: _0 is the continuation function
-  #|         scheduler.curr_coro = coro;
-  #|         try { coro.state._0(); } catch(e) { console.error('Coroutine error:', e); }
-  #|         scheduler.curr_coro = undefined;
-  #|       }
-  #|     }
-  #|     // Reschedule if more work was added
-  #|     if (queue.len > 0) {
-  #|       setTimeout(processQueue, 0);
-  #|     }
-  #|   };
-  #|   setTimeout(processQueue, 0);
+  #|   // Use moonbitlang/async's event_loop reschedule for proper coroutine context
+  #|   moonbitlang$async$internal$event_loop$$reschedule();
   #| }
 
 ///|

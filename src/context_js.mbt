@@ -32,17 +32,33 @@ extern "js" fn js_request_headers(req : JsRequest) -> JsHeaders =
 
 ///|
 /// Get header value from JsHeaders
+/// Returns undefined for None (headers.get returns null which MoonBit may not handle correctly)
 extern "js" fn js_headers_get(headers : JsHeaders, name : String) -> String? =
-  #| (headers, name) => headers.get(name)
+  #| (headers, name) => {
+  #|   const value = headers.get(name);
+  #|   return value === null ? undefined : value;
+  #| }
 
 ///|
-/// Create a new JsResponse
+/// Create a new JsResponse with headers object
+/// Headers are passed as MoonBit Map and converted to JS object in FFI
 extern "js" fn js_response_new(
   body : String,
   status : Int,
-  headers : Json,
+  headers : Map[String, String],
 ) -> JsResponse =
-  #| (body, status, headers) => new Response(body, { status, headers })
+  #| (body, status, headers) => {
+  #|   // Convert MoonBit Map to plain JS object for Response headers
+  #|   // MoonBit Map structure: { head: node, entries: [...] }
+  #|   // where each node has: { key, value, next }
+  #|   const headerObj = {};
+  #|   let curr = headers.head;
+  #|   while (curr !== undefined && curr !== -1) {
+  #|     headerObj[curr.key] = curr.value;
+  #|     curr = curr.next;
+  #|   }
+  #|   return new Response(body, { status, headers: headerObj });
+  #| }
 
 ///|
 /// JavaScript platform-specific context data
@@ -129,14 +145,14 @@ pub async fn Context::body(self : Context) -> String {
 }
 
 ///|
-/// Build response headers as JSON for JS Response constructor
-fn build_js_headers(headers : Map[String, String]) -> Json {
-  let obj : Map[String, Json] = {}
-  for key, value in headers {
-    obj.set(key, Json::string(value))
-  }
-  Json::object(obj)
+/// Get any request header by name (directly from JS Headers API)
+/// This is useful for custom headers not in the common headers list
+pub fn Context::raw_header(self : Context, name : String) -> String? {
+  js_headers_get(self.platform.js_headers, name)
 }
+
+// Note: build_js_headers removed - headers are now passed directly to FFI
+// The js_response_new FFI handles Map[String, String] -> JS object conversion
 
 ///|
 /// Send response via JS callback
@@ -146,7 +162,7 @@ fn send_js_response(
   status : Int,
   headers : Map[String, String],
 ) -> Unit {
-  let response = js_response_new(body, status, build_js_headers(headers))
+  let response = js_response_new(body, status, headers)
   resolve(response)
 }
 
@@ -289,6 +305,8 @@ fn parse_js_headers(js_headers : JsHeaders) -> Map[String, String] {
   let common_headers = [
     "Content-Type", "Accept", "Authorization", "Cookie", "User-Agent", "Host", "Origin",
     "Referer", "X-Requested-With", "Content-Length",
+    // Fetch Metadata headers for CSRF protection
+    "Sec-Fetch-Site", "Sec-Fetch-Mode", "Sec-Fetch-Dest",
   ]
   for name in common_headers {
     match js_headers_get(js_headers, name) {
