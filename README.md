@@ -16,19 +16,17 @@ A Hono-inspired HTTP framework for MoonBit.
 
 ```moonbit
 async fn main {
-  let app = @mars.Mars::new()
-
+  let app = @mars.Server::new()
   app
-    .get("/", async fn(ctx) { ctx.text("Hello, Mars!") })
-    .get("/users/:id", async fn(ctx) {
-      let id = ctx.param("id").unwrap()
-      ctx.json({ "id": id })
-    })
-    .post("/users", async fn(ctx) {
-      let body = ctx.body_json()
-      ctx.json({ "created": true }, status=201)
-    })
-
+  ..get("/", async fn(ctx) { ctx.text("Hello, Mars!") })
+  ..get("/users/:id", async fn(ctx) {
+    let id = ctx.param("id").unwrap()
+    ctx.json({ "id": id })
+  })
+  ..post("/users", async fn(ctx) {
+    let body = ctx.body_json()
+    ctx.json({ "created": true }, status=201)
+  })
   app.serve(@socket.Addr::new("127.0.0.1", 3000)!)
 }
 ```
@@ -38,26 +36,40 @@ async fn main {
 ### HTTP Methods
 
 ```moonbit
-app.get("/path", handler)      // GET
-app.post("/path", handler)     // POST
-app.put("/path", handler)      // PUT
-app.delete("/path", handler)   // DELETE
-app.patch("/path", handler)    // PATCH
-app.query("/path", handler)    // QUERY (RFC 9110)
-app.all("/path", handler)      // All methods
+app..get("/path", handler)     // GET
+app..post("/path", handler)    // POST
+app..put("/path", handler)     // PUT
+app..delete("/path", handler)  // DELETE
+app..patch("/path", handler)   // PATCH
+app..query("/path", handler)   // QUERY (RFC 9110)
+app..all("/path", handler)     // All methods
 ```
 
 ### Path Parameters
 
 ```moonbit
-app.get("/users/:id", async fn(ctx) {
+app..get("/users/:id", async fn(ctx) {
   let id = ctx.param("id")  // -> String?
-})
-
-app.get("/users/:user_id/posts/:post_id", async fn(ctx) {
+})..get("/users/:user_id/posts/:post_id", async fn(ctx) {
   let user_id = ctx.param("user_id")
   let post_id = ctx.param("post_id")
 })
+```
+
+### Mounting Sub-Applications
+
+```moonbit
+// Create a sub-application for API routes
+let api = @mars.Server::new()
+api
+..get("/users", async fn(ctx) { ctx.json({ "users": [] }) })
+..post("/users", async fn(ctx) { ctx.json({ "created": true }) })
+..get("/posts", async fn(ctx) { ctx.json({ "posts": [] }) })
+
+// Mount at /api prefix
+let app = @mars.Server::new()
+app..mount("/api", api)
+// Routes: /api/users (GET, POST), /api/posts (GET)
 ```
 
 ## Context API
@@ -113,16 +125,21 @@ ctx.delete_cookie("session")
 ### Context Variables
 
 ```moonbit
-// Typed variable storage
-ctx.vars.set_string("user_id", "123")
-ctx.vars.set_number("count", 42.0)
-ctx.vars.set_bool("active", true)
-ctx.vars.set_json("data", json_value)
+// Set (type inferred via Var trait)
+ctx.vars.set("user_id", "123")    // String
+ctx.vars.set("count", 42.0)       // Double
+ctx.vars.set("active", true)      // Bool
+ctx.vars.set("data", json_value)  // Json
 
-ctx.vars.get_string("user_id")  // -> String?
-ctx.vars.get_number("count")    // -> Double?
-ctx.vars.get_bool("active")     // -> Bool?
-ctx.vars.get_json("data")       // -> Json?
+// Get with pattern matching
+match ctx.vars.get("user_id") {
+  Some(String(s)) => println(s)
+  _ => ()
+}
+match ctx.vars.get("count") {
+  Some(Number(n, ..)) => println(n.to_string())
+  _ => ()
+}
 ```
 
 ### Background Tasks (waitUntil)
@@ -140,43 +157,42 @@ ctx.wait_until(async fn() {
 
 ```moonbit
 app
-  .use_(logger())
-  .use_(cors())
-  .use_(secure_headers())
-  .get("/", handler)
+..middleware(logger())
+..middleware(cors())
+..middleware(secure_headers())
+..get("/", handler)
 ```
 
 ### Available Middleware
 
-| Middleware | Description |
-|------------|-------------|
-| `logger()` | Request logging |
-| `cors()` | CORS headers |
-| `secure_headers()` | Security headers (CSP, X-Frame-Options, etc.) |
-| `session(options)` | Signed cookie sessions (HMAC-SHA256) |
-| `basic_auth(options)` | HTTP Basic Authentication |
-| `rate_limit(options)` | Rate limiting |
-| `timeout(options)` | Request timeout |
-| `body_limit_kb(size)` | Request body size limit |
-| `compress()` | Response compression |
-| `etag()` | ETag generation |
-| `cache_control(options)` | Cache-Control headers |
-| `trailing_slash(options)` | Trailing slash handling |
-| `ip_filter(options)` | IP whitelist/blacklist |
-| `api_key(options)` | API key authentication |
-| `request_id()` | X-Request-ID header |
+| Middleware                | Description                                   |
+| ------------------------- | --------------------------------------------- |
+| `logger()`                | Request logging                               |
+| `cors()`                  | CORS headers                                  |
+| `secure_headers()`        | Security headers (CSP, X-Frame-Options, etc.) |
+| `session(options)`        | Signed cookie sessions (HMAC-SHA256)          |
+| `basic_auth(options)`     | HTTP Basic Authentication                     |
+| `rate_limit(options)`     | Rate limiting                                 |
+| `timeout(options)`        | Request timeout                               |
+| `body_limit_kb(size)`     | Request body size limit                       |
+| `compress()`              | Response compression                          |
+| `etag()`                  | ETag generation                               |
+| `cache_control(options)`  | Cache-Control headers                         |
+| `trailing_slash(options)` | Trailing slash handling                       |
+| `ip_filter(options)`      | IP whitelist/blacklist                        |
+| `api_key(options)`        | API key authentication                        |
+| `request_id()`            | X-Request-ID header                           |
 
 ### Session Example
 
 ```moonbit
 let session_opts = @middleware.SessionOptions::new("your-secret-key")
-
 app
-  .use_(@middleware.session(session_opts))
-  .get("/profile", async fn(ctx) {
-    let session_id = ctx.get("session_id")
-    ctx.json({ "session": session_id })
-  })
+..middleware(@middleware.session(session_opts))
+..get("/profile", async fn(ctx) {
+  let session_id = ctx.get("session_id")
+  ctx.json({ "session": session_id })
+})
 ```
 
 ### CORS Example
@@ -185,36 +201,105 @@ app
 let cors_opts = @middleware.CorsOptions::new()
   .with_origin("https://example.com")
   .with_credentials(true)
-
-app.use_(@middleware.cors(options=cors_opts))
+app..middleware(@middleware.cors(options=cors_opts))
 ```
 
-## Environment & Platform Adapters
+## Environment & Execution Context
 
-### Environment Variables
+Mars uses trait-based injection for platform-specific features like environment variables and background tasks. This allows seamless integration with different runtimes (Cloudflare Workers, Deno, native, etc.).
+
+### Env Trait
+
+```moonbit
+// Environment trait for bindings
+pub(open) trait Env {
+  get_var(Self, String) -> String?
+  get_binding(Self, String) -> Json?
+}
+```
+
+### ExecCtx Trait
+
+```moonbit
+// Execution context trait for background tasks
+pub(open) trait ExecCtx {
+  wait_until(Self, async () -> Unit, name~ : String) -> Unit
+}
+```
+
+### Using MapEnv (Testing/Simple Use)
 
 ```moonbit
 let env = @mars.MapEnv::new()
   .with_var("API_KEY", "secret")
   .with_var("ENV", "production")
 
-app.serve_with_env(addr, env)
+let exec_ctx = @mars.ExecutionContext::new()
+app.serve_with_env(addr, env, exec_ctx)
 
 // In handler
 ctx.env_var("API_KEY")  // -> String?
+ctx.wait_until(async fn() { ... }, name="logging")
 ```
 
-### Cloudflare Workers Adapter
+### Cloudflare Workers Integration
+
+Mars provides FFI types for direct Cloudflare Workers integration:
 
 ```moonbit
-import { CloudflareEnv, KVNamespace } from "mizchi/mars/adapters"
+// In your Cloudflare Worker entry point
+// env: JsEnv, ctx: JsExecCtx are passed from the runtime
 
-let cf_env = CloudflareEnv::new()
-  .with_var("SECRET", "value")
-  .with_kv("CACHE", KVNamespace::new("CACHE"))
+pub fn fetch(
+  request : @mars.JsRequest,
+  env : @mars.JsEnv,
+  ctx : @mars.JsExecCtx,
+) -> @js_async.Promise[@mars.JsResponse] {
+  let handler = app.to_fetch_handler_with_env(env, ctx)
+  handler(request)
+}
+```
 
-let map_env = cf_env.to_map_env()
-app.serve_with_env(addr, map_env)
+In handler, access Cloudflare bindings:
+
+```moonbit
+app..get("/", async fn(ctx) {
+  // Environment variable
+  let api_key = ctx.env_var("API_KEY")
+
+  // Background task (uses ctx.waitUntil internally)
+  ctx.wait_until(async fn() {
+    // Analytics, logging, etc.
+  }, name="analytics")
+
+  ctx.text("Hello!")
+})
+```
+
+### Custom Platform Adapter
+
+Implement `Env` and `ExecCtx` for your platform:
+
+```moonbit
+pub(all) struct MyEnv {
+  vars : Map[String, String]
+}
+
+pub impl @mars.Env for MyEnv with get_var(self, name) {
+  self.vars.get(name)
+}
+
+pub impl @mars.Env for MyEnv with get_binding(self, _name) {
+  None
+}
+
+pub(all) struct MyExecCtx {
+  // ...
+}
+
+pub impl @mars.ExecCtx for MyExecCtx with wait_until(self, task, name~) {
+  // Platform-specific implementation
+}
 ```
 
 ## Code Generation
@@ -254,14 +339,12 @@ pub async fn ApiClient::delete_user(self : ApiClient, id : String) -> Unit raise
 ## SSE (Server-Sent Events)
 
 ```moonbit
-app.get("/events", async fn(ctx) {
+app..get("/events", async fn(ctx) {
   ctx.sse_start()
-
   for i = 0; i < 10; i = i + 1 {
     ctx.write_raw("data: Event \{i}\n\n")
     // await sleep(1000)
   }
-
   ctx.end_response()
 })
 ```

@@ -13,6 +13,14 @@ pub(open) trait Env {
 }
 
 ///|
+/// Execution context trait for background tasks
+/// Similar to Cloudflare Workers ExecutionContext
+pub(open) trait ExecCtx {
+  /// Schedule a background task to run after response is sent
+  wait_until(Self, async () -> Unit, name~ : String) -> Unit
+}
+
+///|
 /// Empty environment (no bindings)
 pub(all) struct EmptyEnv {}
 
@@ -70,6 +78,63 @@ pub impl Env for MapEnv with get_binding(self, name) {
 }
 
 ///|
+/// Trait for types that can be stored in Variables
+pub(open) trait Var {
+  to_json(Self) -> Json
+  from_json(Json) -> Self?
+}
+
+///|
+pub impl Var for String with to_json(self) {
+  Json::string(self)
+}
+
+///|
+pub impl Var for String with from_json(json) {
+  match json {
+    String(s) => Some(s)
+    _ => None
+  }
+}
+
+///|
+pub impl Var for Double with to_json(self) {
+  Json::number(self)
+}
+
+///|
+pub impl Var for Double with from_json(json) {
+  match json {
+    Number(n, ..) => Some(n)
+    _ => None
+  }
+}
+
+///|
+pub impl Var for Bool with to_json(self) {
+  Json::boolean(self)
+}
+
+///|
+pub impl Var for Bool with from_json(json) {
+  match json {
+    True => Some(true)
+    False => Some(false)
+    _ => None
+  }
+}
+
+///|
+pub impl Var for Json with to_json(self) {
+  self
+}
+
+///|
+pub impl Var for Json with from_json(json) {
+  Some(json)
+}
+
+///|
 /// Typed variables storage
 /// Uses Json for flexible storage with runtime type checking
 pub(all) struct Variables {
@@ -82,76 +147,18 @@ pub fn Variables::new() -> Variables {
 }
 
 ///|
-/// Set a string variable
-pub fn Variables::set_string(
+/// Set a variable (trait-based)
+pub fn[V : Var] Variables::set(
   self : Variables,
   key : String,
-  value : String,
+  value : V,
 ) -> Unit {
-  self.data.set(key, Json::string(value))
+  self.data.set(key, value.to_json())
 }
 
 ///|
-/// Get a string variable
-pub fn Variables::get_string(self : Variables, key : String) -> String? {
-  match self.data.get(key) {
-    Some(String(s)) => Some(s)
-    _ => None
-  }
-}
-
-///|
-/// Set a number variable
-pub fn Variables::set_number(
-  self : Variables,
-  key : String,
-  value : Double,
-) -> Unit {
-  self.data.set(key, Json::number(value))
-}
-
-///|
-/// Get a number variable
-pub fn Variables::get_number(self : Variables, key : String) -> Double? {
-  match self.data.get(key) {
-    Some(Number(n, ..)) => Some(n)
-    _ => None
-  }
-}
-
-///|
-/// Set a boolean variable
-pub fn Variables::set_bool(
-  self : Variables,
-  key : String,
-  value : Bool,
-) -> Unit {
-  self.data.set(key, Json::boolean(value))
-}
-
-///|
-/// Get a boolean variable
-pub fn Variables::get_bool(self : Variables, key : String) -> Bool? {
-  match self.data.get(key) {
-    Some(True) => Some(true)
-    Some(False) => Some(false)
-    _ => None
-  }
-}
-
-///|
-/// Set a JSON variable
-pub fn Variables::set_json(
-  self : Variables,
-  key : String,
-  value : Json,
-) -> Unit {
-  self.data.set(key, value)
-}
-
-///|
-/// Get a JSON variable
-pub fn Variables::get_json(self : Variables, key : String) -> Json? {
+/// Get a variable as Json for pattern matching
+pub fn Variables::get(self : Variables, key : String) -> Json? {
   self.data.get(key)
 }
 

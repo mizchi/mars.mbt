@@ -40,6 +40,12 @@ pub fn ExecutionContext::wait_until(
 }
 
 ///|
+/// Implement ExecCtx trait for ExecutionContext
+pub impl ExecCtx for ExecutionContext with wait_until(self, task, name~) {
+  self.wait_until(task, name~)
+}
+
+///|
 /// Get number of pending tasks
 pub fn ExecutionContext::pending_count(self : ExecutionContext) -> Int {
   self.tasks.length()

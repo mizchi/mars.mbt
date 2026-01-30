@@ -6,7 +6,7 @@ import {
 }
 
 // Values
-pub fn cloudflare_handler(@mars.Mars, CloudflareEnv) -> FetchHandler
+pub fn cloudflare_handler(@mars.Server, CloudflareEnv) -> FetchHandler
 
 // Errors
 

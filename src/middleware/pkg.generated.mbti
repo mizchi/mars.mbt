@@ -516,15 +516,15 @@ pub(all) struct RouterGroup {
   routes : Array[RouteDefinition]
   groups : Array[RouterGroup]
 }
-pub fn RouterGroup::apply(Self, @mars.Mars) -> Unit
+pub fn RouterGroup::apply(Self, @mars.Server) -> Unit
 pub fn RouterGroup::delete(Self, String, @mars.Handler) -> Self
 pub fn RouterGroup::get(Self, String, @mars.Handler) -> Self
 pub fn RouterGroup::group(Self, String) -> Self
+pub fn RouterGroup::middleware(Self, @mars.Handler) -> Self
 pub fn RouterGroup::new(String) -> Self
 pub fn RouterGroup::patch(Self, String, @mars.Handler) -> Self
 pub fn RouterGroup::post(Self, String, @mars.Handler) -> Self
 pub fn RouterGroup::put(Self, String, @mars.Handler) -> Self
-pub fn RouterGroup::use_(Self, @mars.Handler) -> Self
 
 pub(all) struct SecureHeadersOptions {
   hsts : Bool

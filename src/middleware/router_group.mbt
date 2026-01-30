@@ -27,7 +27,7 @@ pub fn RouterGroup::new(prefix : String) -> RouterGroup {
 
 ///|
 /// Add middleware to group
-pub fn RouterGroup::use_(
+pub fn RouterGroup::middleware(
   self : RouterGroup,
   handler : @mars.Handler,
 ) -> RouterGroup {
@@ -100,14 +100,14 @@ pub fn RouterGroup::group(self : RouterGroup, prefix : String) -> RouterGroup {
 
 ///|
 /// Apply group to Mars app
-pub fn RouterGroup::apply(self : RouterGroup, app : @mars.Mars) -> Unit {
+pub fn RouterGroup::apply(self : RouterGroup, app : @mars.Server) -> Unit {
   apply_group(app, self, self.prefix, self.middlewares)
 }
 
 ///|
 /// Apply group recursively
 fn apply_group(
-  app : @mars.Mars,
+  app : @mars.Server,
   group : RouterGroup,
   prefix : String,
   parent_middlewares : Array[@mars.Handler],
@@ -125,11 +125,11 @@ fn apply_group(
     let full_path = join_paths(prefix, route.path)
     let wrapped = wrap_with_middlewares(route.handler, middlewares)
     match route.meth {
-      "GET" => ignore(app.get(full_path, wrapped))
-      "POST" => ignore(app.post(full_path, wrapped))
-      "PUT" => ignore(app.put(full_path, wrapped))
-      "DELETE" => ignore(app.delete(full_path, wrapped))
-      "PATCH" => ignore(app.patch(full_path, wrapped))
+      "GET" => app.get(full_path, wrapped)
+      "POST" => app.post(full_path, wrapped)
+      "PUT" => app.put(full_path, wrapped)
+      "DELETE" => app.delete(full_path, wrapped)
+      "PATCH" => app.patch(full_path, wrapped)
       _ => ()
     }
   }

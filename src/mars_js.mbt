@@ -1,5 +1,6 @@
 ///|
 /// Convert JS method string to @router.Method
+/// Unknown methods are logged (if debug enabled) and default to GET
 fn js_method_to_router_method(meth : String) -> @router.Method {
   match meth {
     "GET" => @router.Method::Get
@@ -12,7 +13,14 @@ fn js_method_to_router_method(meth : String) -> @router.Method {
     "CONNECT" => @router.Method::Connect
     "TRACE" => @router.Method::Trace
     "QUERY" => @router.Method::Query
-    _ => @router.Method::Get
+    _ => {
+      if is_debug() {
+        println(
+          "[mars] Warning: Unknown HTTP method '\{meth}' for routing, treating as GET",
+        )
+      }
+      @router.Method::Get
+    }
   }
 }
 
@@ -29,12 +37,12 @@ fn build_error_headers() -> Map[String, String] {
 }
 
 ///|
-/// Convert Mars app to a fetch handler function
+/// Convert Server app to a fetch handler function
 /// Returns a function that takes JsRequest and returns Promise[JsResponse]
-pub fn Mars::to_fetch_handler(
-  self : Mars,
+pub fn Server::to_fetch_handler(
+  self : Server,
 ) -> (JsRequest) -> @js_async.Promise[JsResponse] {
-  self.to_fetch_handler_with_env(MapEnv::new())
+  self.to_fetch_handler_with_env(EmptyEnv::new(), ExecutionContext::new())
 }
 
 ///|
@@ -48,10 +56,11 @@ extern "js" fn ffi_reschedule() -> Unit =
   #| }
 
 ///|
-/// Convert Mars app to a fetch handler function with environment
-pub fn Mars::to_fetch_handler_with_env(
-  self : Mars,
-  env : MapEnv,
+/// Convert Server app to a fetch handler function with environment and execution context
+pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
+  self : Server,
+  env : E,
+  exec_ctx : C,
 ) -> (JsRequest) -> @js_async.Promise[JsResponse] {
   fn(js_request : JsRequest) -> @js_async.Promise[JsResponse] {
     // Create async handler using Promise::from_async
@@ -74,7 +83,9 @@ pub fn Mars::to_fetch_handler_with_env(
       // We need to capture the response in a ref
       let response_ref : Ref[JsResponse?] = { val: None }
       let resolve = fn(resp : JsResponse) { response_ref.val = Some(resp) }
-      let ctx = Context::with_env_js(request, params, js_request, resolve, env)
+      let ctx = Context::with_env_js(
+        request, params, js_request, resolve, env, exec_ctx,
+      )
 
       // Run middlewares first
       for middleware in self.middlewares {

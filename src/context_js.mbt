@@ -11,6 +11,69 @@ pub(all) type JsResponse
 type JsHeaders
 
 ///|
+/// JavaScript ExecutionContext FFI type (Cloudflare Workers)
+pub(all) type JsExecCtx
+
+///|
+/// Call waitUntil on JS ExecutionContext
+extern "js" fn js_exec_ctx_wait_until(
+  ctx : JsExecCtx,
+  promise : @js_async.Promise[Unit],
+) -> Unit =
+  #| (ctx, promise) => ctx.waitUntil(promise)
+
+///|
+/// Implement ExecCtx trait for JsExecCtx
+pub impl ExecCtx for JsExecCtx with wait_until(self, task, name~) {
+  // Convert MoonBit async function to JS Promise
+  let _ = name
+  let promise = @js_async.Promise::from_async(task)
+  js_exec_ctx_wait_until(self, promise)
+}
+
+///|
+/// JavaScript Env FFI type (Cloudflare Workers bindings)
+pub(all) type JsEnv
+
+///|
+/// Get environment variable from JS Env
+extern "js" fn js_env_get_var(env : JsEnv, name : String) -> String? =
+  #| (env, name) => {
+  #|   const value = env[name];
+  #|   return typeof value === 'string' ? value : undefined;
+  #| }
+
+///|
+/// Get binding from JS Env as JSON string
+extern "js" fn js_env_get_binding_json(env : JsEnv, name : String) -> String? =
+  #| (env, name) => {
+  #|   const value = env[name];
+  #|   if (value === undefined) return undefined;
+  #|   // For simple values, return as JSON
+  #|   // For complex objects (KV, D1, etc.), return type info
+  #|   if (typeof value === 'object' && value !== null) {
+  #|     if (value.constructor && value.constructor.name) {
+  #|       return JSON.stringify({ _type: value.constructor.name });
+  #|     }
+  #|   }
+  #|   return JSON.stringify(value);
+  #| }
+
+///|
+/// Implement Env trait for JsEnv
+pub impl Env for JsEnv with get_var(self, name) {
+  js_env_get_var(self, name)
+}
+
+///|
+pub impl Env for JsEnv with get_binding(self, name) {
+  match js_env_get_binding_json(self, name) {
+    Some(json_str) => @json.parse(json_str) |> Result::ok
+    None => None
+  }
+}
+
+///|
 /// Get request method from JsRequest
 extern "js" fn js_request_method(req : JsRequest) -> String =
   #| (req) => req.method
@@ -88,14 +151,16 @@ pub fn Context::new_js(
   js_request : JsRequest,
   response_resolve : (JsResponse) -> Unit,
 ) -> Context {
+  let exec_ctx = ExecutionContext::new()
+  let env = EmptyEnv::new()
   {
     request,
     params,
     platform: PlatformContext::new(js_request, response_resolve),
     data: Map::new(),
     vars: Variables::new(),
-    execution_ctx: ExecutionContext::new(),
-    env_bindings: MapEnv::new(),
+    exec_ctx,
+    env,
     cached_body: None,
     cached_query: None,
     cached_cookies: None,
@@ -106,13 +171,14 @@ pub fn Context::new_js(
 }
 
 ///|
-/// Create a new Context with environment bindings (JS-specific constructor)
-pub fn Context::with_env_js(
+/// Create a new Context with environment and execution context (JS-specific)
+pub fn[E : Env, C : ExecCtx] Context::with_env_js(
   request : @http.Request,
   params : @router.Params,
   js_request : JsRequest,
   response_resolve : (JsResponse) -> Unit,
-  env : MapEnv,
+  env : E,
+  exec_ctx : C,
 ) -> Context {
   {
     request,
@@ -120,8 +186,8 @@ pub fn Context::with_env_js(
     platform: PlatformContext::new(js_request, response_resolve),
     data: Map::new(),
     vars: Variables::new(),
-    execution_ctx: ExecutionContext::new(),
-    env_bindings: env,
+    exec_ctx,
+    env,
     cached_body: None,
     cached_query: None,
     cached_cookies: None,
@@ -252,6 +318,7 @@ pub fn Context::end_response(self : Context) -> Unit {
 
 ///|
 /// Convert JS method string to @http.RequestMethod
+/// Unknown methods are logged (if debug enabled) and default to GET
 pub fn js_method_to_request_method(meth : String) -> @http.RequestMethod {
   match meth {
     "GET" => @http.RequestMethod::Get
@@ -263,7 +330,14 @@ pub fn js_method_to_request_method(meth : String) -> @http.RequestMethod {
     "OPTIONS" => @http.RequestMethod::Options
     "CONNECT" => @http.RequestMethod::Connect
     "TRACE" => @http.RequestMethod::Trace
-    _ => @http.RequestMethod::Get
+    _ => {
+      if is_debug() {
+        println(
+          "[mars] Warning: Unknown HTTP method '\{meth}', treating as GET",
+        )
+      }
+      @http.RequestMethod::Get
+    }
   }
 }
 
@@ -299,14 +373,25 @@ fn parse_path_from_url(url : String) -> String {
 
 ///|
 /// Parse headers from JsHeaders to Map
+/// Note: Use ctx.raw_header() for headers not in this list
 fn parse_js_headers(js_headers : JsHeaders) -> Map[String, String] {
   let headers : Map[String, String] = {}
   // Common headers to check
+  // For custom headers, use ctx.raw_header("X-Custom-Header")
   let common_headers = [
+    // Standard request headers
     "Content-Type", "Accept", "Authorization", "Cookie", "User-Agent", "Host", "Origin",
-    "Referer", "X-Requested-With", "Content-Length",
+    "Referer", "Content-Length",
+    // CORS headers
+     "Access-Control-Request-Method", "Access-Control-Request-Headers",
+    // Proxy headers
+     "X-Forwarded-For", "X-Forwarded-Proto", "X-Forwarded-Host", "X-Real-IP",
+    // Cache headers
+     "If-None-Match", "If-Modified-Since", "Cache-Control",
     // Fetch Metadata headers for CSRF protection
-    "Sec-Fetch-Site", "Sec-Fetch-Mode", "Sec-Fetch-Dest",
+     "Sec-Fetch-Site", "Sec-Fetch-Mode", "Sec-Fetch-Dest",
+    // Common custom headers
+     "X-Requested-With", "X-Request-ID", "X-Correlation-ID",
   ]
   for name in common_headers {
     match js_headers_get(js_headers, name) {

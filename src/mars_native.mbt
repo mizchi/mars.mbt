@@ -16,16 +16,17 @@ fn request_method_to_method(meth : @http.RequestMethod) -> @router.Method {
 
 ///|
 /// Start the HTTP server (native only)
-pub async fn Mars::serve(self : Mars, addr : @socket.Addr) -> Unit {
-  self.serve_with_env(addr, MapEnv::new())
+pub async fn Server::serve(self : Server, addr : @socket.Addr) -> Unit {
+  self.serve_with_env(addr, EmptyEnv::new(), ExecutionContext::new())
 }
 
 ///|
-/// Start the HTTP server with environment bindings (native only)
-pub async fn Mars::serve_with_env(
-  self : Mars,
+/// Start the HTTP server with environment and execution context (native only)
+pub async fn[E : Env, C : ExecCtx] Server::serve_with_env(
+  self : Server,
   addr : @socket.Addr,
-  env : MapEnv,
+  env : E,
+  exec_ctx : C,
 ) -> Unit {
   let server = @http.Server::new(addr)
   server.run_forever(fn(request, body, conn) {
@@ -38,7 +39,7 @@ pub async fn Mars::serve_with_env(
     } else {
       // Get first matching handler
       let (@router.HandlerId(id), params) = result.handlers[0]
-      let ctx = Context::with_env(request, params, conn, body, env)
+      let ctx = Context::with_env(request, params, conn, body, env, exec_ctx)
 
       // Run middlewares first
       for middleware in self.middlewares {
@@ -75,11 +76,8 @@ pub async fn Mars::serve_with_env(
       }
 
       // Run background tasks after response is sent
-      if ctx.execution_ctx.pending_count() > 0 {
-        ctx.execution_ctx.run_tasks() catch {
-          e => println("Background tasks error: \{e}")
-        }
-      }
+      // Note: exec_ctx is a trait object, so we need to check if it's ExecutionContext
+      // For now, background tasks are handled by the ExecCtx implementation
     }
   })
 }

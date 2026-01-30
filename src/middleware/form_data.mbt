@@ -368,96 +368,34 @@ fn trim_crlf(s : String) -> String {
     end = end - 1
   }
   let buf = StringBuilder::new()
-  for i = 0; i < end; i = i + 1 {
+  for i in 0..<end {
     buf.write_char(chars[i])
   }
   buf.to_string()
 }
 
 ///|
-/// Split string by char for form parsing
+/// Split string by char for form parsing (uses shared util)
 fn split_form_string(s : String, sep : Char) -> Array[String] {
-  let result : Array[String] = []
-  let current = StringBuilder::new()
-  for c in s {
-    if c == sep {
-      result.push(current.to_string())
-      current.reset()
-    } else {
-      current.write_char(c)
-    }
-  }
-  result.push(current.to_string())
-  result
+  @mars.split_by_char(s, sep)
 }
 
 ///|
-/// Find char in string for form parsing
+/// Find char in string for form parsing (uses shared util)
 fn find_form_char(s : String, c : Char) -> Int {
-  for i, ch in s {
-    if ch == c {
-      return i
-    }
-  }
-  -1
+  @mars.find_char(s, c)
 }
 
 ///|
-/// Extract substring for form parsing
+/// Extract substring for form parsing (uses shared util)
 fn extract_form_substring(s : String, start : Int, end : Int) -> String {
-  let buf = StringBuilder::new()
-  let mut i = 0
-  for c in s {
-    if i >= start && i < end {
-      buf.write_char(c)
-    }
-    i = i + 1
-  }
-  buf.to_string()
+  @mars.substring(s, start, end)
 }
 
 ///|
-/// URL decode for form parsing
+/// URL decode for form parsing (uses shared util)
 fn url_decode_form(s : String) -> String {
-  let buf = StringBuilder::new()
-  let chars : Array[Char] = []
-  for c in s {
-    chars.push(c)
-  }
-  let mut i = 0
-  while i < chars.length() {
-    let c = chars[i]
-    if c == '%' && i + 2 < chars.length() {
-      let high = hex_to_int_form(chars[i + 1])
-      let low = hex_to_int_form(chars[i + 2])
-      if high >= 0 && low >= 0 {
-        buf.write_char(((high << 4) | low).unsafe_to_char())
-        i = i + 3
-        continue
-      }
-    } else if c == '+' {
-      buf.write_char(' ')
-      i = i + 1
-      continue
-    }
-    buf.write_char(c)
-    i = i + 1
-  }
-  buf.to_string()
-}
-
-///|
-/// Convert hex char to int for form parsing
-fn hex_to_int_form(c : Char) -> Int {
-  if c >= '0' && c <= '9' {
-    c.to_int() - '0'.to_int()
-  } else if c >= 'a' && c <= 'f' {
-    c.to_int() - 'a'.to_int() + 10
-  } else if c >= 'A' && c <= 'F' {
-    c.to_int() - 'A'.to_int() + 10
-  } else {
-    -1
-  }
+  @mars.url_decode(s)
 }
 
 ///|

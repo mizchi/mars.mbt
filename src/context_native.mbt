@@ -24,14 +24,16 @@ pub fn Context::new(
   conn : @http.ServerConnection,
   body_reader : &@async_io.Reader,
 ) -> Context {
+  let exec_ctx = ExecutionContext::new()
+  let env = EmptyEnv::new()
   {
     request,
     params,
     platform: PlatformContext::new(conn, body_reader),
     data: Map::new(),
     vars: Variables::new(),
-    execution_ctx: ExecutionContext::new(),
-    env_bindings: MapEnv::new(),
+    exec_ctx,
+    env,
     cached_body: None,
     cached_query: None,
     cached_cookies: None,
@@ -42,13 +44,14 @@ pub fn Context::new(
 }
 
 ///|
-/// Create a new Context with environment bindings (native-specific constructor)
-pub fn Context::with_env(
+/// Create a new Context with environment and execution context (native-specific)
+pub fn[E : Env, C : ExecCtx] Context::with_env(
   request : @http.Request,
   params : @router.Params,
   conn : @http.ServerConnection,
   body_reader : &@async_io.Reader,
-  env : MapEnv,
+  env : E,
+  exec_ctx : C,
 ) -> Context {
   {
     request,
@@ -56,8 +59,8 @@ pub fn Context::with_env(
     platform: PlatformContext::new(conn, body_reader),
     data: Map::new(),
     vars: Variables::new(),
-    execution_ctx: ExecutionContext::new(),
-    env_bindings: env,
+    exec_ctx,
+    env,
     cached_body: None,
     cached_query: None,
     cached_cookies: None,

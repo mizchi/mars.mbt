@@ -10,9 +10,33 @@ import {
 }
 
 // Values
+pub fn char_to_lower(Char) -> Char
+
 pub fn compose(Array[Handler]) -> Handler
 
+pub fn find_char(String, Char) -> Int
+
 pub fn handler(async (Context) -> Unit) -> Handler
+
+pub fn hex_to_int(Char) -> Int
+
+pub fn is_debug() -> Bool
+
+pub fn is_whitespace(Char) -> Bool
+
+pub fn set_debug(Bool) -> Unit
+
+pub fn split_by_char(String, Char) -> Array[String]
+
+pub fn substring(String, Int, Int) -> String
+
+pub fn substring_from(String, Int) -> String
+
+pub fn to_lower(String) -> String
+
+pub fn trim(String) -> String
+
+pub fn url_decode(String) -> String
 
 // Errors
 
@@ -26,7 +50,7 @@ pub(all) struct Context {
   request : @http.Request
   params : @router.Params
   vars : Variables
-  execution_ctx : ExecutionContext
+  exec_ctx : &ExecCtx
   // private fields
 }
 pub async fn Context::body(Self) -> String
@@ -58,7 +82,7 @@ pub fn Context::set_status(Self, Int) -> Unit
 pub async fn Context::sse_start(Self) -> Unit
 pub async fn Context::text(Self, String, status? : Int) -> Unit
 pub fn Context::wait_until(Self, async () -> Unit, name? : String) -> Unit
-pub fn Context::with_env(@http.Request, @router.Params, @http.ServerConnection, &@io.Reader, MapEnv) -> Self
+pub fn[E : Env, C : ExecCtx] Context::with_env(@http.Request, @router.Params, @http.ServerConnection, &@io.Reader, E, C) -> Self
 pub async fn Context::write_raw(Self, String) -> Unit
 
 pub(all) struct EmptyEnv {
@@ -76,6 +100,7 @@ pub fn ExecutionContext::new() -> Self
 pub fn ExecutionContext::pending_count(Self) -> Int
 pub async fn ExecutionContext::run_tasks(Self) -> Unit
 pub fn ExecutionContext::wait_until(Self, async () -> Unit, name? : String) -> Unit
+pub impl ExecCtx for ExecutionContext
 
 pub(all) struct Handler(async (Context) -> Unit)
 #deprecated
@@ -90,44 +115,41 @@ pub fn MapEnv::with_binding(Self, String, Json) -> Self
 pub fn MapEnv::with_var(Self, String, String) -> Self
 pub impl Env for MapEnv
 
-pub(all) struct Mars {
-  router : @trie.TrieRouter
-  handlers : Array[Handler]
-  middlewares : Array[Handler]
-}
-pub fn Mars::all(Self, String, Handler) -> Self
-pub fn Mars::delete(Self, String, Handler) -> Self
-pub fn Mars::get(Self, String, Handler) -> Self
-pub fn Mars::new() -> Self
-pub fn Mars::patch(Self, String, Handler) -> Self
-pub fn Mars::post(Self, String, Handler) -> Self
-pub fn Mars::put(Self, String, Handler) -> Self
-pub fn Mars::query(Self, String, Handler) -> Self
-pub async fn Mars::serve(Self, @socket.Addr) -> Unit
-pub async fn Mars::serve_with_env(Self, @socket.Addr, MapEnv) -> Unit
-pub fn Mars::use_(Self, Handler) -> Self
-
 pub(all) struct PlatformContext {
   conn : @http.ServerConnection
   body_reader : &@io.Reader
 }
 pub fn PlatformContext::new(@http.ServerConnection, &@io.Reader) -> Self
 
+pub(all) struct Server {
+  router : @trie.TrieRouter
+  handlers : Array[Handler]
+  middlewares : Array[Handler]
+  routes : Array[(@router.Method, String, Int)]
+}
+pub fn Server::all(Self, String, Handler) -> Unit
+pub fn Server::delete(Self, String, Handler) -> Unit
+pub fn Server::get(Self, String, Handler) -> Unit
+pub fn Server::middleware(Self, Handler) -> Unit
+pub fn Server::mount(Self, String, Self) -> Unit
+pub fn Server::new() -> Self
+pub fn Server::new_debug() -> Self
+pub fn Server::patch(Self, String, Handler) -> Unit
+pub fn Server::post(Self, String, Handler) -> Unit
+pub fn Server::put(Self, String, Handler) -> Unit
+pub fn Server::query(Self, String, Handler) -> Unit
+pub async fn Server::serve(Self, @socket.Addr) -> Unit
+pub async fn[E : Env, C : ExecCtx] Server::serve_with_env(Self, @socket.Addr, E, C) -> Unit
+
 pub(all) struct Variables {
   data : Map[String, Json]
 }
-pub fn Variables::get_bool(Self, String) -> Bool?
-pub fn Variables::get_json(Self, String) -> Json?
-pub fn Variables::get_number(Self, String) -> Double?
-pub fn Variables::get_string(Self, String) -> String?
+pub fn Variables::get(Self, String) -> Json?
 pub fn Variables::has(Self, String) -> Bool
 pub fn Variables::keys(Self) -> Array[String]
 pub fn Variables::new() -> Self
 pub fn Variables::remove(Self, String) -> Unit
-pub fn Variables::set_bool(Self, String, Bool) -> Unit
-pub fn Variables::set_json(Self, String, Json) -> Unit
-pub fn Variables::set_number(Self, String, Double) -> Unit
-pub fn Variables::set_string(Self, String, String) -> Unit
+pub fn[V : Var] Variables::set(Self, String, V) -> Unit
 
 // Type aliases
 
@@ -136,4 +158,17 @@ pub(open) trait Env {
   get_var(Self, String) -> String?
   get_binding(Self, String) -> Json?
 }
+
+pub(open) trait ExecCtx {
+  wait_until(Self, async () -> Unit, name~ : String) -> Unit
+}
+
+pub(open) trait Var {
+  to_json(Self) -> Json
+  from_json(Json) -> Self?
+}
+pub impl Var for Bool
+pub impl Var for Double
+pub impl Var for String
+pub impl Var for Json
 

@@ -1,75 +1,100 @@
 ///|
-/// Mars HTTP Framework
-/// A Hono-inspired HTTP framework for MoonBit
-pub(all) struct Mars {
-  router : @trie.TrieRouter
-  handlers : Array[Handler]
-  middlewares : Array[Handler]
+/// Global debug mode flag
+/// When enabled, logs warnings for unknown HTTP methods, etc.
+let debug_enabled : Ref[Bool] = { val: false }
+
+///|
+/// Enable or disable debug mode globally
+pub fn set_debug(enabled : Bool) -> Unit {
+  debug_enabled.val = enabled
 }
 
 ///|
-/// Create a new Mars application
-pub fn Mars::new() -> Mars {
-  { router: @trie.TrieRouter::new(), handlers: [], middlewares: [] }
+/// Check if debug mode is enabled
+pub fn is_debug() -> Bool {
+  debug_enabled.val
+}
+
+///|
+/// Server HTTP Framework
+/// A Hono-inspired HTTP framework for MoonBit
+pub(all) struct Server {
+  router : @trie.TrieRouter
+  handlers : Array[Handler]
+  middlewares : Array[Handler]
+  /// Registered routes for mount support
+  routes : Array[(@router.Method, String, Int)]
+}
+
+///|
+/// Create a new Server application
+pub fn Server::new() -> Server {
+  { router: @trie.TrieRouter::new(), handlers: [], middlewares: [], routes: [] }
+}
+
+///|
+/// Create a new Server application with debug mode enabled
+pub fn Server::new_debug() -> Server {
+  set_debug(true)
+  Server::new()
 }
 
 ///|
 /// Add a middleware to the application
-pub fn Mars::use_(self : Mars, handler : Handler) -> Mars {
+pub fn Server::middleware(self : Server, handler : Handler) -> Unit {
   self.middlewares.push(handler)
-  self
 }
 
 ///|
 /// Register a GET route
-pub fn Mars::get(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::get(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::Get, path, handler)
 }
 
 ///|
 /// Register a POST route
-pub fn Mars::post(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::post(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::Post, path, handler)
 }
 
 ///|
 /// Register a PUT route
-pub fn Mars::put(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::put(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::Put, path, handler)
 }
 
 ///|
 /// Register a DELETE route
-pub fn Mars::delete(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::delete(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::Delete, path, handler)
 }
 
 ///|
 /// Register a PATCH route
-pub fn Mars::patch(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::patch(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::Patch, path, handler)
 }
 
 ///|
 /// Register a QUERY route (RFC 9110)
-pub fn Mars::query(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::query(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::Query, path, handler)
 }
 
 ///|
 /// Register a route for all HTTP methods
-pub fn Mars::all(self : Mars, path : String, handler : Handler) -> Mars {
+pub fn Server::all(self : Server, path : String, handler : Handler) -> Unit {
   self.add_route(@router.Method::All, path, handler)
 }
 
 ///|
 /// Internal: Add a route with method
-fn Mars::add_route(
-  self : Mars,
+fn Server::add_route(
+  self : Server,
   meth : @router.Method,
   path : String,
   handler : Handler,
-) -> Mars {
+) -> Unit {
   let @router.HandlerId(id) = self.router.add(meth, path)
   // Ensure handlers array is large enough
   while self.handlers.length() <= id {
@@ -77,7 +102,71 @@ fn Mars::add_route(
     self.handlers.push(async fn(_ctx) { () })
   }
   self.handlers[id] = handler
-  self
+  // Record route for mount support
+  self.routes.push((meth, path, id))
+}
+
+///|
+/// Mount a sub-application at the given prefix
+pub fn Server::mount(self : Server, prefix : String, sub : Server) -> Unit {
+  // Wrap sub handlers with sub's middlewares
+  for route in sub.routes {
+    let (meth, path, handler_idx) = route
+    let full_path = join_mount_paths(prefix, path)
+    let handler = sub.handlers[handler_idx]
+    // Wrap with sub's middlewares
+    let wrapped = wrap_with_middlewares(handler, sub.middlewares)
+    self.add_route(meth, full_path, wrapped)
+  }
+}
+
+///|
+/// Join mount prefix and path
+fn join_mount_paths(prefix : String, path : String) -> String {
+  // Remove trailing slash from prefix
+  let prefix_clean = if prefix.length() > 1 && prefix.has_suffix("/") {
+    let chars : Array[Char] = []
+    for c in prefix {
+      chars.push(c)
+    }
+    let buf = StringBuilder::new()
+    for i = 0; i < chars.length() - 1; i = i + 1 {
+      buf.write_char(chars[i])
+    }
+    buf.to_string()
+  } else {
+    prefix
+  }
+  // Ensure path starts with /
+  if path.length() == 0 || not(path.has_prefix("/")) {
+    "\{prefix_clean}/\{path}"
+  } else {
+    "\{prefix_clean}\{path}"
+  }
+}
+
+///|
+/// Wrap handler with middlewares (compose)
+fn wrap_with_middlewares(
+  handler : Handler,
+  middlewares : Array[Handler],
+) -> Handler {
+  if middlewares.is_empty() {
+    return handler
+  }
+  // Compose middlewares with handler
+  let Handler(h) = handler
+  let mut current : async (Context) -> Unit raise Error = h
+  // Apply middlewares in reverse order
+  for i = middlewares.length() - 1; i >= 0; i = i - 1 {
+    let Handler(mw) = middlewares[i]
+    let next = current
+    current = async fn(ctx) {
+      mw(ctx)
+      next(ctx)
+    }
+  }
+  Handler(current)
 }
 
 ///|

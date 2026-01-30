@@ -1,81 +1,38 @@
 ///|
 /// Common utilities for middleware
+/// Re-export string utilities from main package for convenience
 
 ///|
 /// Safe substring extraction (start to end)
+/// @deprecated Use @mars.substring instead
 pub fn safe_substring(s : String, start : Int, end : Int) -> String {
-  let buf = StringBuilder::new()
-  let mut i = 0
-  for c in s {
-    if i >= start && i < end {
-      buf.write_char(c)
-    }
-    i = i + 1
-  }
-  buf.to_string()
+  @mars.substring(s, start, end)
 }
 
 ///|
 /// Safe substring from start to end of string
+/// @deprecated Use @mars.substring_from instead
 pub fn safe_substring_from(s : String, start : Int) -> String {
-  let buf = StringBuilder::new()
-  let mut i = 0
-  for c in s {
-    if i >= start {
-      buf.write_char(c)
-    }
-    i = i + 1
-  }
-  buf.to_string()
+  @mars.substring_from(s, start)
 }
 
 ///|
 /// Safe trim whitespace
+/// @deprecated Use @mars.trim instead
 pub fn safe_trim(s : String) -> String {
-  let chars : Array[Char] = []
-  for c in s {
-    chars.push(c)
-  }
-  // Find start
-  let mut start = 0
-  while start < chars.length() && is_whitespace(chars[start]) {
-    start = start + 1
-  }
-  // Find end
-  let mut end = chars.length()
-  while end > start && is_whitespace(chars[end - 1]) {
-    end = end - 1
-  }
-  // Build result
-  let buf = StringBuilder::new()
-  for i = start; i < end; i = i + 1 {
-    buf.write_char(chars[i])
-  }
-  buf.to_string()
-}
-
-///|
-/// Check if character is whitespace
-fn is_whitespace(c : Char) -> Bool {
-  c == ' ' || c == '\t' || c == '\n' || c == '\r'
+  @mars.trim(s)
 }
 
 ///|
 /// Convert character to lowercase
+/// @deprecated Use @mars.char_to_lower instead
 pub fn char_to_lower(c : Char) -> Char {
-  if c >= 'A' && c <= 'Z' {
-    (c.to_int() + 32).unsafe_to_char()
-  } else {
-    c
-  }
+  @mars.char_to_lower(c)
 }
 
 ///|
 /// Convert string to lowercase
+/// @deprecated Use @mars.to_lower instead
 pub fn string_to_lower(s : String) -> String {
-  let buf = StringBuilder::new()
-  for c in s {
-    buf.write_char(char_to_lower(c))
-  }
-  buf.to_string()
+  @mars.to_lower(s)
 }

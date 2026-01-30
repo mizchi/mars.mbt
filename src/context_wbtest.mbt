@@ -158,19 +158,19 @@ test "hex_to_int invalid" {
 }
 
 ///|
-test "extract_substring basic" {
-  inspect(extract_substring("hello world", 0, 5), content="hello")
-  inspect(extract_substring("hello world", 6, 11), content="world")
+test "substring basic" {
+  inspect(substring("hello world", 0, 5), content="hello")
+  inspect(substring("hello world", 6, 11), content="world")
 }
 
 ///|
-test "extract_substring empty" {
-  inspect(extract_substring("hello", 2, 2), content="")
+test "substring empty" {
+  inspect(substring("hello", 2, 2), content="")
 }
 
 ///|
-test "split_string basic" {
-  let parts = split_string("a,b,c", ',')
+test "split_by_char basic" {
+  let parts = split_by_char("a,b,c", ',')
   inspect(parts.length(), content="3")
   inspect(parts[0], content="a")
   inspect(parts[1], content="b")
@@ -178,55 +178,55 @@ test "split_string basic" {
 }
 
 ///|
-test "split_string no separator" {
-  let parts = split_string("hello", ',')
+test "split_by_char no separator" {
+  let parts = split_by_char("hello", ',')
   inspect(parts.length(), content="1")
   inspect(parts[0], content="hello")
 }
 
 ///|
-test "split_string empty parts" {
-  let parts = split_string("a,,c", ',')
+test "split_by_char empty parts" {
+  let parts = split_by_char("a,,c", ',')
   inspect(parts.length(), content="3")
   inspect(parts[1], content="")
 }
 
 ///|
-test "find_char_in_string found" {
-  inspect(find_char_in_string("hello=world", '='), content="5")
+test "find_char found" {
+  inspect(find_char("hello=world", '='), content="5")
 }
 
 ///|
-test "find_char_in_string not found" {
-  inspect(find_char_in_string("hello", '='), content="-1")
+test "find_char not found" {
+  inspect(find_char("hello", '='), content="-1")
 }
 
 ///|
-test "find_char_in_string first occurrence" {
-  inspect(find_char_in_string("a=b=c", '='), content="1")
+test "find_char first occurrence" {
+  inspect(find_char("a=b=c", '='), content="1")
 }
 
 ///|
-test "trim_string basic" {
-  inspect(trim_string("  hello  "), content="hello")
+test "trim basic" {
+  inspect(trim("  hello  "), content="hello")
 }
 
 ///|
-test "trim_string tabs" {
-  inspect(trim_string("\t\thello\t\t"), content="hello")
+test "trim tabs" {
+  inspect(trim("\t\thello\t\t"), content="hello")
 }
 
 ///|
-test "trim_string no whitespace" {
-  inspect(trim_string("hello"), content="hello")
+test "trim no whitespace" {
+  inspect(trim("hello"), content="hello")
 }
 
 ///|
-test "trim_string all whitespace" {
-  inspect(trim_string("   "), content="")
+test "trim all whitespace" {
+  inspect(trim("   "), content="")
 }
 
 ///|
-test "trim_string mixed" {
-  inspect(trim_string(" \t hello world \t "), content="hello world")
+test "trim mixed" {
+  inspect(trim(" \t hello world \t "), content="hello world")
 }

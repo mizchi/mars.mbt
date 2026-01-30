@@ -181,7 +181,7 @@ pub struct FetchHandler(async (@mars.Context) -> Unit raise Error)
 ///|
 /// Create a Cloudflare Workers compatible handler
 pub fn cloudflare_handler(
-  app : @mars.Mars,
+  app : @mars.Server,
   env : CloudflareEnv,
 ) -> FetchHandler {
   FetchHandler(async fn(ctx : @mars.Context) raise Error {
