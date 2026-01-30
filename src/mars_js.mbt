@@ -42,6 +42,38 @@ pub fn Mars::to_fetch_handler(
 }
 
 ///|
+/// FFI to trigger coroutine scheduler
+/// moonbitlang/async's Promise::from_async doesn't reschedule after spawn,
+/// so we need to manually trigger it for JS target
+extern "js" fn ffi_reschedule() -> Unit =
+  #| () => {
+  #|   const processQueue = () => {
+  #|     const scheduler = moonbitlang$async$internal$coroutine$$scheduler;
+  #|     if (!scheduler || !scheduler.run_later) return;
+  #|     const queue = scheduler.run_later;
+  #|     // Deque internal structure: { buf, len, head }
+  #|     while (queue.len > 0) {
+  #|       const idx = queue.head;
+  #|       const coro = queue.buf[idx];
+  #|       queue.buf[idx] = undefined;
+  #|       queue.head = (idx + 1) % queue.buf.length;
+  #|       queue.len--;
+  #|       if (coro && coro.ready && coro.state && coro.state.$tag === 3) {
+  #|         // Suspend state: _0 is the continuation function
+  #|         scheduler.curr_coro = coro;
+  #|         try { coro.state._0(); } catch(e) { console.error('Coroutine error:', e); }
+  #|         scheduler.curr_coro = undefined;
+  #|       }
+  #|     }
+  #|     // Reschedule if more work was added
+  #|     if (queue.len > 0) {
+  #|       setTimeout(processQueue, 0);
+  #|     }
+  #|   };
+  #|   setTimeout(processQueue, 0);
+  #| }
+
+///|
 /// Convert Mars app to a fetch handler function with environment
 pub fn Mars::to_fetch_handler_with_env(
   self : Mars,
@@ -49,7 +81,7 @@ pub fn Mars::to_fetch_handler_with_env(
 ) -> (JsRequest) -> @js_async.Promise[JsResponse] {
   fn(js_request : JsRequest) -> @js_async.Promise[JsResponse] {
     // Create async handler using Promise::from_async
-    @js_async.Promise::from_async(async fn() -> JsResponse {
+    let promise = @js_async.Promise::from_async(async fn() -> JsResponse {
       // Convert JsRequest to @http.Request
       let request = js_request_to_http_request(js_request)
       let meth_str = js_request_method(js_request)
@@ -109,5 +141,8 @@ pub fn Mars::to_fetch_handler_with_env(
           js_response_new("Not Found", 404, build_not_found_headers())
       }
     })
+    // Trigger coroutine scheduler for JS target
+    ffi_reschedule()
+    promise
   }
 }
