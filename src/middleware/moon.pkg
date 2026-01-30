@@ -5,3 +5,7 @@ import {
   "moonbitlang/core/random",
   "moonbitlang/async/http",
 }
+
+options(
+  "warn-list": "-0067-0024",
+)

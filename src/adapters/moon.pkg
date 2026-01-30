@@ -1,3 +1,7 @@
 import {
   "mizchi/mars",
 }
+
+options(
+  "warn-list": "-0024",
+)

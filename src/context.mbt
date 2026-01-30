@@ -5,10 +5,8 @@ pub(all) struct Context {
   request : @http.Request
   /// URL parameters extracted from route matching
   params : @router.Params
-  /// The server connection for sending responses
-  priv conn : @http.ServerConnection
-  /// Request body reader
-  priv body_reader : &@async_io.Reader
+  /// Platform-specific context data
+  priv platform : PlatformContext
   /// Custom data storage (string only, legacy)
   priv data : Map[String, String]
   /// Typed variables storage
@@ -29,59 +27,6 @@ pub(all) struct Context {
   priv mut status : Int
   /// Whether response has been sent
   priv mut response_sent : Bool
-}
-
-///|
-/// Create a new Context
-pub fn Context::new(
-  request : @http.Request,
-  params : @router.Params,
-  conn : @http.ServerConnection,
-  body_reader : &@async_io.Reader,
-) -> Context {
-  {
-    request,
-    params,
-    conn,
-    body_reader,
-    data: Map::new(),
-    vars: Variables::new(),
-    execution_ctx: ExecutionContext::new(),
-    env_bindings: MapEnv::new(),
-    cached_body: None,
-    cached_query: None,
-    cached_cookies: None,
-    response_headers: {},
-    status: 200,
-    response_sent: false,
-  }
-}
-
-///|
-/// Create a new Context with environment bindings
-pub fn Context::with_env(
-  request : @http.Request,
-  params : @router.Params,
-  conn : @http.ServerConnection,
-  body_reader : &@async_io.Reader,
-  env : MapEnv,
-) -> Context {
-  {
-    request,
-    params,
-    conn,
-    body_reader,
-    data: Map::new(),
-    vars: Variables::new(),
-    execution_ctx: ExecutionContext::new(),
-    env_bindings: env,
-    cached_body: None,
-    cached_query: None,
-    cached_cookies: None,
-    response_headers: {},
-    status: 200,
-    response_sent: false,
-  }
 }
 
 ///|
@@ -156,19 +101,6 @@ pub fn Context::set_header(
   value : String,
 ) -> Unit {
   self.response_headers.set(name, value)
-}
-
-///|
-/// Read request body as string
-pub async fn Context::body(self : Context) -> String {
-  match self.cached_body {
-    Some(body) => body
-    None => {
-      let body = read_body_as_string(self.body_reader)
-      self.cached_body = Some(body)
-      body
-    }
-  }
 }
 
 ///|
@@ -260,23 +192,6 @@ pub fn Context::set_cookie(
 pub fn Context::delete_cookie(self : Context, name : String) -> Unit {
   let cookie = "\{name}=; Path=/; Max-Age=0; HttpOnly"
   self.response_headers.set("Set-Cookie", cookie)
-}
-
-///|
-/// Read body from reader as string
-async fn read_body_as_string(reader : &@async_io.Reader) -> String {
-  let buf = StringBuilder::new()
-  let chunk = FixedArray::make(4096, b'\x00')
-  for {
-    let n = reader.read(chunk) catch { _ => break }
-    if n == 0 {
-      break
-    }
-    for i = 0; i < n; i = i + 1 {
-      buf.write_char(chunk[i].to_int().unsafe_to_char())
-    }
-  }
-  buf.to_string()
 }
 
 ///|
@@ -461,74 +376,6 @@ fn hex_to_int(c : Char) -> Int {
 }
 
 ///|
-/// Send a text response
-pub async fn Context::text(
-  self : Context,
-  body : String,
-  status? : Int,
-) -> Unit {
-  let status = status.unwrap_or(self.status)
-  let headers = merge_headers(self.response_headers, {
-    "Content-Type": "text/plain; charset=utf-8",
-  })
-  self.conn.send_response(
-    status,
-    reason_for_status(status),
-    extra_headers=headers,
-  )
-  self.conn.write(@encoding.encode(@encoding.UTF8, body))
-  self.conn.end_response()
-  self.response_sent = true
-}
-
-///|
-/// Send a JSON response
-pub async fn Context::json(self : Context, data : Json, status? : Int) -> Unit {
-  let status = status.unwrap_or(self.status)
-  let headers = merge_headers(self.response_headers, {
-    "Content-Type": "application/json",
-  })
-  self.conn.send_response(
-    status,
-    reason_for_status(status),
-    extra_headers=headers,
-  )
-  self.conn.write(@encoding.encode(@encoding.UTF8, data.stringify()))
-  self.conn.end_response()
-  self.response_sent = true
-}
-
-///|
-/// Send an HTML response
-pub async fn Context::html(
-  self : Context,
-  body : String,
-  status? : Int,
-) -> Unit {
-  let status = status.unwrap_or(self.status)
-  let headers = merge_headers(self.response_headers, {
-    "Content-Type": "text/html; charset=utf-8",
-  })
-  self.conn.send_response(
-    status,
-    reason_for_status(status),
-    extra_headers=headers,
-  )
-  self.conn.write(@encoding.encode(@encoding.UTF8, body))
-  self.conn.end_response()
-  self.response_sent = true
-}
-
-///|
-/// Send a redirect response
-pub async fn Context::redirect(self : Context, url : String) -> Unit {
-  let headers = merge_headers(self.response_headers, { "Location": url })
-  self.conn.send_response(302, "Found", extra_headers=headers)
-  self.conn.end_response()
-  self.response_sent = true
-}
-
-///|
 /// Merge response headers
 fn merge_headers(
   base : Map[String, String],
@@ -545,60 +392,7 @@ fn merge_headers(
 }
 
 ///|
-/// Send a 404 Not Found response
-pub async fn Context::not_found(self : Context) -> Unit {
-  self.text("Not Found", status=404)
-}
-
-///|
-/// Start an SSE response (sets headers, does not close connection)
-pub async fn Context::sse_start(self : Context) -> Unit {
-  let headers = merge_headers(self.response_headers, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache",
-    "Connection": "keep-alive",
-  })
-  self.conn.send_response(200, "OK", extra_headers=headers)
-  self.response_sent = true
-}
-
-///|
-/// Write raw data to the response (for SSE streaming)
-pub async fn Context::write_raw(self : Context, data : String) -> Unit {
-  self.conn.write(@encoding.encode(@encoding.UTF8, data))
-  self.conn.flush()
-}
-
-///|
-/// End the response (for SSE streaming)
-pub async fn Context::end_response(self : Context) -> Unit {
-  self.conn.end_response()
-}
-
-///|
 /// Check if response has been sent
 pub fn Context::is_response_sent(self : Context) -> Bool {
   self.response_sent
-}
-
-///|
-/// Get HTTP status reason phrase
-fn reason_for_status(status : Int) -> String {
-  match status {
-    200 => "OK"
-    201 => "Created"
-    204 => "No Content"
-    301 => "Moved Permanently"
-    302 => "Found"
-    304 => "Not Modified"
-    400 => "Bad Request"
-    401 => "Unauthorized"
-    403 => "Forbidden"
-    404 => "Not Found"
-    405 => "Method Not Allowed"
-    500 => "Internal Server Error"
-    502 => "Bad Gateway"
-    503 => "Service Unavailable"
-    _ => "Unknown"
-  }
 }

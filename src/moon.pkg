@@ -4,6 +4,18 @@ import {
   "moonbitlang/async/http",
   "moonbitlang/async/io" as @async_io,
   "moonbitlang/async/socket",
+  "moonbitlang/async/js_async",
   "moonbitlang/x/encoding",
   "moonbitlang/core/json",
 }
+
+options(
+  targets: {
+    "context_js.mbt": [ "js" ],
+    "context_native.mbt": [ "native" ],
+    "context_native_wbtest.mbt": [ "native" ],
+    "mars_js.mbt": [ "js" ],
+    "mars_native.mbt": [ "native" ],
+    "mars_native_wbtest.mbt": [ "native" ],
+  },
+)

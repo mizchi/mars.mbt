@@ -31,6 +31,7 @@ pub(all) struct Context {
 }
 pub async fn Context::body(Self) -> String
 pub async fn Context::body_json(Self) -> Json?
+pub fn Context::conn(Self) -> @http.ServerConnection
 pub fn Context::cookie(Self, String) -> String?
 pub fn Context::cookies(Self) -> Map[String, String]
 pub fn Context::delete_cookie(Self, String) -> Unit
@@ -105,6 +106,12 @@ pub fn Mars::query(Self, String, Handler) -> Self
 pub async fn Mars::serve(Self, @socket.Addr) -> Unit
 pub async fn Mars::serve_with_env(Self, @socket.Addr, MapEnv) -> Unit
 pub fn Mars::use_(Self, Handler) -> Self
+
+pub(all) struct PlatformContext {
+  conn : @http.ServerConnection
+  body_reader : &@io.Reader
+}
+pub fn PlatformContext::new(@http.ServerConnection, &@io.Reader) -> Self
 
 pub(all) struct Variables {
   data : Map[String, Json]
