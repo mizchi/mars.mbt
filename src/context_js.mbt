@@ -68,7 +68,7 @@ pub impl Env for JsEnv with get_var(self, name) {
 ///|
 pub impl Env for JsEnv with get_binding(self, name) {
   match js_env_get_binding_json(self, name) {
-    Some(json_str) => @json.parse(json_str) |> Result::ok
+    Some(json_str) => Some(@json.parse(json_str)) catch { _ => None }
     None => None
   }
 }
