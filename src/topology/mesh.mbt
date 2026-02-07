@@ -82,10 +82,5 @@ pub fn run_mesh(config : SimConfig, seed : Int) -> SimResult {
       convergence_tick = tick
     }
   }
-  {
-    topology_name: "mesh",
-    convergence_tick,
-    total_messages,
-    per_tick,
-  }
+  { topology_name: "mesh", convergence_tick, total_messages, per_tick }
 }

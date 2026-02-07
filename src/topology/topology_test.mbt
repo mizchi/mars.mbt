@@ -108,7 +108,10 @@ test "mesh: message count > star" {
   let mesh_result = @topology.run_mesh(config, 42)
   let star_result = @topology.run_star(config, 42)
   // Mesh is O(n²) so should have more messages than Star
-  inspect(mesh_result.total_messages > star_result.total_messages, content="true")
+  inspect(
+    mesh_result.total_messages > star_result.total_messages,
+    content="true",
+  )
 }
 
 ///|

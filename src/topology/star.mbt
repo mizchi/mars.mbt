@@ -66,10 +66,5 @@ pub fn run_star(config : SimConfig, seed : Int) -> SimResult {
       convergence_tick = tick
     }
   }
-  {
-    topology_name: "star",
-    convergence_tick,
-    total_messages,
-    per_tick,
-  }
+  { topology_name: "star", convergence_tick, total_messages, per_tick }
 }

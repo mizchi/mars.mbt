@@ -9,7 +9,7 @@ fn send_filtered_snapshot(
   pipe : NetPipe,
   current_tick : Int,
   src : EphemeralStore,
-  subscribed_ns : Array[String]
+  subscribed_ns : Array[String],
 ) -> Unit {
   let entries : Array[(String, String, EphemeralEntry)] = []
   for ns in subscribed_ns {
@@ -22,10 +22,7 @@ fn send_filtered_snapshot(
 }
 
 ///|
-pub fn run_filtered_star(
-  config : FilteredStarConfig,
-  seed : Int
-) -> SimResult {
+pub fn run_filtered_star(config : FilteredStarConfig, seed : Int) -> SimResult {
   let rng = Rng::new(seed)
   let all_ns = config.base.namespaces
   let n = config.base.num_peers
@@ -92,7 +89,9 @@ pub fn run_filtered_star(
     }
     total_messages += tick_messages
     let inconsistent = count_filtered_inconsistent_pairs(
-      nodes, config.subscriptions, all_ns,
+      nodes,
+      config.subscriptions,
+      all_ns,
     )
     let entries = count_total_entries(nodes, all_ns)
     per_tick.push({
@@ -105,10 +104,5 @@ pub fn run_filtered_star(
       convergence_tick = tick
     }
   }
-  {
-    topology_name: "filtered_star",
-    convergence_tick,
-    total_messages,
-    per_tick,
-  }
+  { topology_name: "filtered_star", convergence_tick, total_messages, per_tick }
 }

@@ -1,0 +1,119 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/mars/topology"
+
+// Values
+pub fn collect_entries(EphemeralStore, Array[String]) -> Array[(String, String, EphemeralEntry)]
+
+pub fn count_filtered_inconsistent_pairs(Array[SimNode], Map[Int, Array[String]], Array[String]) -> Int
+
+pub fn count_inconsistent_pairs(Array[SimNode], Array[String]) -> Int
+
+pub fn count_total_entries(Array[SimNode], Array[String]) -> Int
+
+pub fn pick_random_targets(Rng, Int, Int, Int) -> Array[Int]
+
+pub fn run_filtered_star(FilteredStarConfig, Int) -> SimResult
+
+pub fn run_gossip(GossipConfig, Int) -> SimResult
+
+pub fn run_mesh(SimConfig, Int) -> SimResult
+
+pub fn run_partition(PartitionConfig, Int) -> SimResult
+
+pub fn run_star(SimConfig, Int) -> SimResult
+
+// Errors
+
+// Types and methods
+pub(all) struct EphemeralEntry {
+  value : Int
+  timestamp : Double
+  peer : String
+}
+pub impl Eq for EphemeralEntry
+pub impl Show for EphemeralEntry
+
+pub(all) struct EphemeralStore {
+  data : Map[String, Map[String, EphemeralEntry]]
+}
+pub fn EphemeralStore::get(Self, String, String) -> EphemeralEntry?
+pub fn EphemeralStore::get_all(Self, String) -> Map[String, EphemeralEntry]
+pub fn EphemeralStore::merge(Self, String, String, EphemeralEntry) -> Bool
+pub fn EphemeralStore::new() -> Self
+pub fn EphemeralStore::set(Self, String, String, Int, Double, String) -> Unit
+
+pub(all) struct FilteredStarConfig {
+  base : SimConfig
+  subscriptions : Map[Int, Array[String]]
+}
+
+pub(all) struct GossipConfig {
+  base : SimConfig
+  fanout : Int
+  max_hops : Int
+}
+
+type InFlightPacket
+
+pub(all) struct NetPipe {
+  delay_ticks : Int
+  queue : Array[InFlightPacket]
+}
+pub fn NetPipe::new(Int) -> Self
+pub fn NetPipe::receive(Self, Int, EphemeralStore) -> Int
+pub fn NetPipe::send_entries(Self, Int, Array[(String, String, EphemeralEntry)]) -> Unit
+pub fn NetPipe::send_snapshot(Self, Int, EphemeralStore, Array[String]) -> Unit
+
+pub(all) struct PartitionConfig {
+  base : SimConfig
+  partition_at_tick : Int
+  reconnect_at_tick : Int
+  partitioned_peers : Array[Int]
+}
+
+pub(all) struct PingConfig {
+  ping_ms : Int
+  count : Int
+}
+
+pub(all) struct Rng {
+  mut state : Int
+}
+pub fn Rng::new(Int) -> Self
+pub fn Rng::next(Self) -> Int
+pub fn Rng::next_bound(Self, Int) -> Int
+
+pub(all) struct SimConfig {
+  num_peers : Int
+  ticks : Int
+  ping_config : Array[PingConfig]
+  write_interval : Int
+  namespaces : Array[String]
+}
+
+pub(all) struct SimNode {
+  id : String
+  store : EphemeralStore
+}
+pub fn SimNode::new(String) -> Self
+
+pub(all) struct SimResult {
+  topology_name : String
+  convergence_tick : Int
+  total_messages : Int
+  per_tick : Array[TickMetrics]
+}
+pub impl Show for SimResult
+
+pub(all) struct TickMetrics {
+  tick : Int
+  total_messages_sent : Int
+  inconsistent_pairs : Int
+  total_entries : Int
+}
+pub impl Show for TickMetrics
+
+// Type aliases
+
+// Traits
+
