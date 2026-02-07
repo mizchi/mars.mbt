@@ -52,3 +52,25 @@ test "wasm component adapter default config and hint" {
     content="component=mars-component world=http-component export=handle",
   )
 }
+
+///|
+test "spin_wagi and wasm_component handlers are available" {
+  let app1 = @mars.Server::new()
+  let app2 = @mars.Server::new()
+  let _spin : @mars.AppHandler = spin_wagi_handler(app1)
+  let _wasm_cm : @mars.AppHandler = wasm_component_handler(app2)
+
+}
+
+///|
+test "spin_wagi and wasm_component handler_with_env are available" {
+  let env = @mars.EmptyEnv::new()
+  let exec_ctx = @mars.ExecutionContext::new()
+  let app1 = @mars.Server::new()
+  let app2 = @mars.Server::new()
+  let _spin : @mars.AppHandler = spin_wagi_handler_with_env(app1, env, exec_ctx)
+  let _wasm_cm : @mars.AppHandler = wasm_component_handler_with_env(
+    app2, env, exec_ctx,
+  )
+
+}

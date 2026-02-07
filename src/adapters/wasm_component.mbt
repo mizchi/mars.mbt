@@ -35,6 +35,20 @@ pub fn wasm_component_runtime() -> RuntimeTarget {
 }
 
 ///|
+pub fn wasm_component_handler(app : @mars.Server) -> @mars.AppHandler {
+  app.to_handler()
+}
+
+///|
+pub fn[E : @mars.Env, C : @mars.ExecCtx] wasm_component_handler_with_env(
+  app : @mars.Server,
+  env : E,
+  exec_ctx : C,
+) -> @mars.AppHandler {
+  app.to_handler_with_env(env, exec_ctx)
+}
+
+///|
 pub fn WasmComponentAdapter::binding_hint(
   self : WasmComponentAdapter,
 ) -> String {

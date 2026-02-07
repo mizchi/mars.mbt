@@ -3,6 +3,8 @@ package "mizchi/mars/adapters"
 
 import {
   "mizchi/mars",
+  "moonbitlang/async/http",
+  "moonbitlang/async/io",
 }
 
 // Values
@@ -12,9 +14,17 @@ pub fn cloudflare_runtime() -> RuntimeTarget
 
 pub fn spin_wagi_adapter(@mars.Server, config? : SpinWagiConfig) -> SpinWagiAdapter
 
+pub fn spin_wagi_handler(@mars.Server) -> async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
+
+pub fn[E : @mars.Env, C : @mars.ExecCtx] spin_wagi_handler_with_env(@mars.Server, E, C) -> async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
+
 pub fn spin_wagi_runtime() -> RuntimeTarget
 
 pub fn wasm_component_adapter(@mars.Server, config? : WasmComponentConfig) -> WasmComponentAdapter
+
+pub fn wasm_component_handler(@mars.Server) -> async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
+
+pub fn[E : @mars.Env, C : @mars.ExecCtx] wasm_component_handler_with_env(@mars.Server, E, C) -> async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
 
 pub fn wasm_component_runtime() -> RuntimeTarget
 
