@@ -140,6 +140,8 @@ pub fn Server::put(Self, String, Handler) -> Unit
 pub fn Server::query(Self, String, Handler) -> Unit
 pub async fn Server::serve(Self, @socket.Addr) -> Unit
 pub async fn[E : Env, C : ExecCtx] Server::serve_with_env(Self, @socket.Addr, E, C) -> Unit
+pub fn Server::to_handler(Self) -> async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
+pub fn[E : Env, C : ExecCtx] Server::to_handler_with_env(Self, E, C) -> async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
 
 pub(all) struct Variables {
   data : Map[String, Json]
@@ -152,6 +154,7 @@ pub fn Variables::remove(Self, String) -> Unit
 pub fn[V : Var] Variables::set(Self, String, V) -> Unit
 
 // Type aliases
+pub type AppHandler = async (@http.Request, &@io.Reader, @http.ServerConnection) -> Unit
 
 // Traits
 pub(open) trait Env {

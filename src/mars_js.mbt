@@ -37,12 +37,12 @@ fn build_error_headers() -> Map[String, String] {
 }
 
 ///|
-/// Convert Server app to a fetch handler function
-/// Returns a function that takes JsRequest and returns Promise[JsResponse]
-pub fn Server::to_fetch_handler(
-  self : Server,
-) -> (JsRequest) -> @js_async.Promise[JsResponse] {
-  self.to_fetch_handler_with_env(EmptyEnv::new(), ExecutionContext::new())
+pub type AppHandler = (JsRequest) -> @js_async.Promise[JsResponse]
+
+///|
+/// Convert Server app to a platform handler function
+pub fn Server::to_handler(self : Server) -> AppHandler {
+  self.to_handler_with_env(EmptyEnv::new(), ExecutionContext::new())
 }
 
 ///|
@@ -56,12 +56,12 @@ extern "js" fn ffi_reschedule() -> Unit =
   #| }
 
 ///|
-/// Convert Server app to a fetch handler function with environment and execution context
-pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
+/// Convert Server app to a platform handler function with environment and execution context
+pub fn[E : Env, C : ExecCtx] Server::to_handler_with_env(
   self : Server,
   env : E,
   exec_ctx : C,
-) -> (JsRequest) -> @js_async.Promise[JsResponse] {
+) -> AppHandler {
   fn(js_request : JsRequest) -> @js_async.Promise[JsResponse] {
     // Create async handler using Promise::from_async
     let promise = @js_async.Promise::from_async(async fn() -> JsResponse {
@@ -70,27 +70,30 @@ pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
       let meth_str = js_request_method(js_request)
       let meth = js_method_to_router_method(meth_str)
 
-      // Match route
-      let matched = self.match_first_handler(meth, request.path)
-      let (@router.HandlerId(id), params) = match matched {
-        Some(v) => v
-        None =>
-          return js_response_new("Not Found", 404, build_not_found_headers())
-      }
-
       // We need to capture the response in a ref
       let response_ref : Ref[JsResponse?] = { val: None }
       let resolve = fn(resp : JsResponse) { response_ref.val = Some(resp) }
-      let ctx = Context::with_env_js(
-        request, params, js_request, resolve, env, exec_ctx,
-      )
-      let dispatch = self.dispatch_to_context(ctx, id)
-      if dispatch.handler_error && not(dispatch.response_sent) {
-        return js_response_new(
-          "Internal Server Error",
-          500,
-          build_error_headers(),
+      let dispatch_result = self.match_and_dispatch(meth, request.path, fn(
+        params,
+      ) {
+        Context::with_env_js(
+          request, params, js_request, resolve, env, exec_ctx,
         )
+      })
+      let dispatch = match dispatch_result {
+        RequestDispatchResult::NotFound =>
+          return js_response_new("Not Found", 404, build_not_found_headers())
+        RequestDispatchResult::Dispatched(d) => d
+      }
+      match dispatch_fallback_status(dispatch) {
+        Some(500) =>
+          return js_response_new(
+            "Internal Server Error",
+            500,
+            build_error_headers(),
+          )
+        Some(404) => ()
+        _ => ()
       }
 
       // Return response resolved by Context, or fallback when not sent.
@@ -108,4 +111,24 @@ pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
     ffi_reschedule()
     promise
   }
+}
+
+///|
+/// Convert Server app to a fetch handler function
+/// Kept for backward compatibility
+pub fn Server::to_fetch_handler(
+  self : Server,
+) -> (JsRequest) -> @js_async.Promise[JsResponse] {
+  self.to_handler()
+}
+
+///|
+/// Convert Server app to a fetch handler function with environment and execution context
+/// Kept for backward compatibility
+pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
+  self : Server,
+  env : E,
+  exec_ctx : C,
+) -> (JsRequest) -> @js_async.Promise[JsResponse] {
+  self.to_handler_with_env(env, exec_ctx)
 }

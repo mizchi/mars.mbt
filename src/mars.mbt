@@ -33,6 +33,12 @@ priv struct DispatchResult {
 }
 
 ///|
+priv enum RequestDispatchResult {
+  NotFound
+  Dispatched(DispatchResult)
+}
+
+///|
 /// Create a new Server application
 pub fn Server::new() -> Server {
   { router: @trie.TrieRouter::new(), handlers: [], middlewares: [], routes: [] }
@@ -151,6 +157,33 @@ async fn Server::dispatch_to_context(
     }
   }
   { response_sent: ctx.is_response_sent(), handler_error }
+}
+
+///|
+async fn Server::match_and_dispatch(
+  self : Server,
+  meth : @router.Method,
+  path : String,
+  create_context : (@router.Params) -> Context,
+) -> RequestDispatchResult {
+  let (@router.HandlerId(id), params) = match
+    self.match_first_handler(meth, path) {
+    Some(v) => v
+    None => return RequestDispatchResult::NotFound
+  }
+  let ctx = create_context(params)
+  RequestDispatchResult::Dispatched(self.dispatch_to_context(ctx, id))
+}
+
+///|
+fn dispatch_fallback_status(dispatch : DispatchResult) -> Int? {
+  if dispatch.handler_error && not(dispatch.response_sent) {
+    Some(500)
+  } else if not(dispatch.response_sent) {
+    Some(404)
+  } else {
+    None
+  }
 }
 
 ///|

@@ -255,7 +255,7 @@ pub fn fetch(
   env : @mars.JsEnv,
   ctx : @mars.JsExecCtx,
 ) -> @js_async.Promise[@mars.JsResponse] {
-  let handler = app.to_fetch_handler_with_env(env, ctx)
+  let handler = app.to_handler_with_env(env, ctx)
   handler(request)
 }
 ```

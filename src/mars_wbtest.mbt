@@ -164,3 +164,37 @@ test "Server::match_first_handler returns first handler and params" {
     None => inspect("missing", content="found")
   }
 }
+
+///|
+test "dispatch_fallback_status chooses 500 on handler error without response" {
+  let status = dispatch_fallback_status({
+    response_sent: false,
+    handler_error: true,
+  })
+  inspect(status, content="Some(500)")
+}
+
+///|
+test "dispatch_fallback_status chooses 404 on unsent response" {
+  let status = dispatch_fallback_status({
+    response_sent: false,
+    handler_error: false,
+  })
+  inspect(status, content="Some(404)")
+}
+
+///|
+test "dispatch_fallback_status returns None when response already sent" {
+  let status = dispatch_fallback_status({
+    response_sent: true,
+    handler_error: true,
+  })
+  inspect(status, content="None")
+}
+
+///|
+test "Server::to_handler is available on all targets" {
+  let app = Server::new()
+  let _ = app.to_handler()
+
+}
