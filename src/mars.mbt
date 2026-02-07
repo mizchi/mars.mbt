@@ -27,6 +27,12 @@ pub(all) struct Server {
 }
 
 ///|
+priv struct DispatchResult {
+  response_sent : Bool
+  handler_error : Bool
+}
+
+///|
 /// Create a new Server application
 pub fn Server::new() -> Server {
   { router: @trie.TrieRouter::new(), handlers: [], middlewares: [], routes: [] }
@@ -104,6 +110,47 @@ fn Server::add_route(
   self.handlers[id] = handler
   // Record route for mount support
   self.routes.push((meth, path, id))
+}
+
+///|
+fn Server::match_first_handler(
+  self : Server,
+  meth : @router.Method,
+  path : String,
+) -> (@router.HandlerId, @router.Params)? {
+  let result = self.router.match_(meth, path)
+  result.handlers.get(0)
+}
+
+///|
+async fn Server::dispatch_to_context(
+  self : Server,
+  ctx : Context,
+  handler_id : Int,
+) -> DispatchResult {
+  for middleware in self.middlewares {
+    if ctx.is_response_sent() {
+      break
+    }
+    let Handler(mw) = middleware
+    mw(ctx) catch {
+      e => {
+        println("Middleware error: \{e}")
+        break
+      }
+    }
+  }
+  let mut handler_error = false
+  if not(ctx.is_response_sent()) && handler_id < self.handlers.length() {
+    let Handler(h) = self.handlers[handler_id]
+    h(ctx) catch {
+      e => {
+        println("Handler error: \{e}")
+        handler_error = true
+      }
+    }
+  }
+  { response_sent: ctx.is_response_sent(), handler_error }
 }
 
 ///|

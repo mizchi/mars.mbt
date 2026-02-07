@@ -142,3 +142,25 @@ test "Server::new_debug enables debug mode" {
   // Reset
   set_debug(false)
 }
+
+///|
+test "Server::match_first_handler returns None when no route matched" {
+  let app = Server::new()
+  app.get("/users/:id", async fn(_ctx) { () })
+  inspect(
+    app.match_first_handler(@router.Method::Get, "/health"),
+    content="None",
+  )
+}
+
+///|
+test "Server::match_first_handler returns first handler and params" {
+  let app = Server::new()
+  app.get("/users/:id", async fn(_ctx) { () })
+  let result = app.match_first_handler(@router.Method::Get, "/users/42")
+  match result {
+    Some((@router.HandlerId(_), params)) =>
+      inspect(params.get("id"), content="Some(\"42\")")
+    None => inspect("missing", content="found")
+  }
+}

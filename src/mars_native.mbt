@@ -31,53 +31,26 @@ pub async fn[E : Env, C : ExecCtx] Server::serve_with_env(
   let server = @http.Server::new(addr)
   server.run_forever(fn(request, body, conn) {
     let meth = request_method_to_method(request.meth)
-    let result = self.router.match_(meth, request.path)
-    if result.handlers.is_empty() {
-      // No matching route - 404
-      conn.send_response(404, "Not Found")
-      conn.end_response()
-    } else {
-      // Get first matching handler
-      let (@router.HandlerId(id), params) = result.handlers[0]
-      let ctx = Context::with_env(request, params, conn, body, env, exec_ctx)
-
-      // Run middlewares first
-      for middleware in self.middlewares {
-        if ctx.is_response_sent() {
-          break
-        }
-        let Handler(mw) = middleware
-        mw(ctx) catch {
-          e => {
-            println("Middleware error: \{e}")
-            break
-          }
-        }
-      }
-
-      // Then run the route handler
-      if not(ctx.is_response_sent()) && id < self.handlers.length() {
-        let Handler(h) = self.handlers[id]
-        h(ctx) catch {
-          e => {
-            println("Handler error: \{e}")
-            if not(ctx.is_response_sent()) {
-              conn.send_response(500, "Internal Server Error")
-              conn.end_response()
-            }
-          }
-        }
-      }
-
-      // If no response sent, send 404
-      if not(ctx.is_response_sent()) {
+    match self.match_first_handler(meth, request.path) {
+      None => {
         conn.send_response(404, "Not Found")
         conn.end_response()
       }
-
-      // Run background tasks after response is sent
-      // Note: exec_ctx is a trait object, so we need to check if it's ExecutionContext
-      // For now, background tasks are handled by the ExecCtx implementation
+      Some((@router.HandlerId(id), params)) => {
+        let ctx = Context::with_env(request, params, conn, body, env, exec_ctx)
+        let dispatch = self.dispatch_to_context(ctx, id)
+        if dispatch.handler_error && not(dispatch.response_sent) {
+          conn.send_response(500, "Internal Server Error")
+          conn.end_response()
+        } else if not(dispatch.response_sent) {
+          conn.send_response(404, "Not Found")
+          conn.end_response()
+        }
+      }
     }
+
+    // Run background tasks after response is sent
+    // Note: exec_ctx is a trait object, so we need to check if it's ExecutionContext
+    // For now, background tasks are handled by the ExecCtx implementation
   })
 }

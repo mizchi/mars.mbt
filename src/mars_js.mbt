@@ -71,14 +71,12 @@ pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
       let meth = js_method_to_router_method(meth_str)
 
       // Match route
-      let result = self.router.match_(meth, request.path)
-      if result.handlers.is_empty() {
-        // No matching route - 404
-        return js_response_new("Not Found", 404, build_not_found_headers())
+      let matched = self.match_first_handler(meth, request.path)
+      let (@router.HandlerId(id), params) = match matched {
+        Some(v) => v
+        None =>
+          return js_response_new("Not Found", 404, build_not_found_headers())
       }
-
-      // Get first matching handler
-      let (@router.HandlerId(id), params) = result.handlers[0]
 
       // We need to capture the response in a ref
       let response_ref : Ref[JsResponse?] = { val: None }
@@ -86,44 +84,24 @@ pub fn[E : Env, C : ExecCtx] Server::to_fetch_handler_with_env(
       let ctx = Context::with_env_js(
         request, params, js_request, resolve, env, exec_ctx,
       )
-
-      // Run middlewares first
-      for middleware in self.middlewares {
-        if ctx.is_response_sent() {
-          break
-        }
-        let Handler(mw) = middleware
-        mw(ctx) catch {
-          e => {
-            println("Middleware error: \{e}")
-            break
-          }
-        }
+      let dispatch = self.dispatch_to_context(ctx, id)
+      if dispatch.handler_error && not(dispatch.response_sent) {
+        return js_response_new(
+          "Internal Server Error",
+          500,
+          build_error_headers(),
+        )
       }
 
-      // Then run the route handler
-      if not(ctx.is_response_sent()) && id < self.handlers.length() {
-        let Handler(h) = self.handlers[id]
-        h(ctx) catch {
-          e => {
-            println("Handler error: \{e}")
-            if not(ctx.is_response_sent()) {
-              return js_response_new(
-                "Internal Server Error",
-                500,
-                build_error_headers(),
-              )
-            }
-          }
-        }
-      }
-
-      // Return the response
+      // Return response resolved by Context, or fallback when not sent.
       match response_ref.val {
         Some(resp) => resp
         None =>
-          // If no response sent, send 404
-          js_response_new("Not Found", 404, build_not_found_headers())
+          if dispatch.response_sent {
+            js_response_new("Internal Server Error", 500, build_error_headers())
+          } else {
+            js_response_new("Not Found", 404, build_not_found_headers())
+          }
       }
     })
     // Trigger coroutine scheduler for JS target
