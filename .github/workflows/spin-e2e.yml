@@ -35,8 +35,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: pnpm
-          cache-dependency-path: examples/spin-mars-router/pnpm-lock.yaml
 
       - name: Enable corepack
         run: corepack enable
