@@ -3,5 +3,11 @@ import {
 }
 
 options(
+  targets: {
+    "bun.mbt": [ "js" ],
+    "deno.mbt": [ "js" ],
+    "js_runtime_test.mbt": [ "js" ],
+    "node.mbt": [ "js" ],
+  },
   "warn-list": "-0024",
 )

@@ -8,6 +8,16 @@ import {
 // Values
 pub fn cloudflare_handler(@mars.Server, CloudflareEnv) -> FetchHandler
 
+pub fn cloudflare_runtime() -> RuntimeTarget
+
+pub fn spin_wagi_adapter(@mars.Server, config? : SpinWagiConfig) -> SpinWagiAdapter
+
+pub fn spin_wagi_runtime() -> RuntimeTarget
+
+pub fn wasm_component_adapter(@mars.Server, config? : WasmComponentConfig) -> WasmComponentAdapter
+
+pub fn wasm_component_runtime() -> RuntimeTarget
+
 // Errors
 
 // Types and methods
@@ -53,6 +63,46 @@ pub(all) struct R2Bucket {
 }
 pub fn R2Bucket::new(String) -> Self
 pub impl Show for R2Bucket
+
+pub(all) enum RuntimeTarget {
+  Node
+  Deno
+  Bun
+  Cloudflare
+  SpinWagi
+  WasmComponent
+}
+pub fn RuntimeTarget::id(Self) -> String
+pub fn RuntimeTarget::is_js_runtime(Self) -> Bool
+pub fn RuntimeTarget::is_wasm_runtime(Self) -> Bool
+pub impl Eq for RuntimeTarget
+pub impl Show for RuntimeTarget
+
+pub(all) struct SpinWagiAdapter {
+  app : @mars.Server
+  config : SpinWagiConfig
+}
+pub fn SpinWagiAdapter::manifest_hint(Self) -> String
+
+pub(all) struct SpinWagiConfig {
+  component : String
+  route : String
+  executor : String
+}
+pub fn SpinWagiConfig::default() -> Self
+
+pub(all) struct WasmComponentAdapter {
+  app : @mars.Server
+  config : WasmComponentConfig
+}
+pub fn WasmComponentAdapter::binding_hint(Self) -> String
+
+pub(all) struct WasmComponentConfig {
+  component : String
+  world : String
+  export_name : String
+}
+pub fn WasmComponentConfig::default() -> Self
 
 // Type aliases
 

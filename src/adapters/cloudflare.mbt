@@ -192,3 +192,8 @@ pub fn cloudflare_handler(
     ctx.text("Cloudflare Workers handler")
   })
 }
+
+///|
+pub fn cloudflare_runtime() -> RuntimeTarget {
+  RuntimeTarget::Cloudflare
+}
