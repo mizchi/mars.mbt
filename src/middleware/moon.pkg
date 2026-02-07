@@ -1,5 +1,7 @@
 import {
+  "mizchi/jwt.mbt" as @jwt,
   "mizchi/mars",
+  "moonbitlang/core/encoding/utf8" as @utf8,
   "moonbitlang/x/crypto",
   "moonbitlang/core/json",
   "moonbitlang/core/random",
@@ -7,5 +9,10 @@ import {
 }
 
 options(
+  targets: {
+    "jwt_fetch_native.mbt": [ "native" ],
+    "jwt_fetch_node.mbt": [ "js" ],
+    "jwt_fetch_wasm.mbt": [ "wasm", "wasm-gc" ],
+  },
   "warn-list": "-0067-0024",
 )

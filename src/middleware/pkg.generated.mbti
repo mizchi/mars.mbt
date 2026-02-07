@@ -2,7 +2,9 @@
 package "mizchi/mars/middleware"
 
 import {
+  "mizchi/jwt.mbt",
   "mizchi/mars",
+  "moonbitlang/core/json",
 }
 
 // Values
@@ -91,6 +93,20 @@ pub fn ip_filter(IpFilterOptions) -> @mars.Handler
 pub fn ip_whitelist(Array[String], ip_header? : String, trusted_proxies? : TrustedProxyConfig) -> @mars.Handler
 
 pub fn is_within_limit(String, Int) -> Bool
+
+pub async fn jwks_fetch_native(String) -> String
+
+pub fn jwt_bearer_with_jwks(String, async (String) -> String, () -> Int64, Int64, options? : JwtOptions) -> @mars.Handler
+
+pub fn jwt_bearer_with_key(@jwt.mbt.Key, () -> Int64, options? : JwtOptions) -> @mars.Handler
+
+pub fn[T : @json.FromJson] jwt_claims_decode(@mars.Context, key? : String) -> Result[T, JwtClaimsError]
+
+pub fn[T : @json.FromJson] jwt_claims_decode_string(String) -> Result[T, JwtClaimsError]
+
+pub fn jwt_claims_json(@mars.Context, key? : String) -> Result[Json, JwtClaimsError]
+
+pub fn jwt_claims_map(@mars.Context, key? : String) -> Result[Map[String, Json], JwtClaimsError]
 
 pub fn log_response(@mars.Context, Int, options? : LoggerOptions) -> Unit
 
@@ -373,6 +389,25 @@ pub(all) struct IpFilterOptions {
   whitelist : Bool
   trusted_proxies : TrustedProxyConfig
 }
+
+pub(all) enum JwtClaimsError {
+  MissingClaims
+  InvalidJson
+  NotObject
+  Decode(@json.JsonDecodeError)
+}
+pub impl Show for JwtClaimsError
+
+pub(all) struct JwtOptions {
+  clock_skew_sec : Int64
+  require_exp : Bool
+  issuer : String?
+  audience : String?
+  claims_key : String
+  error_message : String
+  error_status : Int
+}
+pub fn JwtOptions::default() -> Self
 
 pub(all) enum LogLevel {
   Debug
