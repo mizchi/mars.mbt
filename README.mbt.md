@@ -59,42 +59,16 @@ async fn main {
 
 ## JWT Middleware
 
-```moonbit
-import { "mizchi/mars/middleware" as @mw }
-import { "mizchi/jwt.mbt" as @jwt }
-import { "moonbitlang/core/encoding/utf8" as @utf8 }
-let now = fn() => 1_700_000_000L
+`jwt_bearer_with_key`, `jwt_bearer_with_jwks`, and `jwks_fetch_*` are
+temporarily disabled while cross-target JWT support is being redesigned.
+Current behavior is fail-closed (always unauthorized).
 
-// HS256
-let hs_key = @jwt.Key::hs256(@utf8.encode("secret"))
-app.use_(@mw.jwt_bearer_with_key(hs_key, now))
+Claims helper APIs are still available:
 
-// JWKS (native / js)
-let jwks_url = "https://example.com/.well-known/jwks.json"
-app.use_(
-  @mw.jwt_bearer_with_jwks(
-    jwks_url,
-    @mw.jwks_fetch_native,
-    now,
-    3600,
-  ),
-)
-
-// Node/wasm で独自 fetch を注入する例
-app.use_(@mw.jwt_bearer_with_jwks(jwks_url, @mw.jwks_fetch_node, now, 3600))
-app.use_(@mw.jwt_bearer_with_jwks(jwks_url, @mw.jwks_fetch_wasm, now, 3600))
-
-// claims を型安全に取得
-struct Claims {
-  sub : String
-  exp : Int
-} derive(FromJson)
-
-match @mw.jwt_claims_decode[Claims](ctx) {
-  Ok(claims) => println(claims.sub)
-  Err(_) => println("no claims")
-}
-```
+- `jwt_claims_json`
+- `jwt_claims_map`
+- `jwt_claims_decode`
+- `jwt_claims_decode_string`
 
 ## API
 

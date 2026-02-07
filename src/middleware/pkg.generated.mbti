@@ -2,7 +2,6 @@
 package "mizchi/mars/middleware"
 
 import {
-  "mizchi/jwt.mbt",
   "mizchi/mars",
   "moonbitlang/core/json",
 }
@@ -98,7 +97,7 @@ pub async fn jwks_fetch_native(String) -> String
 
 pub fn jwt_bearer_with_jwks(String, async (String) -> String, () -> Int64, Int64, options? : JwtOptions) -> @mars.Handler
 
-pub fn jwt_bearer_with_key(@jwt.mbt.Key, () -> Int64, options? : JwtOptions) -> @mars.Handler
+pub fn[T] jwt_bearer_with_key(T, () -> Int64, options? : JwtOptions) -> @mars.Handler
 
 pub fn[T : @json.FromJson] jwt_claims_decode(@mars.Context, key? : String) -> Result[T, JwtClaimsError]
 

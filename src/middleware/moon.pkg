@@ -1,5 +1,4 @@
 import {
-  "mizchi/jwt.mbt" as @jwt,
   "mizchi/mars",
   "moonbitlang/core/encoding/utf8" as @utf8,
   "moonbitlang/x/crypto",

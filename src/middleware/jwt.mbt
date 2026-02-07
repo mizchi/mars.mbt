@@ -131,68 +131,6 @@ fn extract_bearer_token(_auth : String) -> String? {
 }
 
 ///|
-fn claims_json_string(claims : Map[String, Json]) -> String {
-  Json::object(claims).stringify()
-}
-
-///|
-fn verify_token_with_key(
-  token : String,
-  key : @jwt.Key,
-  opts : @jwt.VerifyOptions,
-) -> String raise @jwt.JwtError {
-  let verified = @jwt.verify(token, key, opts)
-  claims_json_string(verified.claims)
-}
-
-///|
-fn verify_token_with_keyset(
-  token : String,
-  keyset : @jwt.KeySet,
-  opts : @jwt.VerifyOptions,
-) -> String raise @jwt.JwtError {
-  let verified = @jwt.verify_with_keyset(token, keyset, opts)
-  claims_json_string(verified.claims)
-}
-
-///|
-fn build_verify_options(
-  now : Int64,
-  options : JwtOptions,
-) -> @jwt.VerifyOptions {
-  match (options.issuer, options.audience) {
-    (Some(issuer), Some(audience)) =>
-      @jwt.VerifyOptions::new(
-        now,
-        clock_skew_sec=options.clock_skew_sec,
-        require_exp=options.require_exp,
-        issuer~,
-        audience~,
-      )
-    (Some(issuer), None) =>
-      @jwt.VerifyOptions::new(
-        now,
-        clock_skew_sec=options.clock_skew_sec,
-        require_exp=options.require_exp,
-        issuer~,
-      )
-    (None, Some(audience)) =>
-      @jwt.VerifyOptions::new(
-        now,
-        clock_skew_sec=options.clock_skew_sec,
-        require_exp=options.require_exp,
-        audience~,
-      )
-    (None, None) =>
-      @jwt.VerifyOptions::new(
-        now,
-        clock_skew_sec=options.clock_skew_sec,
-        require_exp=options.require_exp,
-      )
-  }
-}
-
-///|
 async fn respond_unauthorized(
   ctx : @mars.Context,
   options : JwtOptions,
@@ -201,9 +139,11 @@ async fn respond_unauthorized(
 }
 
 ///|
-pub fn jwt_bearer_with_key(
-  key : @jwt.Key,
-  now : () -> Int64,
+/// JWT verification is intentionally deferred.
+/// This middleware currently always rejects requests.
+pub fn[T] jwt_bearer_with_key(
+  _key : T,
+  _now : () -> Int64,
   options? : JwtOptions = JwtOptions::default(),
 ) -> @mars.Handler {
   async fn(ctx : @mars.Context) raise Error {
@@ -211,62 +151,33 @@ pub fn jwt_bearer_with_key(
       respond_unauthorized(ctx, options)
       return
     }
-    guard extract_bearer_token(auth) is Some(token) else {
+    guard extract_bearer_token(auth) is Some(_token) else {
       respond_unauthorized(ctx, options)
       return
     }
-    let now_value = now()
-    let verify_opts = build_verify_options(now_value, options)
-    let claims_json_opt = Some(verify_token_with_key(token, key, verify_opts)) catch {
-      _ => None
-    }
-    guard claims_json_opt is Some(claims_json) else {
-      respond_unauthorized(ctx, options)
-      return
-    }
-    ctx.set(options.claims_key, claims_json)
+    respond_unauthorized(ctx, options)
   }
 }
 
 ///|
+/// JWT verification is intentionally deferred.
+/// This middleware currently always rejects requests.
 pub fn jwt_bearer_with_jwks(
-  url : String,
-  fetch : async (String) -> String,
-  now : () -> Int64,
-  ttl_sec : Int64,
+  _url : String,
+  _fetch : async (String) -> String,
+  _now : () -> Int64,
+  _ttl_sec : Int64,
   options? : JwtOptions = JwtOptions::default(),
 ) -> @mars.Handler {
-  let cache : Ref[@jwt.JwksCache?] = Ref::new(None)
   async fn(ctx : @mars.Context) raise Error {
     guard ctx.header("Authorization") is Some(auth) else {
       respond_unauthorized(ctx, options)
       return
     }
-    guard extract_bearer_token(auth) is Some(token) else {
+    guard extract_bearer_token(auth) is Some(_token) else {
       respond_unauthorized(ctx, options)
       return
     }
-    let now_value = now()
-    let verify_opts = build_verify_options(now_value, options)
-    let next_cache_opt = Some(
-      @jwt.fetch_jwks_async(url, fetch, now_value, ttl_sec, cache?=cache.val),
-    ) catch {
-      _ => None
-    }
-    guard next_cache_opt is Some(next_cache) else {
-      respond_unauthorized(ctx, options)
-      return
-    }
-    cache.val = Some(next_cache)
-    let claims_json_opt = Some(
-      verify_token_with_keyset(token, next_cache.keyset(), verify_opts),
-    ) catch {
-      _ => None
-    }
-    guard claims_json_opt is Some(claims_json) else {
-      respond_unauthorized(ctx, options)
-      return
-    }
-    ctx.set(options.claims_key, claims_json)
+    respond_unauthorized(ctx, options)
   }
 }
