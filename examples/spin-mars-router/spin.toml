@@ -1,0 +1,15 @@
+spin_manifest_version = 2
+
+[application]
+authors = ["mizchi"]
+name = "spin-mars-router-demo"
+version = "0.1.0"
+description = "MoonBit WASIp2 component + vendored mars router split"
+
+[[trigger.http]]
+route = "/..."
+executor = { type = "wagi" }
+component = "spin-mars-router"
+
+[component.spin-mars-router]
+source = "component.wasm"

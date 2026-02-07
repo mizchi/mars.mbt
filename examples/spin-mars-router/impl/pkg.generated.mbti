@@ -1,0 +1,18 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "spin-mars-router-demo/impl"
+
+// Values
+pub fn cabi_realloc(Int, Int, Int, Int) -> Int
+
+pub fn run() -> Result[Unit, Unit]
+
+pub fn wasmExportRun() -> Int
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

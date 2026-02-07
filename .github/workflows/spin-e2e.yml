@@ -1,0 +1,69 @@
+name: spin-e2e
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/spin-e2e.yml"
+      - "examples/spin-mars-router/**"
+      - "src/router/**"
+      - "moon.mod.json"
+  pull_request:
+    paths:
+      - ".github/workflows/spin-e2e.yml"
+      - "examples/spin-mars-router/**"
+      - "src/router/**"
+      - "moon.mod.json"
+  workflow_dispatch:
+
+jobs:
+  spin-mars-router:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MoonBit
+        uses: moonbit-community/setup-moonbit@main
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: examples/spin-mars-router/pnpm-lock.yaml
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install Spin CLI
+        run: |
+          curl -fsSL https://developer.fermyon.com/downloads/install.sh | bash
+          if [ -x "$HOME/.spin/bin/spin" ]; then
+            echo "$HOME/.spin/bin" >> "$GITHUB_PATH"
+          fi
+          if [ -x "./spin" ]; then
+            mkdir -p "$HOME/.local/bin"
+            mv ./spin "$HOME/.local/bin/spin"
+            echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          fi
+          spin --version
+
+      - name: Install moon-component CLI
+        run: |
+          git clone --depth 1 https://github.com/mizchi/moon-component.git /tmp/moon-component
+          cargo install --path /tmp/moon-component/tools/moon-component
+          moon-component --help >/dev/null
+
+      - name: Run spin-mars-router tests
+        working-directory: examples/spin-mars-router
+        run: |
+          moon update
+          moon test
+          pnpm install --frozen-lockfile
+          pnpm exec playwright test

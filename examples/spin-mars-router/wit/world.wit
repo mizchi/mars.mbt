@@ -1,0 +1,5 @@
+package local:spin-mars-router-demo;
+
+world spin-mars-router-demo {
+  include wasi:cli/command@0.2.9;
+}

@@ -1,0 +1,25 @@
+default:
+    @just --list
+
+build:
+    moon build --target wasm --release impl
+
+componentize: build
+    moon-component componentize _build/wasm/release/build/impl/impl.wasm \
+        --wit-dir wit -o component.wasm
+
+test:
+    moon test
+
+e2e:
+    pnpm install --frozen-lockfile
+    pnpm exec playwright test
+
+wasmtime-run: componentize
+    wasmtime run component.wasm -- /
+
+spin-up listen="127.0.0.1:3000": componentize
+    spin up --listen {{listen}}
+
+clean:
+    rm -rf _build component.wasm

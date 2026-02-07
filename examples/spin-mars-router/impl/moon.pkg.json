@@ -1,0 +1,23 @@
+{
+  "is-main": true,
+  "import": [
+    { "path": "spin-mars-router-demo/gen/cabi", "alias": "cabi" },
+    { "path": "spin-mars-router-demo/app", "alias": "app" }
+  ],
+  "link": {
+    "wasm": {
+      "exports": [
+        "cabi_realloc:cabi_realloc",
+        "wasmExportRun:wasi:cli/run@0.2.9#run"
+      ],
+      "export-memory-name": "memory"
+    },
+    "wasm-gc": {
+      "exports": [
+        "cabi_realloc:cabi_realloc",
+        "wasmExportRun:wasi:cli/run@0.2.9#run"
+      ],
+      "export-memory-name": "memory"
+    }
+  }
+}

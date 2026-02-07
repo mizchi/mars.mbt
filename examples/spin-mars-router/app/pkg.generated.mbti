@@ -1,0 +1,20 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "spin-mars-router-demo/app"
+
+// Values
+pub fn route(String, String) -> RouteResponse
+
+// Errors
+
+// Types and methods
+pub(all) struct RouteResponse {
+  status : Int
+  body : String
+}
+pub impl Eq for RouteResponse
+pub impl Show for RouteResponse
+
+// Type aliases
+
+// Traits
+

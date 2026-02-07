@@ -1,0 +1,6 @@
+{
+  "import": [
+    { "path": "mizchi/mars/router", "alias": "router" },
+    { "path": "mizchi/mars/router/trie", "alias": "trie" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "spin-mars-router-demo",
+  "version": "0.1.0",
+  "deps": {
+    "moonbitlang/regexp": "0.3.4",
+    "mizchi/mars": { "path": "../.." }
+  }
+}
