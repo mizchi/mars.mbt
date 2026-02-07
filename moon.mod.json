@@ -4,7 +4,8 @@
   "deps": {
     "moonbitlang/async": "0.16.2",
     "moonbitlang/x": "0.4.38",
-    "moonbitlang/regexp": "0.3.4"
+    "moonbitlang/regexp": "0.3.4",
+    "mizchi/jwt.mbt": { "path": "../jwt.mbt" }
   },
   "source": "src",
   "preferred-target": "native",
