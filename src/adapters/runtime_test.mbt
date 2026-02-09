@@ -2,6 +2,7 @@
 test "RuntimeTarget id mapping" {
   inspect(RuntimeTarget::Node.id(), content="node")
   inspect(RuntimeTarget::Deno.id(), content="deno")
+  inspect(RuntimeTarget::DenoDeploy.id(), content="deno-deploy")
   inspect(RuntimeTarget::Bun.id(), content="bun")
   inspect(RuntimeTarget::Cloudflare.id(), content="cloudflare")
   inspect(RuntimeTarget::SpinWagi.id(), content="spin-wagi")
@@ -11,10 +12,12 @@ test "RuntimeTarget id mapping" {
 ///|
 test "RuntimeTarget category helpers" {
   inspect(RuntimeTarget::Node.is_js_runtime(), content="true")
+  inspect(RuntimeTarget::DenoDeploy.is_js_runtime(), content="true")
   inspect(RuntimeTarget::Cloudflare.is_js_runtime(), content="true")
   inspect(RuntimeTarget::SpinWagi.is_js_runtime(), content="false")
   inspect(RuntimeTarget::WasmComponent.is_js_runtime(), content="false")
   inspect(RuntimeTarget::Node.is_wasm_runtime(), content="false")
+  inspect(RuntimeTarget::DenoDeploy.is_wasm_runtime(), content="false")
   inspect(RuntimeTarget::Cloudflare.is_wasm_runtime(), content="true")
   inspect(RuntimeTarget::SpinWagi.is_wasm_runtime(), content="true")
   inspect(RuntimeTarget::WasmComponent.is_wasm_runtime(), content="true")

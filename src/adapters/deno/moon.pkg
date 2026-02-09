@@ -1,0 +1,7 @@
+import {
+  "mizchi/mars",
+}
+
+options(
+  targets: { "deno.mbt": [ "js" ], "deno_deploy.mbt": [ "js" ] },
+)

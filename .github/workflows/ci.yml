@@ -9,6 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [native, js]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,6 +23,27 @@ jobs:
       - name: Moon update
         run: moon update
       - name: Moon check
-        run: moon check --target native
+        run: moon check --target ${{ matrix.target }}
       - name: Moon test
-        run: moon test --target native
+        run: moon test --target ${{ matrix.target }}
+      - name: Deno Deploy adapter smoke test
+        if: matrix.target == 'js'
+        run: moon test src/adapters/deno_deploy_runtime_test.mbt --target js
+
+  wasm-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [wasm, wasm-gc]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install MoonBit CLI
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Moon update
+        run: moon update
+      - name: Moon check
+        run: moon check --target ${{ matrix.target }}

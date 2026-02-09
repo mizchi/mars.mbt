@@ -1,4 +1,5 @@
 import {
+  "moonbitlang/async",
   "mizchi/mars/router",
   "mizchi/mars/router/trie",
   "moonbitlang/async/http",
@@ -14,8 +15,11 @@ options(
     "context_js.mbt": [ "js" ],
     "context_native.mbt": [ "native" ],
     "context_native_wbtest.mbt": [ "native" ],
+    "context_wasm.mbt": [ "wasm", "wasm-gc" ],
     "mars_js.mbt": [ "js" ],
     "mars_native.mbt": [ "native" ],
     "mars_native_wbtest.mbt": [ "native" ],
+    "mars_wasm.mbt": [ "wasm", "wasm-gc" ],
+    "mars_wasm_test.mbt": [ "wasm", "wasm-gc" ],
   },
 )

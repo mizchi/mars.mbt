@@ -3,6 +3,7 @@
 pub(all) enum RuntimeTarget {
   Node
   Deno
+  DenoDeploy
   Bun
   Cloudflare
   SpinWagi
@@ -14,6 +15,7 @@ pub fn RuntimeTarget::id(self : RuntimeTarget) -> String {
   match self {
     Node => "node"
     Deno => "deno"
+    DenoDeploy => "deno-deploy"
     Bun => "bun"
     Cloudflare => "cloudflare"
     SpinWagi => "spin-wagi"
@@ -24,7 +26,7 @@ pub fn RuntimeTarget::id(self : RuntimeTarget) -> String {
 ///|
 pub fn RuntimeTarget::is_js_runtime(self : RuntimeTarget) -> Bool {
   match self {
-    Node | Deno | Bun | Cloudflare => true
+    Node | Deno | DenoDeploy | Bun | Cloudflare => true
     _ => false
   }
 }

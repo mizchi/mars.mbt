@@ -1,11 +1,6 @@
 ///|
-pub fn node_runtime() -> RuntimeTarget {
-  RuntimeTarget::Node
-}
-
-///|
 pub fn node_handler(app : @mars.Server) -> @mars.AppHandler {
-  @node_adapters.node_handler(app)
+  app.to_handler()
 }
 
 ///|
@@ -14,5 +9,5 @@ pub fn[E : @mars.Env, C : @mars.ExecCtx] node_handler_with_env(
   env : E,
   exec_ctx : C,
 ) -> @mars.AppHandler {
-  @node_adapters.node_handler_with_env(app, env, exec_ctx)
+  app.to_handler_with_env(env, exec_ctx)
 }

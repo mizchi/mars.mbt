@@ -1,13 +1,20 @@
 import {
   "mizchi/mars",
+  "mizchi/mars/adapters/bun" as @bun_adapters,
+  "mizchi/mars/adapters/deno" as @deno_adapters,
+  "mizchi/mars/adapters/node" as @node_adapters,
 }
 
 options(
   targets: {
     "bun.mbt": [ "js" ],
+    "bun_runtime_test.mbt": [ "js" ],
     "deno.mbt": [ "js" ],
-    "js_runtime_test.mbt": [ "js" ],
+    "deno_deploy.mbt": [ "js" ],
+    "deno_deploy_runtime_test.mbt": [ "js" ],
+    "deno_runtime_test.mbt": [ "js" ],
     "node.mbt": [ "js" ],
+    "node_runtime_test.mbt": [ "js" ],
   },
   "warn-list": "-0024",
 )
