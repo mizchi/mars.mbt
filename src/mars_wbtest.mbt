@@ -86,7 +86,6 @@ test "handler helper creates Handler" {
   let h = handler(async fn(_ctx) { () })
   // Just verify it compiles and can be created
   let Handler(_) = h
-
 }
 
 ///|
@@ -196,5 +195,4 @@ test "dispatch_fallback_status returns None when response already sent" {
 test "Server::to_handler is available on all targets" {
   let app = Server::new()
   let _ = app.to_handler()
-
 }

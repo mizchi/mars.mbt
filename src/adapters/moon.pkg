@@ -2,6 +2,8 @@ import {
   "mizchi/mars",
 }
 
+warnings = "-0024"
+
 options(
   targets: {
     "bun.mbt": [ "js" ],
@@ -9,5 +11,4 @@ options(
     "js_runtime_test.mbt": [ "js" ],
     "node.mbt": [ "js" ],
   },
-  "warn-list": "-0024",
 )
