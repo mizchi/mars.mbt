@@ -117,7 +117,6 @@ test "bench: large router (100 routes) static match" (b : @bench.T) {
   let router = TrieRouter::new()
   for i in 0..<100 {
     let _ = router.add(@router.Method::Get, "/api/resource" + i.to_string())
-
   }
   b.bench(fn() { ignore(router.match_(@router.Method::Get, "/api/resource50")) })
 }
@@ -130,7 +129,6 @@ test "bench: large router (100 routes) dynamic match" (b : @bench.T) {
       @router.Method::Get,
       "/api/resource" + i.to_string() + "/:id",
     )
-
   }
   b.bench(fn() {
     ignore(router.match_(@router.Method::Get, "/api/resource50/123"))

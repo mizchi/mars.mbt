@@ -33,11 +33,9 @@ pub fn TrieRouter::add(
     Some(paths) =>
       for p in paths {
         let _ = self.root.insert(meth_str, p, handler_id, self.order)
-
       }
     None => {
       let _ = self.root.insert(meth_str, path, handler_id, self.order)
-
     }
   }
   @router.HandlerId(handler_id)

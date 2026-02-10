@@ -6,7 +6,6 @@ test "node deno bun handlers are available on js target" {
   let _node : @mars.AppHandler = node_handler(app1)
   let _deno : @mars.AppHandler = deno_handler(app2)
   let _bun : @mars.AppHandler = bun_handler(app3)
-
 }
 
 ///|
@@ -19,7 +18,6 @@ test "node deno bun handler_with_env are available on js target" {
   let _node : @mars.AppHandler = node_handler_with_env(app1, env, exec_ctx)
   let _deno : @mars.AppHandler = deno_handler_with_env(app2, env, exec_ctx)
   let _bun : @mars.AppHandler = bun_handler_with_env(app3, env, exec_ctx)
-
 }
 
 ///|

@@ -59,7 +59,6 @@ test "spin_wagi and wasm_component handlers are available" {
   let app2 = @mars.Server::new()
   let _spin : @mars.AppHandler = spin_wagi_handler(app1)
   let _wasm_cm : @mars.AppHandler = wasm_component_handler(app2)
-
 }
 
 ///|
@@ -72,5 +71,4 @@ test "spin_wagi and wasm_component handler_with_env are available" {
   let _wasm_cm : @mars.AppHandler = wasm_component_handler_with_env(
     app2, env, exec_ctx,
   )
-
 }
