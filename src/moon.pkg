@@ -3,6 +3,7 @@ import {
   "mizchi/mars/router/trie",
   "moonbitlang/async/http",
   "moonbitlang/async/io" @async_io,
+  "moonbitlang/async/js_async" @js_async,
   "moonbitlang/async/socket",
   "moonbitlang/x/encoding",
   "moonbitlang/core/json",
