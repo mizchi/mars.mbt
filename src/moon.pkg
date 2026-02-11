@@ -4,7 +4,6 @@ import {
   "moonbitlang/async/http",
   "moonbitlang/async/io" @async_io,
   "moonbitlang/async/socket",
-  "moonbitlang/async/js_async",
   "moonbitlang/x/encoding",
   "moonbitlang/core/json",
 }

@@ -111,7 +111,7 @@ fn Server::add_route(
   // Ensure handlers array is large enough
   while self.handlers.length() <= id {
     // Placeholder handler
-    self.handlers.push(async fn(_ctx) { () })
+    self.handlers.push(fn(_ctx) { () })
   }
   self.handlers[id] = handler
   // Record route for mount support

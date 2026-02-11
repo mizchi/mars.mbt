@@ -8,82 +8,82 @@ test "Server new creates empty app" {
 ///|
 test "Server get registers route" {
   let app = Server::new()
-  app.get("/", async fn(_ctx) { () })
+  app.get("/", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server post registers route" {
   let app = Server::new()
-  app.post("/users", async fn(_ctx) { () })
+  app.post("/users", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server put registers route" {
   let app = Server::new()
-  app.put("/users/:id", async fn(_ctx) { () })
+  app.put("/users/:id", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server delete registers route" {
   let app = Server::new()
-  app.delete("/users/:id", async fn(_ctx) { () })
+  app.delete("/users/:id", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server patch registers route" {
   let app = Server::new()
-  app.patch("/users/:id", async fn(_ctx) { () })
+  app.patch("/users/:id", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server query registers route" {
   let app = Server::new()
-  app.query("/search", async fn(_ctx) { () })
+  app.query("/search", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server all registers route for all methods" {
   let app = Server::new()
-  app.all("/health", async fn(_ctx) { () })
+  app.all("/health", fn(_ctx) { () })
   inspect(app.handlers.length() > 0, content="true")
 }
 
 ///|
 test "Server middleware adds middleware" {
   let app = Server::new()
-  app.middleware(async fn(_ctx) { () })
+  app.middleware(fn(_ctx) { () })
   inspect(app.middlewares.length(), content="1")
 }
 
 ///|
 test "Server multiple middlewares" {
   let app = Server::new()
-  app
-  ..middleware(async fn(_ctx) { () })
-  ..middleware(async fn(_ctx) { () })
-  ..middleware(async fn(_ctx) { () })
+  let _ = app
+    ..middleware(fn(_ctx) { () })
+    ..middleware(fn(_ctx) { () })
+    ..middleware(fn(_ctx) { () })
   inspect(app.middlewares.length(), content="3")
 }
 
 ///|
 test "Server chained routes" {
   let app = Server::new()
-  app
-  ..get("/", async fn(_ctx) { () })
-  ..post("/users", async fn(_ctx) { () })
-  ..get("/users/:id", async fn(_ctx) { () })
+  let _ = app
+    ..get("/", fn(_ctx) { () })
+    ..post("/users", fn(_ctx) { () })
+    ..get("/users/:id", fn(_ctx) { () })
   inspect(app.handlers.length() >= 3, content="true")
 }
 
 ///|
 test "handler helper creates Handler" {
-  let h = handler(async fn(_ctx) { () })
+  let h = handler(fn(_ctx) { () })
   // Just verify it compiles and can be created
   let Handler(_) = h
 }
@@ -91,9 +91,7 @@ test "handler helper creates Handler" {
 ///|
 test "Server mount sub-app" {
   let api = Server::new()
-  api
-  ..get("/users", async fn(_ctx) { () })
-  ..post("/users", async fn(_ctx) { () })
+  let _ = api..get("/users", fn(_ctx) { () })..post("/users", fn(_ctx) { () })
   let app = Server::new()
   app.mount("/api", api)
   // Should have 2 routes mounted
@@ -103,7 +101,7 @@ test "Server mount sub-app" {
 ///|
 test "Server mount preserves route info" {
   let api = Server::new()
-  api.get("/items", async fn(_ctx) { () })
+  api.get("/items", fn(_ctx) { () })
   let app = Server::new()
   app.mount("/v1", api)
   // Check route was registered with prefix
@@ -145,7 +143,7 @@ test "Server::new_debug enables debug mode" {
 ///|
 test "Server::match_first_handler returns None when no route matched" {
   let app = Server::new()
-  app.get("/users/:id", async fn(_ctx) { () })
+  app.get("/users/:id", fn(_ctx) { () })
   inspect(
     app.match_first_handler(@router.Method::Get, "/health"),
     content="None",
@@ -155,7 +153,7 @@ test "Server::match_first_handler returns None when no route matched" {
 ///|
 test "Server::match_first_handler returns first handler and params" {
   let app = Server::new()
-  app.get("/users/:id", async fn(_ctx) { () })
+  app.get("/users/:id", fn(_ctx) { () })
   let result = app.match_first_handler(@router.Method::Get, "/users/42")
   match result {
     Some((@router.HandlerId(_), params)) =>

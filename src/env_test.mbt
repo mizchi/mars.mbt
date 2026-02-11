@@ -142,10 +142,10 @@ test "Variables type mismatch returns None" {
 test "ExecutionContext implements ExecCtx trait" {
   let exec_ctx : &ExecCtx = ExecutionContext::new()
   // Can call wait_until via trait
-  exec_ctx.wait_until(async fn() { () }, name="test-task")
+  exec_ctx.wait_until(fn() { () }, name="test-task")
   // Verify task was added (need to cast back to check)
   let ctx = ExecutionContext::new()
-  ctx.wait_until(async fn() { () }, name="via-trait")
+  ctx.wait_until(fn() { () }, name="via-trait")
   inspect(ctx.pending_count(), content="1")
 }
 
@@ -170,16 +170,16 @@ impl ExecCtx for TestExecCtx with wait_until(self, _task, name~) {
 test "Custom ExecCtx implementation" {
   let ctx = TestExecCtx::new()
   inspect(ctx.task_count, content="0")
-  ctx.wait_until(async fn() { () }, name="task1")
+  ctx.wait_until(fn() { () }, name="task1")
   inspect(ctx.task_count, content="1")
-  ctx.wait_until(async fn() { () }, name="task2")
+  ctx.wait_until(fn() { () }, name="task2")
   inspect(ctx.task_count, content="2")
 }
 
 ///|
 test "ExecCtx trait polymorphism" {
   fn add_task(ctx : &ExecCtx) -> Unit {
-    ctx.wait_until(async fn() { () }, name="polymorphic")
+    ctx.wait_until(fn() { () }, name="polymorphic")
   }
 
   // Works with ExecutionContext

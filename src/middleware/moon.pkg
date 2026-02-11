@@ -1,6 +1,5 @@
 import {
   "mizchi/mars",
-  "moonbitlang/core/encoding/utf8" @utf8,
   "moonbitlang/x/crypto",
   "moonbitlang/core/json",
   "moonbitlang/core/random",
