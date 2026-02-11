@@ -2,15 +2,19 @@
   "name": "mizchi/mars",
   "version": "0.3.2",
   "deps": {
-    "moonbitlang/async": "0.16.2",
-    "moonbitlang/x": "0.4.38",
-    "moonbitlang/regexp": "0.3.4"
+    "moonbitlang/async": "0.16.6",
+    "moonbitlang/x": "0.4.40",
+    "moonbitlang/regexp": "0.3.5"
   },
-  "source": "src",
-  "preferred-target": "native",
   "readme": "README.mbt.md",
   "repository": "https://github.com/mizchi/mars.mbt",
   "license": "MIT",
-  "keywords": ["http", "router", "web-framework"],
-  "description": "Hono-inspired HTTP framework for MoonBit"
+  "keywords": [
+    "http",
+    "router",
+    "web-framework"
+  ],
+  "description": "Hono-inspired HTTP framework for MoonBit",
+  "source": "src",
+  "preferred-target": "native"
 }

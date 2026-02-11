@@ -1,9 +1,11 @@
 import {
   "mizchi/mars",
-  "mizchi/mars/adapters/bun" as @bun_adapters,
-  "mizchi/mars/adapters/deno" as @deno_adapters,
-  "mizchi/mars/adapters/node" as @node_adapters,
+  "mizchi/mars/adapters/bun" @bun_adapters,
+  "mizchi/mars/adapters/deno" @deno_adapters,
+  "mizchi/mars/adapters/node" @node_adapters,
 }
+
+warnings = "-0024"
 
 options(
   targets: {
@@ -16,5 +18,4 @@ options(
     "node.mbt": [ "js" ],
     "node_runtime_test.mbt": [ "js" ],
   },
-  "warn-list": "-0024",
 )
