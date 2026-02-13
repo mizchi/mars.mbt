@@ -40,6 +40,13 @@ fn build_error_headers() -> Map[String, String] {
 pub type AppHandler = (JsRequest) -> @js_async.Promise[JsResponse]
 
 ///|
+/// Keep imports used on JS target for deny-warn checks.
+fn keep_js_target_imports() -> Unit {
+  ignore(@async_io.Encoding::UTF8)
+  ignore(@encoding.UTF8)
+}
+
+///|
 /// Convert Server app to a platform handler function
 pub fn Server::to_handler(self : Server) -> AppHandler {
   self.to_handler_with_env(EmptyEnv::new(), ExecutionContext::new())
@@ -62,6 +69,7 @@ pub fn[E : Env, C : ExecCtx] Server::to_handler_with_env(
   env : E,
   exec_ctx : C,
 ) -> AppHandler {
+  keep_js_target_imports()
   fn(js_request : JsRequest) -> @js_async.Promise[JsResponse] {
     // Create async handler using Promise::from_async
     let promise = @js_async.Promise::from_async(async fn() -> JsResponse {

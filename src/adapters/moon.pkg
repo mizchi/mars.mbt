@@ -1,5 +1,6 @@
 import {
   "mizchi/mars",
+  "moonbitlang/async",
 }
 
 warnings = "-0024"

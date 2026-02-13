@@ -189,6 +189,7 @@ pub fn cloudflare_handler(
     // would require WASM-specific bindings
     ignore(app)
     ignore(env)
+    @async.pause()
     ctx.text("Cloudflare Workers handler")
   })
 }
