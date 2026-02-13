@@ -22,7 +22,8 @@ async fn main {
         ctx.json({ "path": ctx.path(), "message": "API wildcard" })
       }),
     )
-  let addr = @socket.Addr::parse("127.0.0.1:3000")
   println("Server starting at http://127.0.0.1:3000")
-  app.serve(addr)
+  app.serve(host="127.0.0.1", port=3000) catch {
+    err => println("Server failed: \{err}")
+  }
 }

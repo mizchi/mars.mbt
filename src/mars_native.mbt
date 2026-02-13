@@ -65,20 +65,21 @@ pub fn[E : Env, C : ExecCtx] Server::to_handler_with_env(
 }
 
 ///|
-/// Start the HTTP server (native only)
-pub async fn Server::serve(self : Server, addr : @socket.Addr) -> Unit {
-  self.serve_with_env(addr, EmptyEnv::new(), ExecutionContext::new())
+/// Start the HTTP server
+pub async fn Server::serve(self : Server, host? : String, port? : Int) -> Unit {
+  self.serve_with_env(host?, port?, EmptyEnv::new(), ExecutionContext::new())
 }
 
 ///|
-/// Start the HTTP server with environment and execution context (native only)
+/// Start the HTTP server with environment and execution context
 pub async fn[E : Env, C : ExecCtx] Server::serve_with_env(
   self : Server,
-  addr : @socket.Addr,
+  host? : String,
+  port? : Int,
   env : E,
   exec_ctx : C,
 ) -> Unit {
-  let server = @http.Server::new(addr)
+  let server = @http.Server::new(host?, port?)
   let handler = self.to_handler_with_env(env, exec_ctx)
   server.run_forever(handler)
 }

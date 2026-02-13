@@ -27,7 +27,7 @@ async fn main {
     let body = ctx.body_json()
     ctx.json({ "created": true }, status=201)
   })
-  app.serve(@socket.Addr::new("127.0.0.1", 3000)!)
+  app.serve(host="127.0.0.1", port=3000)
 }
 ```
 
@@ -235,7 +235,7 @@ let env = @mars.MapEnv::new()
   .with_var("ENV", "production")
 
 let exec_ctx = @mars.ExecutionContext::new()
-app.serve_with_env(addr, env, exec_ctx)
+app.serve_with_env(host="127.0.0.1", port=3000, env, exec_ctx)
 
 // In handler
 ctx.env_var("API_KEY")  // -> String?

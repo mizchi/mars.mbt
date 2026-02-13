@@ -3,7 +3,7 @@ package "mizchi/mars/adapters"
 
 import {
   "mizchi/mars",
-  "moonbitlang/async/http",
+  "mizchi/x/http",
   "moonbitlang/async/io",
 }
 

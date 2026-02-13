@@ -53,7 +53,7 @@ async fn main {
   }))
 
   // Start server
-  app.serve(@socket.Addr::parse("127.0.0.1:3000"))
+  app.serve(host="127.0.0.1", port=3000)
 }
 ```
 
@@ -82,7 +82,7 @@ Claims helper APIs are still available:
 - `Mars::patch(path, handler) -> Mars` - Register PATCH route
 - `Mars::all(path, handler) -> Mars` - Register route for all methods
 - `Mars::use_(middleware) -> Mars` - Add middleware
-- `Mars::serve(addr)` - Start HTTP server
+- `Mars::serve(host?, port?)` - Start HTTP server
 
 ### Context
 

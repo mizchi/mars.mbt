@@ -1,7 +1,6 @@
 import {
   "mizchi/mars" @mars,
   "moonbitlang/async",
-  "moonbitlang/async/socket",
 }
 
 options(
