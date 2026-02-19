@@ -74,6 +74,7 @@ pub fn Context::path(Self) -> String
 pub fn Context::queries(Self) -> Map[String, String]
 pub fn Context::query(Self, String) -> String?
 pub async fn Context::redirect(Self, String) -> Unit
+pub fn Context::request(Self) -> @http.Request
 pub fn Context::set(Self, String, String) -> Unit
 pub fn Context::set_cookie(Self, String, String, max_age? : Int, path? : String, http_only? : Bool, same_site? : String) -> Unit
 pub fn Context::set_header(Self, String, String) -> Unit

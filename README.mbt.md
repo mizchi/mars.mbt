@@ -88,6 +88,7 @@ Claims helper APIs are still available:
 
 - `Context::param(name) -> String?` - Get URL parameter
 - `Context::path() -> String` - Get request path
+- `Context::request() -> @http.Request` - Get raw HTTP request
 - `Context::header(name) -> String?` - Get request header
 - `Context::text(body, status?)` - Send text response
 - `Context::json(data, status?)` - Send JSON response

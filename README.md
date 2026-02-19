@@ -349,6 +349,25 @@ app..get("/events", async fn(ctx) {
 })
 ```
 
+## WebSocket (native)
+
+`mizchi/x/websocket` currently focuses on client APIs.  
+For server-side WebSocket endpoints, use `moonbitlang/async/websocket` with
+`ctx.request()` and `ctx.conn()`:
+
+```moonbit
+import "moonbitlang/async/websocket" @websocket
+
+app.get("/ws", async fn(ctx) {
+  let ws = @websocket.from_http_server(ctx.request(), ctx.conn())
+  defer ws.close()
+  for {
+    let msg = ws.recv()
+    ws..start_message(msg.kind)..write_reader(msg).end_message()
+  }
+})
+```
+
 ## Project Structure
 
 ```

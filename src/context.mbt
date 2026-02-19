@@ -48,6 +48,12 @@ pub fn Context::meth(self : Context) -> @http.RequestMethod {
 }
 
 ///|
+/// Get raw HTTP request
+pub fn Context::request(self : Context) -> @http.Request {
+  self.request
+}
+
+///|
 /// Get a request header
 pub fn Context::header(self : Context, name : String) -> String? {
   self.request.headers.get(name)

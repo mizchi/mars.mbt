@@ -1,0 +1,11 @@
+default:
+    @just --list
+
+run:
+    moon run app --target native
+
+check:
+    moon check --target native
+
+test:
+    moon test --target native

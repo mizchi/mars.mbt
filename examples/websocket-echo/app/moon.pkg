@@ -1,0 +1,18 @@
+import {
+  "mizchi/mars" @mars,
+  "mizchi/x/http" @http,
+  "moonbitlang/async",
+  "moonbitlang/async/http" @async_http,
+  "moonbitlang/async/websocket" @websocket,
+}
+
+options(
+  "is-main": true,
+  targets: {
+    "main.mbt": [ "native" ],
+    "main_js.mbt": [ "js" ],
+    "server_js.mbt": [ "js" ],
+    "server_native.mbt": [ "native" ],
+    "websocket_test.mbt": [ "native" ],
+  },
+)

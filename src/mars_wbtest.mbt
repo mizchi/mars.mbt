@@ -194,3 +194,13 @@ test "Server::to_handler is available on all targets" {
   let app = Server::new()
   let _ = app.to_handler()
 }
+
+///|
+test "Context::request is available in handler" {
+  let app = Server::new()
+  app.get("/ws", fn(ctx) {
+    let req = ctx.request()
+    let _ = req
+  })
+  inspect(app.handlers.length() > 0, content="true")
+}
