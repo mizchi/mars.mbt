@@ -27,6 +27,8 @@ pub fn set_debug(Bool) -> Unit
 
 pub fn split_by_char(String, Char) -> Array[String]
 
+pub fn strip_query_string(String) -> String
+
 pub fn substring(String, Int, Int) -> String
 
 pub fn substring_from(String, Int) -> String
