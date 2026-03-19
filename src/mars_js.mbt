@@ -81,7 +81,8 @@ pub fn[E : Env, C : ExecCtx] Server::to_handler_with_env(
       // We need to capture the response in a ref
       let response_ref : Ref[JsResponse?] = { val: None }
       let resolve = fn(resp : JsResponse) { response_ref.val = Some(resp) }
-      let dispatch_result = self.match_and_dispatch(meth, request.path, fn(
+      let routing_path = strip_query_string(request.path)
+      let dispatch_result = self.match_and_dispatch(meth, routing_path, fn(
         params,
       ) {
         Context::with_env_js(

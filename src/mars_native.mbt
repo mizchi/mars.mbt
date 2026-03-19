@@ -36,8 +36,9 @@ pub fn[E : Env, C : ExecCtx] Server::to_handler_with_env(
 ) -> AppHandler {
   async fn(request, body, conn) {
     let meth = request_method_to_method(request.meth)
+    let routing_path = strip_query_string(request.path)
     match
-      self.match_and_dispatch(meth, request.path, fn(params) {
+      self.match_and_dispatch(meth, routing_path, fn(params) {
         Context::with_env(request, params, conn, body, env, exec_ctx)
       }) {
       RequestDispatchResult::NotFound => {

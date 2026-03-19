@@ -85,6 +85,19 @@ pub fn is_whitespace(c : Char) -> Bool {
 }
 
 ///|
+/// Strip query string from path (everything from first '?' onwards)
+pub fn strip_query_string(path : String) -> String {
+  let buf = StringBuilder::new()
+  for c in path {
+    if c == '?' {
+      break
+    }
+    buf.write_char(c)
+  }
+  buf.to_string()
+}
+
+///|
 /// URL decode a string (handles %XX and + encoding)
 pub fn url_decode(s : String) -> String {
   let buf = StringBuilder::new()
