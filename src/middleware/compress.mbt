@@ -10,7 +10,17 @@ pub(all) enum CompressionEncoding {
   Deflate
   Br // Brotli
   Identity // No compression
-} derive(Show, Eq)
+} derive(Debug, Eq)
+
+///|
+pub impl Show for CompressionEncoding with output(self, logger) {
+  match self {
+    Gzip => logger.write_string("Gzip")
+    Deflate => logger.write_string("Deflate")
+    Br => logger.write_string("Br")
+    Identity => logger.write_string("Identity")
+  }
+}
 
 ///|
 /// Compression options

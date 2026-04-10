@@ -2,7 +2,7 @@
 pub(all) struct RouteResponse {
   status : Int
   body : String
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 fn build_router() -> @trie.TrieRouter {

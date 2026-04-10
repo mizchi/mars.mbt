@@ -12,7 +12,7 @@ pub(all) enum ValidationError {
   Pattern(String, String)
   Range(String, Double, Double)
   Custom(String, String)
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 /// Validation result
@@ -195,7 +195,7 @@ pub fn Validator::custom(
   check : (Json) -> Bool,
   message : String,
 ) -> Validator {
-  if not(check(self.data)) {
+  if !check(self.data) {
     self.result.add_error(ValidationError::Custom(field, message))
   }
   self
@@ -212,7 +212,7 @@ pub fn Validator::validate(self : Validator) -> ValidationResult {
 pub fn Validator::email(self : Validator, field : String) -> Validator {
   match get_json_field(self.data, field) {
     Some(String(s)) =>
-      if not(is_valid_email(s)) {
+      if !is_valid_email(s) {
         self.result.add_error(
           ValidationError::Pattern(field, "valid email address"),
         )
@@ -264,7 +264,7 @@ pub fn validate_body(validator_fn : (Validator) -> Validator) -> @mars.Handler {
     }
     let validator = validator_fn(Validator::new(json))
     let result = validator.validate()
-    if not(result.is_valid()) {
+    if !result.is_valid() {
       let errors : Array[Json] = []
       for msg in result.messages() {
         errors.push(Json::string(msg))

@@ -28,7 +28,7 @@ pub(all) struct OAuth2Token {
 pub(all) enum OAuth2Error {
   InvalidResponse(String)
   MissingField(String)
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 /// URL encode a string for OAuth2
@@ -78,7 +78,7 @@ pub fn oauth2_authorization_url(
   url.write_string("&redirect_uri=")
   url.write_string(url_encode_oauth2(config.redirect_uri))
   url.write_string("&response_type=code")
-  if not(scope.is_empty()) {
+  if !scope.is_empty() {
     url.write_string("&scope=")
     url.write_string(url_encode_oauth2(scope))
   }
@@ -231,12 +231,12 @@ pub fn oauth2_bearer(validate : (String) -> Bool) -> @mars.Handler {
       ctx.text("Unauthorized", status=401)
       return
     }
-    if not(auth.has_prefix("Bearer ")) {
+    if !auth.has_prefix("Bearer ") {
       ctx.text("Unauthorized", status=401)
       return
     }
     let token = safe_substring_from(auth, 7)
-    if not(validate(token)) {
+    if !validate(token) {
       ctx.text("Unauthorized", status=401)
     }
   }

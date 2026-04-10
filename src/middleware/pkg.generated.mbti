@@ -3,6 +3,7 @@ package "mizchi/mars/middleware"
 
 import {
   "mizchi/mars",
+  "moonbitlang/core/debug",
   "moonbitlang/core/json",
 }
 
@@ -262,8 +263,7 @@ pub fn ApiKeyOptions::simple(Array[String], location? : ApiKeyLocation) -> Self
 pub(all) enum ApiKeyResult {
   Valid(String)
   Invalid
-}
-pub impl Eq for ApiKeyResult
+} derive(Eq, @debug.Debug)
 pub impl Show for ApiKeyResult
 
 pub(all) struct BasicAuthOptions {
@@ -312,8 +312,7 @@ pub(all) enum CompressionEncoding {
   Deflate
   Br
   Identity
-}
-pub impl Eq for CompressionEncoding
+} derive(Eq, @debug.Debug)
 pub impl Show for CompressionEncoding
 
 pub(all) struct CorsOptions {
@@ -413,9 +412,7 @@ pub(all) enum LogLevel {
   Info
   Warn
   Error
-}
-pub impl Eq for LogLevel
-pub impl Show for LogLevel
+} derive(Eq, @debug.Debug)
 
 pub(all) struct LoggerOptions {
   level : LogLevel
@@ -492,9 +489,7 @@ pub(all) struct OAuth2Config {
 pub(all) enum OAuth2Error {
   InvalidResponse(String)
   MissingField(String)
-}
-pub impl Eq for OAuth2Error
-pub impl Show for OAuth2Error
+} derive(Eq, @debug.Debug)
 
 pub(all) struct OAuth2Token {
   access_token : String
@@ -638,8 +633,7 @@ pub(all) enum TrailingSlashMode {
   Add
   Remove
   Keep
-}
-pub impl Eq for TrailingSlashMode
+} derive(Eq, @debug.Debug)
 pub impl Show for TrailingSlashMode
 
 pub(all) struct TrailingSlashOptions {
@@ -668,9 +662,7 @@ pub(all) enum ValidationError {
   Pattern(String, String)
   Range(String, Double, Double)
   Custom(String, String)
-}
-pub impl Eq for ValidationError
-pub impl Show for ValidationError
+} derive(Eq, @debug.Debug)
 
 pub(all) struct ValidationResult {
   errors : Array[ValidationError]
@@ -699,8 +691,7 @@ pub fn Validator::validate(Self) -> ValidationResult
 pub(all) enum WebhookResult {
   Valid
   Invalid(String)
-}
-pub impl Eq for WebhookResult
+} derive(Eq, @debug.Debug)
 pub impl Show for WebhookResult
 
 // Type aliases

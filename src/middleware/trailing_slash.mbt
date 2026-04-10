@@ -11,7 +11,16 @@ pub(all) enum TrailingSlashMode {
   Remove
   /// Keep as-is (no normalization)
   Keep
-} derive(Show, Eq)
+} derive(Debug, Eq)
+
+///|
+pub impl Show for TrailingSlashMode with output(self, logger) {
+  match self {
+    Add => logger.write_string("Add")
+    Remove => logger.write_string("Remove")
+    Keep => logger.write_string("Keep")
+  }
+}
 
 ///|
 /// Trailing slash options

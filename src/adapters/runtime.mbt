@@ -7,7 +7,19 @@ pub(all) enum RuntimeTarget {
   Cloudflare
   SpinWagi
   WasmComponent
-} derive(Show, Eq)
+} derive(Debug, Eq)
+
+///|
+pub impl Show for RuntimeTarget with output(self, logger) {
+  match self {
+    Node => logger.write_string("Node")
+    Deno => logger.write_string("Deno")
+    Bun => logger.write_string("Bun")
+    Cloudflare => logger.write_string("Cloudflare")
+    SpinWagi => logger.write_string("SpinWagi")
+    WasmComponent => logger.write_string("WasmComponent")
+  }
+}
 
 ///|
 pub fn RuntimeTarget::id(self : RuntimeTarget) -> String {

@@ -42,12 +42,12 @@ pub fn SseEvent::full(
 /// Format SSE event as string
 pub fn SseEvent::format(self : SseEvent) -> String {
   let buf = StringBuilder::new()
-  if not(self.id.is_empty()) {
+  if !self.id.is_empty() {
     buf.write_string("id: ")
     buf.write_string(self.id)
     buf.write_char('\n')
   }
-  if not(self.event.is_empty()) {
+  if !self.event.is_empty() {
     buf.write_string("event: ")
     buf.write_string(self.event)
     buf.write_char('\n')

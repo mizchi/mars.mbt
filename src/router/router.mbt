@@ -1,6 +1,14 @@
 ///|
 /// Handler ID for storing handlers
-pub(all) struct HandlerId(Int) derive(Eq, Hash, Show)
+pub(all) struct HandlerId(Int) derive(Eq, Hash, Debug)
+
+///|
+pub impl Show for HandlerId with output(self, logger) {
+  let HandlerId(id) = self
+  logger.write_string("HandlerId(")
+  logger.write_string(id.to_string())
+  logger.write_string(")")
+}
 
 ///|
 /// Router trait for HTTP routing

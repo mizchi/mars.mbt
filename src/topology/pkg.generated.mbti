@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "mizchi/mars/topology"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn collect_entries(EphemeralStore, Array[String]) -> Array[(String, String, EphemeralEntry)]
 
@@ -29,9 +33,7 @@ pub(all) struct EphemeralEntry {
   value : Int
   timestamp : Double
   peer : String
-}
-pub impl Eq for EphemeralEntry
-pub impl Show for EphemeralEntry
+} derive(Eq, @debug.Debug)
 
 pub(all) struct EphemeralStore {
   data : Map[String, Map[String, EphemeralEntry]]
@@ -102,16 +104,14 @@ pub(all) struct SimResult {
   convergence_tick : Int
   total_messages : Int
   per_tick : Array[TickMetrics]
-}
-pub impl Show for SimResult
+} derive(@debug.Debug)
 
 pub(all) struct TickMetrics {
   tick : Int
   total_messages_sent : Int
   inconsistent_pairs : Int
   total_entries : Int
-}
-pub impl Show for TickMetrics
+} derive(@debug.Debug)
 
 // Type aliases
 

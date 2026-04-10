@@ -77,7 +77,7 @@ pub fn MockRequest::form(
   let buf = StringBuilder::new()
   let mut first = true
   for key, value in data {
-    if not(first) {
+    if !first {
       buf.write_char('&')
     }
     first = false

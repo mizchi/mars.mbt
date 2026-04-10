@@ -104,9 +104,9 @@ fn split_etags(s : String) -> Array[String] {
   let mut in_quotes = false
   for c in s {
     if c == '"' {
-      in_quotes = not(in_quotes)
+      in_quotes = !in_quotes
       current.write_char(c)
-    } else if c == ',' && not(in_quotes) {
+    } else if c == ',' && !in_quotes {
       result.push(current.to_string())
       current.reset()
     } else {

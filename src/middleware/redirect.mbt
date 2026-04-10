@@ -171,12 +171,12 @@ pub fn www_redirect(add_www : Bool) -> @mars.Handler {
       return
     }
     let has_www = host.has_prefix("www.")
-    if add_www && not(has_www) {
+    if add_www && !has_www {
       let path = ctx.path()
       let url = "https://www." + host + path
       ctx.set_header("Location", url)
       ctx.text("", status=301)
-    } else if not(add_www) && has_www {
+    } else if !add_www && has_www {
       let path = ctx.path()
       let new_host = safe_substring_from(host, 4)
       let url = "https://" + new_host + path

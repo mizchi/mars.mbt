@@ -72,7 +72,7 @@ pub fn Node::insert(
         // Still add pattern info for matching
         match pattern {
           Some(Param(name)) | Some(ParamWithRegex(name, _, _)) =>
-            if not(possible_keys.contains(name)) {
+            if !possible_keys.contains(name) {
               possible_keys.push(name)
             }
           _ => ()
@@ -112,7 +112,7 @@ pub fn Node::insert(
 fn dedupe_strings(arr : Array[String]) -> Array[String] {
   let result : Array[String] = []
   for s in arr {
-    if not(result.contains(s)) {
+    if !result.contains(s) {
       result.push(s)
     }
   }

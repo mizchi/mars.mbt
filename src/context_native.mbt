@@ -75,7 +75,7 @@ pub fn[E : Env, C : ExecCtx] Context::with_env(
 async fn read_body_as_string(reader : &@async_io.Reader) -> String {
   let buf = StringBuilder::new()
   let chunk = FixedArray::make(4096, b'\x00')
-  for {
+  for ;; {
     let n = reader.read(chunk) catch { _ => break }
     if n == 0 {
       break

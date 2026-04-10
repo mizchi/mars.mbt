@@ -189,7 +189,7 @@ pub fn generate_types_doc(routes : Array[RouteSpec]) -> String {
   for route in routes {
     match route.input_type {
       Some(t) =>
-        if not(seen_types.contains(t)) {
+        if !seen_types.contains(t) {
           seen_types.set(t, true)
           buf.write_string("// Input type: ")
           buf.write_string(t)
@@ -197,7 +197,7 @@ pub fn generate_types_doc(routes : Array[RouteSpec]) -> String {
         }
       None => ()
     }
-    if not(seen_types.contains(route.output_type)) {
+    if !seen_types.contains(route.output_type) {
       seen_types.set(route.output_type, true)
       buf.write_string("// Output type: ")
       buf.write_string(route.output_type)
@@ -223,7 +223,7 @@ pub fn validate_routes(routes : Array[RouteSpec]) -> Array[String] {
         break
       }
     }
-    if not(method_valid) {
+    if !method_valid {
       errors.push(
         "Invalid method: " + route.http_method + " for route " + route.name,
       )

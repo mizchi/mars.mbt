@@ -5,6 +5,7 @@ import {
   "mizchi/mars",
   "mizchi/x/http",
   "moonbitlang/async/io",
+  "moonbitlang/core/debug",
 }
 
 // Values
@@ -50,9 +51,8 @@ pub fn CloudflareEnv::with_var(Self, String, String) -> Self
 
 pub(all) struct D1Database {
   name : String
-}
+} derive(@debug.Debug)
 pub fn D1Database::new(String) -> Self
-pub impl Show for D1Database
 
 pub struct FetchHandler(async (@mars.Context) -> Unit)
 #deprecated
@@ -61,18 +61,16 @@ pub fn FetchHandler::inner(Self) -> async (@mars.Context) -> Unit
 pub(all) struct KVNamespace {
   name : String
   // private fields
-}
+} derive(@debug.Debug)
 pub fn KVNamespace::delete(Self, String) -> Unit
 pub fn KVNamespace::get(Self, String) -> String?
 pub fn KVNamespace::new(String) -> Self
 pub fn KVNamespace::put(Self, String, String) -> Unit
-pub impl Show for KVNamespace
 
 pub(all) struct R2Bucket {
   name : String
-}
+} derive(@debug.Debug)
 pub fn R2Bucket::new(String) -> Self
-pub impl Show for R2Bucket
 
 pub(all) enum RuntimeTarget {
   Node
@@ -81,11 +79,10 @@ pub(all) enum RuntimeTarget {
   Cloudflare
   SpinWagi
   WasmComponent
-}
+} derive(Eq, @debug.Debug)
 pub fn RuntimeTarget::id(Self) -> String
 pub fn RuntimeTarget::is_js_runtime(Self) -> Bool
 pub fn RuntimeTarget::is_wasm_runtime(Self) -> Bool
-pub impl Eq for RuntimeTarget
 pub impl Show for RuntimeTarget
 
 pub(all) struct SpinWagiAdapter {

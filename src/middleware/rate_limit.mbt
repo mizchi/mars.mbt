@@ -169,7 +169,7 @@ fn get_client_ip_for_rate_limit(
   ctx : @mars.Context,
   trusted_proxies : TrustedProxyConfig,
 ) -> String {
-  if not(trusted_proxies.enabled) {
+  if !trusted_proxies.enabled {
     return "unknown"
   }
   let header = match ctx.header("X-Forwarded-For") {
@@ -185,7 +185,7 @@ fn get_client_ip_for_rate_limit(
   // Walk from right to left, find first untrusted IP
   for i = ips.length() - 1; i >= 0; i = i - 1 {
     let ip = trim_ip(ips[i])
-    if not(is_trusted_proxy_rate(ip, trusted_proxies)) {
+    if !is_trusted_proxy_rate(ip, trusted_proxies) {
       return ip
     }
   }
@@ -221,7 +221,7 @@ fn trim_ip(s : String) -> String {
   let mut end_pos = 0
   for c in s {
     if c != ' ' && c != '\t' {
-      if not(started) {
+      if !started {
         started = true
       }
       buf.write_char(c)

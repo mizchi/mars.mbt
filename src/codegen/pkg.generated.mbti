@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "mizchi/mars/codegen"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn extract_path_params(String) -> Array[PathParam]
 
@@ -18,16 +22,14 @@ pub(all) struct ClientOptions {
   base_url_field : String
   async_functions : Bool
   package_prefix : String?
-}
+} derive(@debug.Debug)
 pub fn ClientOptions::default() -> Self
 pub fn ClientOptions::new(String) -> Self
-pub impl Show for ClientOptions
 
 pub(all) struct PathParam {
   name : String
   position : Int
-}
-pub impl Show for PathParam
+} derive(@debug.Debug)
 
 pub(all) struct RouteSpec {
   http_method : String
@@ -36,14 +38,13 @@ pub(all) struct RouteSpec {
   output_type : String
   name : String
   description : String?
-}
+} derive(@debug.Debug)
 pub fn RouteSpec::delete(String, String, String, description? : String) -> Self
 pub fn RouteSpec::get(String, String, String, description? : String) -> Self
 pub fn RouteSpec::patch(String, String, String, String, description? : String) -> Self
 pub fn RouteSpec::post(String, String, String, String, description? : String) -> Self
 pub fn RouteSpec::put(String, String, String, String, description? : String) -> Self
 pub fn RouteSpec::query(String, String, String, String, description? : String) -> Self
-pub impl Show for RouteSpec
 
 // Type aliases
 

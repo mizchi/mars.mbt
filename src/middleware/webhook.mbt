@@ -7,7 +7,19 @@
 pub(all) enum WebhookResult {
   Valid
   Invalid(String)
-} derive(Show, Eq)
+} derive(Debug, Eq)
+
+///|
+pub impl Show for WebhookResult with output(self, logger) {
+  match self {
+    Valid => logger.write_string("Valid")
+    Invalid(s) => {
+      logger.write_string("Invalid(\"")
+      logger.write_string(s)
+      logger.write_string("\")")
+    }
+  }
+}
 
 ///|
 /// Hex characters for encoding
@@ -85,7 +97,7 @@ pub fn verify_github_webhook(
   body : String,
 ) -> WebhookResult {
   // Parse "sha256=<hex>"
-  if not(signature_header.has_prefix("sha256=")) {
+  if !signature_header.has_prefix("sha256=") {
     return WebhookResult::Invalid("Invalid signature format")
   }
   let signature = safe_substring_from(signature_header, 7)

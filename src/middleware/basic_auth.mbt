@@ -60,7 +60,7 @@ pub fn basic_auth(options : BasicAuthOptions) -> @mars.Handler {
       send_auth_required(ctx, options.realm)
       return
     }
-    if not(auth.has_prefix("Basic ")) {
+    if !auth.has_prefix("Basic ") {
       send_auth_required(ctx, options.realm)
       return
     }
@@ -69,7 +69,7 @@ pub fn basic_auth(options : BasicAuthOptions) -> @mars.Handler {
       send_auth_required(ctx, options.realm)
       return
     }
-    if not((options.validate)(username, password)) {
+    if !(options.validate)(username, password) {
       send_auth_required(ctx, options.realm)
       return
     }

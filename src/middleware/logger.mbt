@@ -9,7 +9,7 @@ pub(all) enum LogLevel {
   Info
   Warn
   Error
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 /// Logger options
@@ -62,7 +62,7 @@ fn format_log_entry(
   buf.write_string("ms)")
   if options.query {
     let queries = ctx.queries()
-    if not(queries.is_empty()) {
+    if !queries.is_empty() {
       buf.write_string(" query=")
       buf.write_string(format_map(queries))
     }
@@ -87,7 +87,7 @@ fn format_map(m : Map[String, String]) -> String {
   buf.write_string("{")
   let mut first = true
   for key, value in m {
-    if not(first) {
+    if !first {
       buf.write_string(",")
     }
     first = false

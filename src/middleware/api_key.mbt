@@ -20,7 +20,19 @@ pub(all) enum ApiKeyResult {
   Valid(String)
   /// Invalid or missing API key
   Invalid
-} derive(Show, Eq)
+} derive(Debug, Eq)
+
+///|
+pub impl Show for ApiKeyResult with output(self, logger) {
+  match self {
+    Valid(s) => {
+      logger.write_string("Valid(\"")
+      logger.write_string(s)
+      logger.write_string("\")")
+    }
+    Invalid => logger.write_string("Invalid")
+  }
+}
 
 ///|
 /// API key options

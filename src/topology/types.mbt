@@ -11,7 +11,7 @@ pub(all) struct EphemeralEntry {
   value : Int
   timestamp : Double
   peer : String
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 pub(all) struct EphemeralStore {
@@ -146,7 +146,7 @@ pub(all) struct TickMetrics {
   total_messages_sent : Int
   inconsistent_pairs : Int
   total_entries : Int
-} derive(Show)
+} derive(Debug)
 
 ///|
 pub(all) struct SimResult {
@@ -154,7 +154,7 @@ pub(all) struct SimResult {
   convergence_tick : Int
   total_messages : Int
   per_tick : Array[TickMetrics]
-} derive(Show)
+} derive(Debug)
 
 ///|
 pub(all) struct SimNode {

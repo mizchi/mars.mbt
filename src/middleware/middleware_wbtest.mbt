@@ -632,7 +632,7 @@ fn check_hex_chars(key : String) -> Bool {
           break
         }
       }
-      if not(found) {
+      if !found {
         return false
       }
     }

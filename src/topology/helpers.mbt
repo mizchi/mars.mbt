@@ -69,7 +69,7 @@ pub fn count_inconsistent_pairs(
             break
           }
         }
-        if not(found_diff) {
+        if !found_diff {
           for key, _ej in entries_j {
             match entries_i.get(key) {
               Some(_) => ()
@@ -141,7 +141,7 @@ pub fn count_filtered_inconsistent_pairs(
             break
           }
         }
-        if not(found_diff) {
+        if !found_diff {
           for key, _ej in entries_j {
             match entries_i.get(key) {
               Some(_) => ()
