@@ -213,7 +213,7 @@ fn wrap_with_middlewares(
       mw_fn(ctx)
     }
     // Run handler
-    if not(ctx.is_response_sent()) {
+    if !ctx.is_response_sent() {
       let @mars.Handler(h) = handler
       h(ctx)
     }

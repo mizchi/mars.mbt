@@ -127,7 +127,7 @@ pub async fn send_error(
   options? : ErrorHandlerOptions = ErrorHandlerOptions::default(),
 ) -> Unit {
   if options.json {
-    let json = if options.show_details && not(err.details.is_empty()) {
+    let json = if options.show_details && !err.details.is_empty() {
       Json::object({
         "error": Json::string(err.message),
         "details": Json::string(err.details),

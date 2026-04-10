@@ -38,7 +38,7 @@ pub fn TrustedProxyConfig::trust_all() -> TrustedProxyConfig {
 ///|
 /// Check if an IP is a trusted proxy
 fn is_trusted_proxy(ip : String, config : TrustedProxyConfig) -> Bool {
-  if not(config.enabled) {
+  if !config.enabled {
     return false
   }
   for proxy in config.proxies {
@@ -183,7 +183,7 @@ fn get_client_ip_secure(
   trusted_proxies : TrustedProxyConfig,
 ) -> String {
   // If no trusted proxies configured, return unknown (safest default)
-  if not(trusted_proxies.enabled) {
+  if !trusted_proxies.enabled {
     return "unknown"
   }
   let ip_header = match ctx.header(header) {
@@ -200,7 +200,7 @@ fn get_client_ip_secure(
   // Walk from right to left, stop at first untrusted IP
   for i = ips.length() - 1; i >= 0; i = i - 1 {
     let ip = safe_trim(ips[i])
-    if not(is_trusted_proxy(ip, trusted_proxies)) {
+    if !is_trusted_proxy(ip, trusted_proxies) {
       return ip
     }
   }
@@ -241,7 +241,7 @@ pub fn ip_filter(options : IpFilterOptions) -> @mars.Handler {
     let matches = ip_matches_any(ip, options.ips)
     if options.whitelist {
       // Whitelist mode: block if NOT in list
-      if not(matches) {
+      if !matches {
         ctx.text("Forbidden", status=403)
       }
       // Blacklist mode: block if in list

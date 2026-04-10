@@ -7,7 +7,7 @@
 pub(all) struct KVNamespace {
   name : String
   priv data : Map[String, String]
-} derive(Show)
+} derive(Debug)
 
 ///|
 pub fn KVNamespace::new(name : String) -> KVNamespace {
@@ -40,7 +40,7 @@ pub fn KVNamespace::delete(self : KVNamespace, key : String) -> Unit {
 /// Cloudflare D1 Database (mock interface)
 pub(all) struct D1Database {
   name : String
-} derive(Show)
+} derive(Debug)
 
 ///|
 pub fn D1Database::new(name : String) -> D1Database {
@@ -51,7 +51,7 @@ pub fn D1Database::new(name : String) -> D1Database {
 /// Cloudflare R2 Bucket (mock interface)
 pub(all) struct R2Bucket {
   name : String
-} derive(Show)
+} derive(Debug)
 
 ///|
 pub fn R2Bucket::new(name : String) -> R2Bucket {

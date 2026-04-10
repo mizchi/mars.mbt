@@ -31,7 +31,17 @@ pub(all) enum JwtClaimsError {
   InvalidJson
   NotObject
   Decode(@json.JsonDecodeError)
-} derive(Show)
+}
+
+///|
+pub impl Show for JwtClaimsError with output(self, logger) {
+  match self {
+    MissingClaims => logger.write_string("MissingClaims")
+    InvalidJson => logger.write_string("InvalidJson")
+    NotObject => logger.write_string("NotObject")
+    Decode(_) => logger.write_string("Decode(<JsonDecodeError>)")
+  }
+}
 
 ///|
 fn parse_claims_json_string(

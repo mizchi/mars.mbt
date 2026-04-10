@@ -74,7 +74,7 @@ pub fn cors(options? : CorsOptions = CorsOptions::default()) -> @mars.Handler {
       if options.credentials {
         ctx.set_header("Access-Control-Allow-Credentials", "true")
       }
-      if not(options.exposed_headers.is_empty()) {
+      if !options.exposed_headers.is_empty() {
         ctx.set_header(
           "Access-Control-Expose-Headers",
           join_array(options.exposed_headers, ", "),

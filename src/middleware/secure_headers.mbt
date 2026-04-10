@@ -90,7 +90,7 @@ pub fn secure_headers(
       ctx.set_header("X-Content-Type-Options", "nosniff")
     }
     // X-Frame-Options
-    if not(options.frame_options.is_empty()) {
+    if !options.frame_options.is_empty() {
       ctx.set_header("X-Frame-Options", options.frame_options)
     }
     // X-XSS-Protection
@@ -98,15 +98,15 @@ pub fn secure_headers(
       ctx.set_header("X-XSS-Protection", "1; mode=block")
     }
     // Content-Security-Policy
-    if not(options.csp.is_empty()) {
+    if !options.csp.is_empty() {
       ctx.set_header("Content-Security-Policy", options.csp)
     }
     // Referrer-Policy
-    if not(options.referrer_policy.is_empty()) {
+    if !options.referrer_policy.is_empty() {
       ctx.set_header("Referrer-Policy", options.referrer_policy)
     }
     // Permissions-Policy
-    if not(options.permissions_policy.is_empty()) {
+    if !options.permissions_policy.is_empty() {
       ctx.set_header("Permissions-Policy", options.permissions_policy)
     }
   }

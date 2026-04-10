@@ -147,7 +147,7 @@ async fn Server::dispatch_to_context(
     }
   }
   let mut handler_error = false
-  if not(ctx.is_response_sent()) && handler_id < self.handlers.length() {
+  if !ctx.is_response_sent() && handler_id < self.handlers.length() {
     let Handler(h) = self.handlers[handler_id]
     h(ctx) catch {
       e => {
@@ -177,9 +177,9 @@ async fn Server::match_and_dispatch(
 
 ///|
 fn dispatch_fallback_status(dispatch : DispatchResult) -> Int? {
-  if dispatch.handler_error && not(dispatch.response_sent) {
+  if dispatch.handler_error && !dispatch.response_sent {
     Some(500)
-  } else if not(dispatch.response_sent) {
+  } else if !dispatch.response_sent {
     Some(404)
   } else {
     None
@@ -218,7 +218,7 @@ fn join_mount_paths(prefix : String, path : String) -> String {
     prefix
   }
   // Ensure path starts with /
-  if path.length() == 0 || not(path.has_prefix("/")) {
+  if path.length() == 0 || !path.has_prefix("/") {
     "\{prefix_clean}/\{path}"
   } else {
     "\{prefix_clean}\{path}"

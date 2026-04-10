@@ -40,7 +40,7 @@ async fn handle_websocket_echo(
   // `mars` uses mizchi/x HTTP types; async websocket expects async HTTP types.
   let ws = @websocket.from_http_server(to_async_request(request), conn.inner)
   defer ws.close()
-  for {
+  for ;; {
     let msg = ws.recv() catch {
       @websocket.ConnectionClosed(_) => break
       err => raise err

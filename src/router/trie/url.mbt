@@ -196,7 +196,7 @@ pub fn check_optional_parameter(path : String) -> Array[String]? {
   let len = path.length()
   if len == 0 ||
     path[len - 1] != '?'.to_int().to_uint16() ||
-    not(path.contains(":")) {
+    !path.contains(":") {
     return None
   }
   let segments = path.split("/")
@@ -207,7 +207,7 @@ pub fn check_optional_parameter(path : String) -> Array[String]? {
     if seg == "" {
       continue
     }
-    if not(seg.contains(":")) {
+    if !seg.contains(":") {
       base_path.write_char('/')
       base_path.write_string(seg)
     } else if seg.contains(":") {
@@ -233,7 +233,7 @@ pub fn check_optional_parameter(path : String) -> Array[String]? {
   // Remove duplicates while preserving order
   let unique : Array[String] = []
   for r in results {
-    if not(unique.contains(r)) {
+    if !unique.contains(r) {
       unique.push(r)
     }
   }

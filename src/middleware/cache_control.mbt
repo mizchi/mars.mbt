@@ -168,7 +168,7 @@ fn join_cache_parts(parts : Array[String]) -> String {
 pub fn cache_control(options : CacheOptions) -> @mars.Handler {
   async fn(ctx : @mars.Context) {
     let header = build_cache_control(options)
-    if not(header.is_empty()) {
+    if !header.is_empty() {
       ctx.set_header("Cache-Control", header)
     }
     // Set Pragma for HTTP/1.0 compatibility
@@ -188,7 +188,7 @@ pub fn no_cache_middleware() -> @mars.Handler {
 /// Set cache headers on context
 pub fn set_cache_headers(ctx : @mars.Context, options : CacheOptions) -> Unit {
   let header = build_cache_control(options)
-  if not(header.is_empty()) {
+  if !header.is_empty() {
     ctx.set_header("Cache-Control", header)
   }
   if options.no_cache || options.no_store {

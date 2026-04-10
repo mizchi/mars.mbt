@@ -1,16 +1,18 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "mizchi/mars/router"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 
 // Errors
 
 // Types and methods
-pub(all) struct HandlerId(Int)
+pub(all) struct HandlerId(Int) derive(Eq, Hash, @debug.Debug)
 #deprecated
 pub fn HandlerId::inner(Self) -> Int
-pub impl Eq for HandlerId
-pub impl Hash for HandlerId
 pub impl Show for HandlerId
 
 pub(all) struct MatchResult[H] {
@@ -31,11 +33,9 @@ pub(all) enum Method {
   Trace
   Query
   All
-}
+} derive(Eq, Hash)
 pub fn Method::from_string(String) -> Self?
 pub fn Method::to_string(Self) -> String
-pub impl Eq for Method
-pub impl Hash for Method
 pub impl Show for Method
 
 pub(all) struct Params {

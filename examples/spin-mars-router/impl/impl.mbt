@@ -39,7 +39,7 @@ fn decode_environment_as_lines_by_string_list(
   mem_bytes : Int,
 ) -> Array[String] {
   let lines : Array[String] = []
-  if result_len <= 0 || not(is_valid_memory_range(result_ptr, 0, mem_bytes)) {
+  if result_len <= 0 || !(is_valid_memory_range(result_ptr, 0, mem_bytes)) {
     return lines
   }
   let max_entries = (mem_bytes - result_ptr) / 8
@@ -64,7 +64,7 @@ fn decode_environment_as_lines_by_tuple_list(
   mem_bytes : Int,
 ) -> Array[String] {
   let lines : Array[String] = []
-  if result_len <= 0 || not(is_valid_memory_range(result_ptr, 0, mem_bytes)) {
+  if result_len <= 0 || !(is_valid_memory_range(result_ptr, 0, mem_bytes)) {
     return lines
   }
   let max_entries = (mem_bytes - result_ptr) / 16

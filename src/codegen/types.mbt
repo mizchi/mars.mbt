@@ -13,7 +13,7 @@ pub(all) struct RouteSpec {
   name : String
   /// Optional description for documentation
   description : String?
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a GET route spec
@@ -131,7 +131,7 @@ pub(all) struct ClientOptions {
   async_functions : Bool
   /// Package prefix for imports
   package_prefix : String?
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Default client options
@@ -155,7 +155,7 @@ pub fn ClientOptions::new(name : String) -> ClientOptions {
 pub(all) struct PathParam {
   name : String
   position : Int
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Extract path parameters from a route path
