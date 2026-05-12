@@ -55,8 +55,6 @@ pub(all) struct D1Database {
 pub fn D1Database::new(String) -> Self
 
 pub struct FetchHandler(async (@mars.Context) -> Unit)
-#deprecated
-pub fn FetchHandler::inner(Self) -> async (@mars.Context) -> Unit
 
 pub(all) struct KVNamespace {
   name : String

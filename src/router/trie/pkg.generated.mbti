@@ -3,7 +3,6 @@ package "mizchi/mars/router/trie"
 
 import {
   "mizchi/mars/router",
-  "moonbitlang/regexp",
 }
 
 // Values
@@ -44,7 +43,7 @@ pub fn Node::with_handler(String, Int) -> Self
 pub(all) enum Pattern {
   Wildcard
   Param(String)
-  ParamWithRegex(String, String, @regexp.Regexp?)
+  ParamWithRegex(String, String)
 }
 pub impl Eq for Pattern
 pub impl Show for Pattern

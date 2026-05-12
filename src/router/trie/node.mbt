@@ -58,7 +58,7 @@ pub fn Node::insert(
         possible_keys.push(name)
         ":" + name
       }
-      Some(ParamWithRegex(name, regex, _)) => {
+      Some(ParamWithRegex(name, regex)) => {
         possible_keys.push(name)
         ":" + name + "{" + regex + "}"
       }
@@ -71,7 +71,7 @@ pub fn Node::insert(
         cur_node = child
         // Still add pattern info for matching
         match pattern {
-          Some(Param(name)) | Some(ParamWithRegex(name, _, _)) =>
+          Some(Param(name)) | Some(ParamWithRegex(name, _)) =>
             if !possible_keys.contains(name) {
               possible_keys.push(name)
             }
@@ -239,12 +239,11 @@ fn search_recursive(
           None => ()
         }
       }
-      ParamWithRegex(name, regex, compiled) => {
+      ParamWithRegex(name, regex) => {
         let key = ":" + name + "{" + regex + "}"
         match node.children.get(key) {
           Some(child) =>
-            // Use pre-compiled regex for faster matching
-            if matches_compiled_regex(part, compiled) {
+            if matches_segment_regex(part, regex) {
               let new_params = params.with_param(name, part)
               if is_last {
                 collect_handlers(child, meth, new_params, results)
@@ -263,19 +262,6 @@ fn search_recursive(
         }
       }
     }
-  }
-}
-
-///|
-/// Check if string matches pre-compiled regex
-fn matches_compiled_regex(s : String, compiled : @regexp.Regexp?) -> Bool {
-  match compiled {
-    Some(re) =>
-      match re.match_(s) {
-        Some(_) => true
-        None => false
-      }
-    None => false
   }
 }
 

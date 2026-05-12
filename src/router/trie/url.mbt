@@ -6,7 +6,7 @@ pub fn split_path(path : String) -> Array[String] {
   let paths : Array[String] = []
   let parts = path.split("/")
   for part in parts {
-    let s = part.to_string()
+    let s = part.to_owned()
     if s != "" {
       paths.push(s)
     }
@@ -46,9 +46,7 @@ fn extract_groups_from_path(path : String) -> (Array[(String, String)], String) 
         }
         i += 1
       }
-      let group_content = path
-        .view(start_offset=start, end_offset=i)
-        .to_string()
+      let group_content = path.view(start_offset=start, end_offset=i).to_owned()
       let mark = "@\{start}"
       groups.push((mark, group_content))
       result.write_string(mark)
@@ -86,8 +84,7 @@ pub(all) enum Pattern {
   /// Parameter pattern (:name)
   Param(String)
   /// Parameter with regex pattern (:name{regex})
-  /// Stores (name, regex_string, compiled_regex?)
-  ParamWithRegex(String, String, @regexp.Regexp?)
+  ParamWithRegex(String, String)
 }
 
 ///|
@@ -99,7 +96,7 @@ pub impl Show for Pattern with output(self, logger) {
       logger.write_string(name)
       logger.write_string(")")
     }
-    ParamWithRegex(name, regex, _) => {
+    ParamWithRegex(name, regex) => {
       logger.write_string("ParamWithRegex(")
       logger.write_string(name)
       logger.write_string(", ")
@@ -114,8 +111,7 @@ pub impl Eq for Pattern with equal(self, other) {
   match (self, other) {
     (Wildcard, Wildcard) => true
     (Param(a), Param(b)) => a == b
-    (ParamWithRegex(a1, a2, _), ParamWithRegex(b1, b2, _)) =>
-      a1 == b1 && a2 == b2
+    (ParamWithRegex(a1, a2), ParamWithRegex(b1, b2)) => a1 == b1 && a2 == b2
     _ => false
   }
 }
@@ -147,40 +143,29 @@ fn index_of(s : String, needle : String) -> Int {
 }
 
 ///|
-/// Compile a regex pattern, returning None on failure
-fn compile_regex(pattern : String) -> @regexp.Regexp? {
-  let full_pattern = "^" + pattern + "$"
-  Some(@regexp.compile(full_pattern)) catch {
-    _ => None
-  }
-}
-
-///|
 /// Get pattern from a path segment
 /// Returns None for static segments
 /// "*" => Wildcard
 /// ":id" => Param("id")
-/// ":id{[0-9]+}" => ParamWithRegex("id", "[0-9]+", compiled_regex)
+/// ":id{[0-9]+}" => ParamWithRegex("id", "[0-9]+")
 pub fn get_pattern(label : String) -> Pattern? {
   if label == "*" {
     return Some(Wildcard)
   }
   if label.length() > 0 && label[0] == ':'.to_int().to_uint16() {
-    let rest = label.view(start_offset=1).to_string()
+    let rest = label.view(start_offset=1).to_owned()
     // Check for regex pattern in braces
     let brace_start = index_of(rest, "{")
     if brace_start >= 0 {
-      let name = rest.view(end_offset=brace_start).to_string()
+      let name = rest.view(end_offset=brace_start).to_owned()
       // Extract regex (without braces)
       let regex_start = brace_start + 1
       let regex_end = rest.length() - 1 // Remove closing brace
       if regex_end > regex_start {
         let regex = rest
           .view(start_offset=regex_start, end_offset=regex_end)
-          .to_string()
-        // Pre-compile the regex at pattern creation time
-        let compiled = compile_regex(regex)
-        return Some(ParamWithRegex(name, regex, compiled))
+          .to_owned()
+        return Some(ParamWithRegex(name, regex))
       }
     }
     return Some(Param(rest))
@@ -203,7 +188,7 @@ pub fn check_optional_parameter(path : String) -> Array[String]? {
   let results : Array[String] = []
   let base_path = StringBuilder::new()
   for segment in segments {
-    let seg = segment.to_string()
+    let seg = segment.to_owned()
     if seg == "" {
       continue
     }
@@ -220,7 +205,7 @@ pub fn check_optional_parameter(path : String) -> Array[String]? {
           results.push(current_base)
         }
         // Remove trailing ? from segment
-        let optional_segment = seg.view(end_offset=seg.length() - 1).to_string()
+        let optional_segment = seg.view(end_offset=seg.length() - 1).to_owned()
         base_path.write_char('/')
         base_path.write_string(optional_segment)
         results.push(base_path.to_string())

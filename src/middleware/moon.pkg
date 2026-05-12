@@ -6,7 +6,7 @@ import {
   "mizchi/x/http" @http,
 }
 
-warnings = "-0067-0024"
+warnings = "-0067-0024-0020"
 
 options(
   targets: {

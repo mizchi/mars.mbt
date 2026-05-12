@@ -1,9 +1,10 @@
 {
   "name": "websocket-echo-example",
   "version": "0.1.0",
+  "preferred-target": "native",
   "deps": {
     "mizchi/mars": { "path": "../.." },
     "moonbitlang/async": "0.16.6",
-    "mizchi/x": "0.2.0"
+    "mizchi/x": "0.3.0"
   }
 }

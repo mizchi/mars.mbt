@@ -1,5 +1,6 @@
 import {
   "mizchi/mars/router",
-  "moonbitlang/regexp",
   "moonbitlang/core/bench",
 }
+
+warnings = "-0020"

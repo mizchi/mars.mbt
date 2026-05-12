@@ -8,7 +8,7 @@ import {
   "moonbitlang/core/json",
 }
 
-warnings = "-29"
+warnings = "-29-0020"
 
 options(
   targets: {

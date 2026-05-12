@@ -11,8 +11,6 @@ import {
 
 // Types and methods
 pub(all) struct HandlerId(Int) derive(Eq, Hash, @debug.Debug)
-#deprecated
-pub fn HandlerId::inner(Self) -> Int
 pub impl Show for HandlerId
 
 pub(all) struct MatchResult[H] {
