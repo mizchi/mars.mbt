@@ -2,8 +2,8 @@
   "name": "mizchi/mars",
   "version": "0.3.10",
   "deps": {
-    "moonbitlang/async": "0.16.6",
-    "moonbitlang/x": "0.4.40",
+    "moonbitlang/async": "0.19.0",
+    "moonbitlang/x": "0.4.43",
     "mizchi/x": "0.3.0"
   },
   "readme": "README.mbt.md",

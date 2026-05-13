@@ -77,7 +77,7 @@ cd examples/spin-mars-router
 just e2e
 ```
 
-Playwright が `just spin-up` を起動し、以下ルートを HTTP 経由で検証します。
+Playwright が committed `component.wasm` を `spin up` で起動し、以下ルートを HTTP 経由で検証します。
 
 - `/`
 - `/users/42`

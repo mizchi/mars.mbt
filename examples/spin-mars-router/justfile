@@ -15,10 +15,10 @@ e2e:
     pnpm install --frozen-lockfile
     pnpm exec playwright test
 
-wasmtime-run: componentize
+wasmtime-run:
     wasmtime run component.wasm -- /
 
-spin-up listen="127.0.0.1:3000": componentize
+spin-up listen="127.0.0.1:3000":
     spin up --listen {{listen}}
 
 clean:

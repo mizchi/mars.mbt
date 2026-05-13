@@ -15,8 +15,7 @@ export default defineConfig({
     baseURL,
   },
   webServer: {
-    command:
-      "sh -lc 'moon build --target wasm --release impl && moon-component componentize _build/wasm/release/build/impl/impl.wasm --wit-dir wit -o component.wasm && spin up --listen 127.0.0.1:3101'",
+    command: "spin up --listen 127.0.0.1:3101",
     url: `${baseURL}/health`,
     timeout: 180_000,
     reuseExistingServer: false,

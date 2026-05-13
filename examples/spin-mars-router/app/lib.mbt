@@ -5,6 +5,15 @@ pub(all) struct RouteResponse {
 } derive(Debug, Eq)
 
 ///|
+pub impl Show for RouteResponse with output(self, logger) {
+  logger.write_string("{status: ")
+  logger.write_string(self.status.to_string())
+  logger.write_string(", body: \"")
+  logger.write_string(self.body)
+  logger.write_string("\"}")
+}
+
+///|
 fn build_router() -> @trie.TrieRouter {
   let router = @trie.TrieRouter::new()
   let _ = router.add(@router.Method::Get, "/")

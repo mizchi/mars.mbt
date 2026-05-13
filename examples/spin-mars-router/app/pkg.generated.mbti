@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "spin-mars-router-demo/app"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn route(String, String) -> RouteResponse
 
@@ -10,8 +14,7 @@ pub fn route(String, String) -> RouteResponse
 pub(all) struct RouteResponse {
   status : Int
   body : String
-}
-pub impl Eq for RouteResponse
+} derive(Eq, @debug.Debug)
 pub impl Show for RouteResponse
 
 // Type aliases

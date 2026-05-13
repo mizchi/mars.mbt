@@ -30,9 +30,6 @@ jobs:
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -53,12 +50,6 @@ jobs:
             echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           fi
           spin --version
-
-      - name: Install moon-component CLI
-        run: |
-          git clone --depth 1 https://github.com/mizchi/moon-component.git /tmp/moon-component
-          cargo install --path /tmp/moon-component/tools/moon-component
-          moon-component --help >/dev/null
 
       - name: Run spin-mars-router tests
         working-directory: examples/spin-mars-router

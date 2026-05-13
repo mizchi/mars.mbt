@@ -127,7 +127,7 @@ fn read_environment_lines() -> Array[String] {
 fn find_method_from_environment_lines(lines : Array[String]) -> String? {
   for i = 0; i < lines.length(); i = i + 1 {
     match lines[i].chop_prefix("REQUEST_METHOD=") {
-      Some(v) => return Some(v.to_string())
+      Some(v) => return Some(v.to_owned())
       None => ()
     }
   }

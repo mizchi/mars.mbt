@@ -20,7 +20,7 @@ pub(all) struct EphemeralStore {
 
 ///|
 pub fn EphemeralStore::new() -> EphemeralStore {
-  { data: Map::new() }
+  { data: Map::from_array([]) }
 }
 
 ///|
@@ -31,7 +31,7 @@ fn EphemeralStore::get_or_create_ns(
   match self.data.get(ns) {
     Some(m) => m
     None => {
-      let m : Map[String, EphemeralEntry] = Map::new()
+      let m : Map[String, EphemeralEntry] = Map::from_array([])
       self.data[ns] = m
       m
     }
@@ -70,7 +70,7 @@ pub fn EphemeralStore::get_all(
 ) -> Map[String, EphemeralEntry] {
   match self.data.get(ns) {
     Some(ns_map) => ns_map
-    None => Map::new()
+    None => Map::from_array([])
   }
 }
 

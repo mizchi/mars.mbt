@@ -59,9 +59,13 @@ async fn main {
 
 ## JWT Middleware
 
-`jwt_bearer_with_key`, `jwt_bearer_with_jwks`, and `jwks_fetch_*` are
-temporarily disabled while cross-target JWT support is being redesigned.
-Current behavior is fail-closed (always unauthorized).
+`jwt_bearer_with_key` and `jwt_bearer_with_jwks` are temporarily disabled
+while cross-target JWT verification is being redesigned. Current verifier
+behavior is fail-closed (always unauthorized).
+
+`jwks_fetch_native`, `jwks_fetch_node`, and `jwks_fetch_wasm` fetch JWKS
+documents for applications that need the transport helper directly. Native and
+Node.js targets use `mizchi/x/http`.
 
 Claims helper APIs are still available:
 
