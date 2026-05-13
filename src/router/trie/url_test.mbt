@@ -1,17 +1,39 @@
 ///|
 test "split_path basic" {
-  inspect(split_path("/hello/world"), content="[\"hello\", \"world\"]")
+  inspect(
+    split_path("/hello/world"),
+    content=(
+      #|[hello, world]
+    ),
+  )
   inspect(split_path("/"), content="[]")
-  inspect(split_path("/api/users/123"), content="[\"api\", \"users\", \"123\"]")
-  inspect(split_path("hello/world"), content="[\"hello\", \"world\"]")
+  inspect(
+    split_path("/api/users/123"),
+    content=(
+      #|[api, users, 123]
+    ),
+  )
+  inspect(
+    split_path("hello/world"),
+    content=(
+      #|[hello, world]
+    ),
+  )
 }
 
 ///|
 test "split_routing_path with groups" {
-  inspect(split_routing_path("/users/:id"), content="[\"users\", \":id\"]")
+  inspect(
+    split_routing_path("/users/:id"),
+    content=(
+      #|[users, :id]
+    ),
+  )
   inspect(
     split_routing_path("/users/:id{[0-9]+}"),
-    content="[\"users\", \":id{[0-9]+}\"]",
+    content=(
+      #|[users, :id{[0-9]+}]
+    ),
   )
 }
 
@@ -44,7 +66,9 @@ test "get_pattern static segment" {
 test "check_optional_parameter" {
   inspect(
     check_optional_parameter("/api/animals/:type?"),
-    content="Some([\"/api/animals\", \"/api/animals/:type\"])",
+    content=(
+      #|Some([/api/animals, /api/animals/:type])
+    ),
   )
   inspect(check_optional_parameter("/api/animals"), content="None")
   inspect(check_optional_parameter("/users/:id"), content="None")
@@ -54,7 +78,9 @@ test "check_optional_parameter" {
 test "check_optional_parameter root" {
   inspect(
     check_optional_parameter("/:type?"),
-    content="Some([\"/\", \"/:type\"])",
+    content=(
+      #|Some([/, /:type])
+    ),
   )
 }
 
@@ -75,7 +101,12 @@ test "Node::insert and search with param" {
   let results = node.search("GET", "/users/123")
   assert_eq(results.length(), 1)
   assert_eq(results[0].handler_id, 1)
-  inspect(results[0].params.get("id"), content="Some(\"123\")")
+  inspect(
+    results[0].params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
 }
 
 ///|
@@ -120,7 +151,12 @@ test "TrieRouter basic usage" {
   let (handler_id, params) = result.handlers[0]
   let @router.HandlerId(id) = handler_id
   assert_eq(id, 3)
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
 }
 
 ///|

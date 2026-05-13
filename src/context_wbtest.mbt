@@ -7,38 +7,73 @@ test "parse_query_string empty" {
 ///|
 test "parse_query_string single param" {
   let result = parse_query_string("/path?name=alice")
-  inspect(result.get("name"), content="Some(\"alice\")")
+  inspect(
+    result.get("name"),
+    content=(
+      #|Some(alice)
+    ),
+  )
 }
 
 ///|
 test "parse_query_string multiple params" {
   let result = parse_query_string("/path?name=alice&age=25")
-  inspect(result.get("name"), content="Some(\"alice\")")
-  inspect(result.get("age"), content="Some(\"25\")")
+  inspect(
+    result.get("name"),
+    content=(
+      #|Some(alice)
+    ),
+  )
+  inspect(
+    result.get("age"),
+    content=(
+      #|Some(25)
+    ),
+  )
 }
 
 ///|
 test "parse_query_string url encoded" {
   let result = parse_query_string("/path?message=hello%20world")
-  inspect(result.get("message"), content="Some(\"hello world\")")
+  inspect(
+    result.get("message"),
+    content=(
+      #|Some(hello world)
+    ),
+  )
 }
 
 ///|
 test "parse_query_string plus as space" {
   let result = parse_query_string("/path?message=hello+world")
-  inspect(result.get("message"), content="Some(\"hello world\")")
+  inspect(
+    result.get("message"),
+    content=(
+      #|Some(hello world)
+    ),
+  )
 }
 
 ///|
 test "parse_query_string special chars" {
   let result = parse_query_string("/path?email=user%40example.com")
-  inspect(result.get("email"), content="Some(\"user@example.com\")")
+  inspect(
+    result.get("email"),
+    content=(
+      #|Some(user@example.com)
+    ),
+  )
 }
 
 ///|
 test "parse_query_string empty value" {
   let result = parse_query_string("/path?empty=")
-  inspect(result.get("empty"), content="Some(\"\")")
+  inspect(
+    result.get("empty"),
+    content=(
+      #|Some()
+    ),
+  )
 }
 
 ///|
@@ -57,21 +92,46 @@ test "parse_cookies empty" {
 ///|
 test "parse_cookies single" {
   let result = parse_cookies("session=abc123")
-  inspect(result.get("session"), content="Some(\"abc123\")")
+  inspect(
+    result.get("session"),
+    content=(
+      #|Some(abc123)
+    ),
+  )
 }
 
 ///|
 test "parse_cookies multiple" {
   let result = parse_cookies("session=abc123; user=alice")
-  inspect(result.get("session"), content="Some(\"abc123\")")
-  inspect(result.get("user"), content="Some(\"alice\")")
+  inspect(
+    result.get("session"),
+    content=(
+      #|Some(abc123)
+    ),
+  )
+  inspect(
+    result.get("user"),
+    content=(
+      #|Some(alice)
+    ),
+  )
 }
 
 ///|
 test "parse_cookies with spaces" {
   let result = parse_cookies("  session=abc123  ;  user=alice  ")
-  inspect(result.get("session"), content="Some(\"abc123\")")
-  inspect(result.get("user"), content="Some(\"alice\")")
+  inspect(
+    result.get("session"),
+    content=(
+      #|Some(abc123)
+    ),
+  )
+  inspect(
+    result.get("user"),
+    content=(
+      #|Some(alice)
+    ),
+  )
 }
 
 ///|

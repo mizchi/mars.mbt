@@ -157,7 +157,12 @@ test "Server::match_first_handler returns first handler and params" {
   let result = app.match_first_handler(@router.Method::Get, "/users/42")
   match result {
     Some((@router.HandlerId(_), params)) =>
-      inspect(params.get("id"), content="Some(\"42\")")
+      inspect(
+        params.get("id"),
+        content=(
+          #|Some(42)
+        ),
+      )
     None => inspect("missing", content="found")
   }
 }

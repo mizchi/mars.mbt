@@ -36,7 +36,12 @@ test "RouteSpec::post" {
     "/users", "create_user", "CreateUserInput", "User",
   )
   inspect(route.http_method, content="POST")
-  inspect(route.input_type, content="Some(\"CreateUserInput\")")
+  inspect(
+    route.input_type,
+    content=(
+      #|Some(CreateUserInput)
+    ),
+  )
   inspect(route.output_type, content="User")
 }
 
@@ -53,7 +58,12 @@ test "RouteSpec::query" {
     "/search", "search", "SearchQuery", "SearchResult",
   )
   inspect(route.http_method, content="QUERY")
-  inspect(route.input_type, content="Some(\"SearchQuery\")")
+  inspect(
+    route.input_type,
+    content=(
+      #|Some(SearchQuery)
+    ),
+  )
 }
 
 ///|

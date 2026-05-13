@@ -30,8 +30,18 @@ test "CloudflareEnv with_var" {
   let env = CloudflareEnv::new()
     .with_var("API_KEY", "secret")
     .with_var("ENV", "production")
-  inspect(env.get_var("API_KEY"), content="Some(\"secret\")")
-  inspect(env.get_var("ENV"), content="Some(\"production\")")
+  inspect(
+    env.get_var("API_KEY"),
+    content=(
+      #|Some(secret)
+    ),
+  )
+  inspect(
+    env.get_var("ENV"),
+    content=(
+      #|Some(production)
+    ),
+  )
   inspect(env.get_var("MISSING"), content="None")
 }
 
@@ -65,8 +75,18 @@ test "CloudflareEnv to_map_env converts vars" {
     .with_var("SECRET", "value123")
     .with_var("MODE", "dev")
   let map_env = cf_env.to_map_env()
-  inspect(map_env.get_var("SECRET"), content="Some(\"value123\")")
-  inspect(map_env.get_var("MODE"), content="Some(\"dev\")")
+  inspect(
+    map_env.get_var("SECRET"),
+    content=(
+      #|Some(value123)
+    ),
+  )
+  inspect(
+    map_env.get_var("MODE"),
+    content=(
+      #|Some(dev)
+    ),
+  )
 }
 
 ///|
@@ -76,12 +96,24 @@ test "CloudflareEnv to_map_env includes bindings info" {
     .with_d1("DB", D1Database::new("DB"))
     .with_r2("BUCKET", R2Bucket::new("BUCKET"))
   let map_env = cf_env.to_map_env()
-  let expected_kv = "Some(String(\"KVNamespace\"))"
-  let expected_d1 = "Some(String(\"D1Database\"))"
-  let expected_r2 = "Some(String(\"R2Bucket\"))"
-  inspect(map_env.get_binding("kv:CACHE"), content=expected_kv)
-  inspect(map_env.get_binding("d1:DB"), content=expected_d1)
-  inspect(map_env.get_binding("r2:BUCKET"), content=expected_r2)
+  inspect(
+    map_env.get_binding("kv:CACHE"),
+    content=(
+      #|Some(String(KVNamespace))
+    ),
+  )
+  inspect(
+    map_env.get_binding("d1:DB"),
+    content=(
+      #|Some(String(D1Database))
+    ),
+  )
+  inspect(
+    map_env.get_binding("r2:BUCKET"),
+    content=(
+      #|Some(String(R2Bucket))
+    ),
+  )
 }
 
 ///|
@@ -91,7 +123,12 @@ test "CloudflareEnv chained builder pattern" {
     .with_kv("KV", KVNamespace::new("KV"))
     .with_d1("D1", D1Database::new("D1"))
     .with_r2("R2", R2Bucket::new("R2"))
-  inspect(env.get_var("KEY"), content="Some(\"value\")")
+  inspect(
+    env.get_var("KEY"),
+    content=(
+      #|Some(value)
+    ),
+  )
   inspect(env.get_kv("KV") is Some(_), content="true")
   inspect(env.get_d1("D1") is Some(_), content="true")
   inspect(env.get_r2("R2") is Some(_), content="true")

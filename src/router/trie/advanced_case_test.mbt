@@ -35,7 +35,12 @@ test "Multi match - Blog - GET /entry/123" {
   assert_eq(res.handlers.length(), 3)
   // Check that params are extracted correctly for the specific handler
   let (_, params) = res.handlers[2]
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
 }
 
 ///|
@@ -51,8 +56,18 @@ test "Multi match - Blog - GET /entry/123/comment/456" {
   let res = router.match_(@router.Method::Get, "/entry/123/comment/456")
   assert_eq(res.handlers.length(), 3)
   let (_, params) = res.handlers[2]
-  inspect(params.get("id"), content="Some(\"123\")")
-  inspect(params.get("comment_id"), content="Some(\"456\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
+  inspect(
+    params.get("comment_id"),
+    content=(
+      #|Some(456)
+    ),
+  )
 }
 
 ///|
@@ -168,7 +183,12 @@ test "Duplicate param name - self" {
   // Current impl: second value overwrites first
   // Hono: first match wins
   // Document this behavior difference
-  inspect(params.get("id"), content="Some(\"456\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(456)
+    ),
+  )
 }
 
 ///|
@@ -181,9 +201,24 @@ test "Duplicate param name - different routes" {
   // Each handler has its own params
   let (_, params1) = res.handlers[0]
   let (_, params2) = res.handlers[1]
-  inspect(params1.get("id"), content="Some(\"posts\")")
-  inspect(params1.get("action"), content="Some(\"get\")")
-  inspect(params2.get("id"), content="Some(\"get\")")
+  inspect(
+    params1.get("id"),
+    content=(
+      #|Some(posts)
+    ),
+  )
+  inspect(
+    params1.get("action"),
+    content=(
+      #|Some(get)
+    ),
+  )
+  inspect(
+    params2.get("id"),
+    content=(
+      #|Some(get)
+    ),
+  )
 }
 
 // =============================================================================
@@ -372,8 +407,18 @@ test "Multiple optional parameters - both provided" {
   let res = router.match_(@router.Method::Get, "/v1/123/abc")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("version"), content="Some(\"123\")")
-  inspect(params.get("platform"), content="Some(\"abc\")")
+  inspect(
+    params.get("version"),
+    content=(
+      #|Some(123)
+    ),
+  )
+  inspect(
+    params.get("platform"),
+    content=(
+      #|Some(abc)
+    ),
+  )
 }
 
 ///|
@@ -383,7 +428,12 @@ test "Multiple optional parameters - one provided" {
   let res = router.match_(@router.Method::Get, "/v1/123")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("version"), content="Some(\"123\")")
+  inspect(
+    params.get("version"),
+    content=(
+      #|Some(123)
+    ),
+  )
   inspect(params.get("platform"), content="None")
 }
 

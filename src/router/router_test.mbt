@@ -20,7 +20,12 @@ test "Params basic operations" {
   assert_true(params.is_empty())
   params.set("id", "123")
   assert_false(params.is_empty())
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
   inspect(params.get("unknown"), content="None")
 }
 

@@ -116,7 +116,7 @@ test "mesh: message count > star" {
 
 ///|
 test "filtered_star: peers see only subscribed ns" {
-  let subs : Map[Int, Array[String]] = Map::new()
+  let subs : Map[Int, Array[String]] = Map::from_array([])
   subs[0] = ["pos"]
   subs[1] = ["hp"]
   subs[2] = ["pos", "hp"]
@@ -144,7 +144,7 @@ test "filtered_star: peers see only subscribed ns" {
 
 ///|
 test "filtered_star: filtered convergence" {
-  let subs : Map[Int, Array[String]] = Map::new()
+  let subs : Map[Int, Array[String]] = Map::from_array([])
   subs[0] = ["alpha"]
   subs[1] = ["beta"]
   subs[2] = ["alpha", "beta"]
@@ -220,7 +220,7 @@ test "partition: convergence report" {
   let buf = StringBuilder::new()
   buf.write_string("=== Partition Report ===\n")
   buf.write_string(
-    "partition: tick \{config.partition_at_tick}-\{config.reconnect_at_tick}, peers: \{config.partitioned_peers}\n",
+    "partition: tick \{config.partition_at_tick}-\{config.reconnect_at_tick}, peers: [2, 3]\n",
   )
   buf.write_string(
     "convergence_tick: \{result.convergence_tick}, total_messages: \{result.total_messages}\n",

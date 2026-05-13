@@ -39,7 +39,12 @@ test "Reserved words - named parameter" {
   let res = router.match_(@router.Method::Get, "/entry/123")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("constructor"), content="Some(\"123\")")
+  inspect(
+    params.get("constructor"),
+    content=(
+      #|Some(123)
+    ),
+  )
 }
 
 ///|
@@ -61,7 +66,12 @@ test "Complex - Named Param" {
   let res = router.match_(@router.Method::Get, "/entry/123")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
 
   // No match for different pattern
   let res2 = router.match_(@router.Method::Get, "/entry-123")
@@ -83,8 +93,18 @@ test "Complex - Regexp" {
   let res = router.match_(@router.Method::Get, "/post/20210101/hello")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("date"), content="Some(\"20210101\")")
-  inspect(params.get("title"), content="Some(\"hello\")")
+  inspect(
+    params.get("date"),
+    content=(
+      #|Some(20210101)
+    ),
+  )
+  inspect(
+    params.get("title"),
+    content=(
+      #|Some(hello)
+    ),
+  )
 
   // No match - wrong format
   let res2 = router.match_(@router.Method::Get, "/post/onetwothree")
@@ -106,7 +126,12 @@ test "Optional route - with value" {
   let res = router.match_(@router.Method::Get, "/api/animals/dog")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("type"), content="Some(\"dog\")")
+  inspect(
+    params.get("type"),
+    content=(
+      #|Some(dog)
+    ),
+  )
 }
 
 ///|
@@ -183,11 +208,21 @@ test "Capture group - simple" {
   let res = router.match_(@router.Method::Get, "/foo/bar")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("capture"), content="Some(\"bar\")")
+  inspect(
+    params.get("capture"),
+    content=(
+      #|Some(bar)
+    ),
+  )
   let res2 = router.match_(@router.Method::Get, "/foo/baz")
   assert_eq(res2.handlers.length(), 1)
   let (_, params2) = res2.handlers[0]
-  inspect(params2.get("capture"), content="Some(\"baz\")")
+  inspect(
+    params2.get("capture"),
+    content=(
+      #|Some(baz)
+    ),
+  )
   let res3 = router.match_(@router.Method::Get, "/foo/qux")
   assert_eq(res3.handlers.length(), 0)
 }
@@ -238,12 +273,27 @@ test "Nested params - entry with comment" {
   let res = router.match_(@router.Method::Get, "/entry/123")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
   let res2 = router.match_(@router.Method::Get, "/entry/123/comment/456")
   assert_eq(res2.handlers.length(), 1)
   let (_, params2) = res2.handlers[0]
-  inspect(params2.get("id"), content="Some(\"123\")")
-  inspect(params2.get("comment_id"), content="Some(\"456\")")
+  inspect(
+    params2.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
+  inspect(
+    params2.get("comment_id"),
+    content=(
+      #|Some(456)
+    ),
+  )
 }
 
 // =============================================================================
@@ -257,8 +307,18 @@ test "Multiple params - type and action" {
   let res = router.match_(@router.Method::Get, "/posts/123")
   assert_eq(res.handlers.length(), 1)
   let (_, params) = res.handlers[0]
-  inspect(params.get("type"), content="Some(\"posts\")")
-  inspect(params.get("action"), content="Some(\"123\")")
+  inspect(
+    params.get("type"),
+    content=(
+      #|Some(posts)
+    ),
+  )
+  inspect(
+    params.get("action"),
+    content=(
+      #|Some(123)
+    ),
+  )
 }
 
 // =============================================================================
@@ -342,7 +402,12 @@ test "Mixed static and dynamic segments" {
   let res3 = router.match_(@router.Method::Get, "/users/123/settings")
   assert_eq(res3.handlers.length(), 1)
   let (_, params) = res3.handlers[0]
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
 }
 
 // =============================================================================
@@ -379,7 +444,12 @@ test "Numeric regex constraint" {
   let res1 = router.match_(@router.Method::Get, "/items/123")
   assert_eq(res1.handlers.length(), 1)
   let (_, params) = res1.handlers[0]
-  inspect(params.get("id"), content="Some(\"123\")")
+  inspect(
+    params.get("id"),
+    content=(
+      #|Some(123)
+    ),
+  )
   let res2 = router.match_(@router.Method::Get, "/items/abc")
   assert_eq(res2.handlers.length(), 0)
   let res3 = router.match_(@router.Method::Get, "/items/12a")

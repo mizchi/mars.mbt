@@ -3,8 +3,18 @@ test "MapEnv creation and variables" {
   let env = MapEnv::new()
     .with_var("API_KEY", "secret123")
     .with_var("ENV", "production")
-  inspect(env.get_var("API_KEY"), content="Some(\"secret123\")")
-  inspect(env.get_var("ENV"), content="Some(\"production\")")
+  inspect(
+    env.get_var("API_KEY"),
+    content=(
+      #|Some(secret123)
+    ),
+  )
+  inspect(
+    env.get_var("ENV"),
+    content=(
+      #|Some(production)
+    ),
+  )
   inspect(env.get_var("MISSING"), content="None")
 }
 
@@ -13,10 +23,18 @@ test "MapEnv bindings" {
   let env = MapEnv::new()
     .with_binding("KV", Json::object({ "type": "kv-namespace" }))
     .with_binding("D1", Json::object({ "type": "d1-database" }))
-  let expected_kv = "Some(Object({\"type\": String(\"kv-namespace\")}))"
-  let expected_d1 = "Some(Object({\"type\": String(\"d1-database\")}))"
-  inspect(env.get_binding("KV"), content=expected_kv)
-  inspect(env.get_binding("D1"), content=expected_d1)
+  inspect(
+    env.get_binding("KV"),
+    content=(
+      #|Some(Object({type: String(kv-namespace)}))
+    ),
+  )
+  inspect(
+    env.get_binding("D1"),
+    content=(
+      #|Some(Object({type: String(d1-database)}))
+    ),
+  )
   inspect(env.get_binding("MISSING"), content="None")
 }
 
@@ -41,8 +59,18 @@ test "Variables string operations" {
     _ => None
   }
   let missing = vars.get("missing")
-  inspect(name, content="Some(\"Alice\")")
-  inspect(city, content="Some(\"Tokyo\")")
+  inspect(
+    name,
+    content=(
+      #|Some(Alice)
+    ),
+  )
+  inspect(
+    city,
+    content=(
+      #|Some(Tokyo)
+    ),
+  )
   inspect(missing, content="None")
 }
 
@@ -217,10 +245,17 @@ impl Env for TestEnv with get_binding(self, name) {
 ///|
 test "Custom Env implementation" {
   let env = TestEnv::new("TEST")
-  inspect(env.get_var("KEY"), content="Some(\"TEST_KEY\")")
+  inspect(
+    env.get_var("KEY"),
+    content=(
+      #|Some(TEST_KEY)
+    ),
+  )
   inspect(
     env.get_binding("DB"),
-    content="Some(Object({\"name\": String(\"DB\"), \"prefix\": String(\"TEST\")}))",
+    content=(
+      #|Some(Object({name: String(DB), prefix: String(TEST)}))
+    ),
   )
 }
 
@@ -232,7 +267,12 @@ test "Env trait polymorphism" {
 
   // Works with MapEnv
   let map_env = MapEnv::new().with_var("API_KEY", "secret")
-  inspect(get_api_key(map_env), content="Some(\"secret\")")
+  inspect(
+    get_api_key(map_env),
+    content=(
+      #|Some(secret)
+    ),
+  )
 
   // Works with EmptyEnv
   let empty_env = EmptyEnv::new()
@@ -240,5 +280,10 @@ test "Env trait polymorphism" {
 
   // Works with custom implementation
   let test_env = TestEnv::new("PREFIX")
-  inspect(get_api_key(test_env), content="Some(\"PREFIX_API_KEY\")")
+  inspect(
+    get_api_key(test_env),
+    content=(
+      #|Some(PREFIX_API_KEY)
+    ),
+  )
 }

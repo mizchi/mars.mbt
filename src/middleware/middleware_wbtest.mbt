@@ -299,14 +299,29 @@ test "router_group_new" {
 ///|
 test "form_data_parse_urlencoded" {
   let form = parse_form_urlencoded("name=John&age=30")
-  inspect(form.get("name"), content="Some(\"John\")")
-  inspect(form.get("age"), content="Some(\"30\")")
+  inspect(
+    form.get("name"),
+    content=(
+      #|Some(John)
+    ),
+  )
+  inspect(
+    form.get("age"),
+    content=(
+      #|Some(30)
+    ),
+  )
 }
 
 ///|
 test "form_data_url_decode" {
   let form = parse_form_urlencoded("msg=Hello%20World")
-  inspect(form.get("msg"), content="Some(\"Hello World\")")
+  inspect(
+    form.get("msg"),
+    content=(
+      #|Some(Hello World)
+    ),
+  )
 }
 
 ///|
@@ -328,7 +343,12 @@ test "mock_request_post_json" {
   let req = MockRequest::post("/users").json(
     Json::object({ "name": Json::string("John") }),
   )
-  inspect(req.headers.get("Content-Type"), content="Some(\"application/json\")")
+  inspect(
+    req.headers.get("Content-Type"),
+    content=(
+      #|Some(application/json)
+    ),
+  )
 }
 
 ///|
@@ -343,7 +363,12 @@ test "mock_context_basic" {
   let req = MockRequest::get("/test").header("X-Custom", "value")
   let ctx = MockContext::from_request(req)
   inspect(ctx.path(), content="/test")
-  inspect(ctx.header("X-Custom"), content="Some(\"value\")")
+  inspect(
+    ctx.header("X-Custom"),
+    content=(
+      #|Some(value)
+    ),
+  )
 }
 
 ///|
@@ -697,7 +722,12 @@ test "session_data_operations" {
   inspect(data.get("user"), content="None")
   // Set and get
   data.set("user", "john")
-  inspect(data.get("user"), content="Some(\"john\")")
+  inspect(
+    data.get("user"),
+    content=(
+      #|Some(john)
+    ),
+  )
   // Delete
   data.delete("user")
   inspect(data.get("user"), content="None")
@@ -710,9 +740,24 @@ test "session_data_multiple_keys" {
   data.set("name", "Alice")
   data.set("role", "admin")
   data.set("theme", "dark")
-  inspect(data.get("name"), content="Some(\"Alice\")")
-  inspect(data.get("role"), content="Some(\"admin\")")
-  inspect(data.get("theme"), content="Some(\"dark\")")
+  inspect(
+    data.get("name"),
+    content=(
+      #|Some(Alice)
+    ),
+  )
+  inspect(
+    data.get("role"),
+    content=(
+      #|Some(admin)
+    ),
+  )
+  inspect(
+    data.get("theme"),
+    content=(
+      #|Some(dark)
+    ),
+  )
 }
 
 ///|
@@ -739,20 +784,40 @@ test "form_data_empty" {
 ///|
 test "form_data_special_chars" {
   let form = parse_form_urlencoded("msg=Hello%2BWorld") // + encoded as %2B
-  inspect(form.get("msg"), content="Some(\"Hello+World\")")
+  inspect(
+    form.get("msg"),
+    content=(
+      #|Some(Hello+World)
+    ),
+  )
 }
 
 ///|
 test "form_data_plus_as_space" {
   let form = parse_form_urlencoded("msg=Hello+World")
-  inspect(form.get("msg"), content="Some(\"Hello World\")")
+  inspect(
+    form.get("msg"),
+    content=(
+      #|Some(Hello World)
+    ),
+  )
 }
 
 ///|
 test "form_data_empty_value" {
   let form = parse_form_urlencoded("name=&age=30")
-  inspect(form.get("name"), content="Some(\"\")")
-  inspect(form.get("age"), content="Some(\"30\")")
+  inspect(
+    form.get("name"),
+    content=(
+      #|Some()
+    ),
+  )
+  inspect(
+    form.get("age"),
+    content=(
+      #|Some(30)
+    ),
+  )
 }
 
 ///|
@@ -760,7 +825,12 @@ test "form_data_add_and_get" {
   let form = FormData::new()
   form.add("color", "red")
   form.add("color", "blue")
-  inspect(form.get("color"), content="Some(\"red\")") // First value
+  inspect(
+    form.get("color"),
+    content=(
+      #|Some(red)
+    ),
+  ) // First value
   let all = form.get_all("color")
   inspect(all.length(), content="2")
 }
@@ -926,14 +996,29 @@ test "mock_request_with_body" {
 ///|
 test "mock_request_auth" {
   let req = MockRequest::get("/api").auth("token123")
-  inspect(req.headers.get("Authorization"), content="Some(\"Bearer token123\")")
+  inspect(
+    req.headers.get("Authorization"),
+    content=(
+      #|Some(Bearer token123)
+    ),
+  )
 }
 
 ///|
 test "mock_request_query_params" {
   let req = MockRequest::get("/search").query("q", "test").query("page", "1")
-  inspect(req.query.get("q"), content="Some(\"test\")")
-  inspect(req.query.get("page"), content="Some(\"1\")")
+  inspect(
+    req.query.get("q"),
+    content=(
+      #|Some(test)
+    ),
+  )
+  inspect(
+    req.query.get("page"),
+    content=(
+      #|Some(1)
+    ),
+  )
 }
 
 ///|
@@ -942,7 +1027,12 @@ test "mock_context_json_response" {
   let ctx = MockContext::from_request(req)
   ctx.json_response(Json::object({ "ok": Json::boolean(true) }))
   let res = ctx.get_response()
-  inspect(res.get_header("Content-Type"), content="Some(\"application/json\")")
+  inspect(
+    res.get_header("Content-Type"),
+    content=(
+      #|Some(application/json)
+    ),
+  )
 }
 
 ///|
@@ -950,7 +1040,12 @@ test "mock_context_set_get_data" {
   let req = MockRequest::get("/test")
   let ctx = MockContext::from_request(req)
   ctx.set("user_id", "123")
-  inspect(ctx.get("user_id"), content="Some(\"123\")")
+  inspect(
+    ctx.get("user_id"),
+    content=(
+      #|Some(123)
+    ),
+  )
   inspect(ctx.get("nonexistent"), content="None")
 }
 
@@ -958,7 +1053,12 @@ test "mock_context_set_get_data" {
 test "mock_context_params" {
   let req = MockRequest::get("/users/42")
   let ctx = MockContext::from_request(req).set_param("id", "42")
-  inspect(ctx.param("id"), content="Some(\"42\")")
+  inspect(
+    ctx.param("id"),
+    content=(
+      #|Some(42)
+    ),
+  )
 }
 
 ///|
