@@ -1,0 +1,5 @@
+members = [
+  ".",
+  "./examples/spin-mars-router",
+  "./examples/websocket-echo",
+]

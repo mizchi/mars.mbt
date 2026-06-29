@@ -29,4 +29,6 @@ description = "Hono-inspired MoonBit web framework with trie routing, middleware
 
 preferred_target = "native"
 
-source = "src"
+options(
+  source: "src",
+)
