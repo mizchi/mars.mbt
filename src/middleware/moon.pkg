@@ -4,7 +4,7 @@ import {
   "moonbitlang/x/crypto",
   "moonbitlang/core/json",
   "moonbitlang/core/random",
-  "mizchi/x/http" @http,
+  "mizchi/x/http",
 }
 
 warnings = "-0067-0024-0020-0029"

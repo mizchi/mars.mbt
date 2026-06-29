@@ -24,7 +24,7 @@ extern "js" fn js_exec_ctx_wait_until(
 
 ///|
 /// Implement ExecCtx trait for JsExecCtx
-pub impl ExecCtx for JsExecCtx with wait_until(self, task, name~) {
+pub impl ExecCtx for JsExecCtx with fn wait_until(self, task, name~) {
   // Convert MoonBit async function to JS Promise
   let _ = name
   let promise = @js_async.Promise::from_async(task)
@@ -61,12 +61,12 @@ extern "js" fn js_env_get_binding_json(env : JsEnv, name : String) -> String? =
 
 ///|
 /// Implement Env trait for JsEnv
-pub impl Env for JsEnv with get_var(self, name) {
+pub impl Env for JsEnv with fn get_var(self, name) {
   js_env_get_var(self, name)
 }
 
 ///|
-pub impl Env for JsEnv with get_binding(self, name) {
+pub impl Env for JsEnv with fn get_binding(self, name) {
   match js_env_get_binding_json(self, name) {
     Some(json_str) => Some(@json.parse(json_str)) catch { _ => None }
     None => None

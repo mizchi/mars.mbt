@@ -13,7 +13,7 @@ pub(all) enum CompressionEncoding {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for CompressionEncoding with output(self, logger) {
+pub impl Show for CompressionEncoding with fn output(self, logger) {
   match self {
     Gzip => logger.write_string("Gzip")
     Deflate => logger.write_string("Deflate")

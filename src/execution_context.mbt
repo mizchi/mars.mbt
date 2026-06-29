@@ -41,7 +41,7 @@ pub fn ExecutionContext::wait_until(
 
 ///|
 /// Implement ExecCtx trait for ExecutionContext
-pub impl ExecCtx for ExecutionContext with wait_until(self, task, name~) {
+pub impl ExecCtx for ExecutionContext with fn wait_until(self, task, name~) {
   self.wait_until(task, name~)
 }
 

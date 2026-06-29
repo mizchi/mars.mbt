@@ -158,17 +158,17 @@ pub type AppHandler = async (@http.Request, &@io.Reader, @http.ServerConnection)
 
 // Traits
 pub(open) trait Env {
-  get_var(Self, String) -> String?
-  get_binding(Self, String) -> Json?
+  fn get_var(Self, String) -> String?
+  fn get_binding(Self, String) -> Json?
 }
 
 pub(open) trait ExecCtx {
-  wait_until(Self, async () -> Unit, name~ : String) -> Unit
+  fn wait_until(Self, async () -> Unit, name~ : String) -> Unit
 }
 
 pub(open) trait Var {
-  to_json(Self) -> Json
-  from_json(Json) -> Self?
+  fn to_json(Self) -> Json
+  fn from_json(Json) -> Self?
 }
 pub impl Var for Bool
 pub impl Var for Double

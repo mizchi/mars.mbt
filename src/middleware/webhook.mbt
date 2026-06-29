@@ -10,7 +10,7 @@ pub(all) enum WebhookResult {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for WebhookResult with output(self, logger) {
+pub impl Show for WebhookResult with fn output(self, logger) {
   match self {
     Valid => logger.write_string("Valid")
     Invalid(s) => {

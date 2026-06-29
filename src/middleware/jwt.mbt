@@ -34,7 +34,7 @@ pub(all) enum JwtClaimsError {
 }
 
 ///|
-pub impl Show for JwtClaimsError with output(self, logger) {
+pub impl Show for JwtClaimsError with fn output(self, logger) {
   match self {
     MissingClaims => logger.write_string("MissingClaims")
     InvalidJson => logger.write_string("InvalidJson")

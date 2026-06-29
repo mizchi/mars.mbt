@@ -7,9 +7,9 @@
 /// Implement this trait for your platform (Cloudflare, Deno, etc.)
 pub(open) trait Env {
   /// Get an environment variable
-  get_var(Self, String) -> String?
+  fn get_var(Self, String) -> String?
   /// Get a binding by name (KV, D1, R2, etc.)
-  get_binding(Self, String) -> Json?
+  fn get_binding(Self, String) -> Json?
 }
 
 ///|
@@ -17,7 +17,7 @@ pub(open) trait Env {
 /// Similar to Cloudflare Workers ExecutionContext
 pub(open) trait ExecCtx {
   /// Schedule a background task to run after response is sent
-  wait_until(Self, async () -> Unit, name~ : String) -> Unit
+  fn wait_until(Self, async () -> Unit, name~ : String) -> Unit
 }
 
 ///|
@@ -30,12 +30,12 @@ pub fn EmptyEnv::new() -> EmptyEnv {
 }
 
 ///|
-pub impl Env for EmptyEnv with get_var(_self, _name) {
+pub impl Env for EmptyEnv with fn get_var(_self, _name) {
   None
 }
 
 ///|
-pub impl Env for EmptyEnv with get_binding(_self, _name) {
+pub impl Env for EmptyEnv with fn get_binding(_self, _name) {
   None
 }
 
@@ -68,29 +68,29 @@ pub fn MapEnv::with_binding(
 }
 
 ///|
-pub impl Env for MapEnv with get_var(self, name) {
+pub impl Env for MapEnv with fn get_var(self, name) {
   self.vars.get(name)
 }
 
 ///|
-pub impl Env for MapEnv with get_binding(self, name) {
+pub impl Env for MapEnv with fn get_binding(self, name) {
   self.bindings.get(name)
 }
 
 ///|
 /// Trait for types that can be stored in Variables
 pub(open) trait Var {
-  to_json(Self) -> Json
-  from_json(Json) -> Self?
+  fn to_json(Self) -> Json
+  fn from_json(Json) -> Self?
 }
 
 ///|
-pub impl Var for String with to_json(self) {
+pub impl Var for String with fn to_json(self) {
   Json::string(self)
 }
 
 ///|
-pub impl Var for String with from_json(json) {
+pub impl Var for String with fn from_json(json) {
   match json {
     String(s) => Some(s)
     _ => None
@@ -98,12 +98,12 @@ pub impl Var for String with from_json(json) {
 }
 
 ///|
-pub impl Var for Double with to_json(self) {
+pub impl Var for Double with fn to_json(self) {
   Json::number(self)
 }
 
 ///|
-pub impl Var for Double with from_json(json) {
+pub impl Var for Double with fn from_json(json) {
   match json {
     Number(n, ..) => Some(n)
     _ => None
@@ -111,12 +111,12 @@ pub impl Var for Double with from_json(json) {
 }
 
 ///|
-pub impl Var for Bool with to_json(self) {
+pub impl Var for Bool with fn to_json(self) {
   Json::boolean(self)
 }
 
 ///|
-pub impl Var for Bool with from_json(json) {
+pub impl Var for Bool with fn from_json(json) {
   match json {
     True => Some(true)
     False => Some(false)
@@ -125,12 +125,12 @@ pub impl Var for Bool with from_json(json) {
 }
 
 ///|
-pub impl Var for Json with to_json(self) {
+pub impl Var for Json with fn to_json(self) {
   self
 }
 
 ///|
-pub impl Var for Json with from_json(json) {
+pub impl Var for Json with fn from_json(json) {
   Some(json)
 }
 

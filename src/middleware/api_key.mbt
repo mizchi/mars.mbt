@@ -23,7 +23,7 @@ pub(all) enum ApiKeyResult {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for ApiKeyResult with output(self, logger) {
+pub impl Show for ApiKeyResult with fn output(self, logger) {
   match self {
     Valid(s) => {
       logger.write_string("Valid(\"")

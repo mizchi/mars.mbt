@@ -189,7 +189,7 @@ fn TestExecCtx::new() -> TestExecCtx {
 }
 
 ///|
-impl ExecCtx for TestExecCtx with wait_until(self, _task, name~) {
+impl ExecCtx for TestExecCtx with fn wait_until(self, _task, name~) {
   let _ = name
   self.task_count = self.task_count + 1
 }
@@ -233,12 +233,12 @@ fn TestEnv::new(prefix : String) -> TestEnv {
 }
 
 ///|
-impl Env for TestEnv with get_var(self, name) {
+impl Env for TestEnv with fn get_var(self, name) {
   Some("\{self.prefix}_\{name}")
 }
 
 ///|
-impl Env for TestEnv with get_binding(self, name) {
+impl Env for TestEnv with fn get_binding(self, name) {
   Some(Json::object({ "name": name, "prefix": self.prefix }))
 }
 

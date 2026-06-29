@@ -59,16 +59,16 @@ pub fn TrieRouter::match_(
 
 ///|
 /// Implement Router trait for TrieRouter
-pub impl @router.Router for TrieRouter with name(self) {
+pub impl @router.Router for TrieRouter with fn name(self) {
   self.name()
 }
 
 ///|
-pub impl @router.Router for TrieRouter with add(self, meth, path) {
+pub impl @router.Router for TrieRouter with fn add(self, meth, path) {
   self.add(meth, path)
 }
 
 ///|
-pub impl @router.Router for TrieRouter with match_(self, meth, path) {
+pub impl @router.Router for TrieRouter with fn match_(self, meth, path) {
   self.match_(meth, path)
 }

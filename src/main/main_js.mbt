@@ -3,7 +3,7 @@
 fn main {
   // In JS, the server is started via to_handler()
   // This main function exists only to satisfy the main package requirement
-  ignore(@async.now())
+  ignore(@async.is_being_cancelled())
   ignore(@mars.Server::new())
   ()
 }

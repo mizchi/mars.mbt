@@ -88,7 +88,7 @@ pub(all) enum Pattern {
 }
 
 ///|
-pub impl Show for Pattern with output(self, logger) {
+pub impl Show for Pattern with fn output(self, logger) {
   match self {
     Wildcard => logger.write_string("Wildcard")
     Param(name) => {
@@ -107,7 +107,7 @@ pub impl Show for Pattern with output(self, logger) {
 }
 
 ///|
-pub impl Eq for Pattern with equal(self, other) {
+pub impl Eq for Pattern with fn equal(self, other) {
   match (self, other) {
     (Wildcard, Wildcard) => true
     (Param(a), Param(b)) => a == b

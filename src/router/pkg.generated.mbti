@@ -52,8 +52,8 @@ pub impl Show for Params
 
 // Traits
 pub(open) trait Router {
-  name(Self) -> String
-  add(Self, Method, String) -> HandlerId
-  match_(Self, Method, String) -> MatchResult[HandlerId]
+  fn name(Self) -> String
+  fn add(Self, Method, String) -> HandlerId
+  fn match_(Self, Method, String) -> MatchResult[HandlerId]
 }
 

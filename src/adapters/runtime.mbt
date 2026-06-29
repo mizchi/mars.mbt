@@ -10,7 +10,7 @@ pub(all) enum RuntimeTarget {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for RuntimeTarget with output(self, logger) {
+pub impl Show for RuntimeTarget with fn output(self, logger) {
   match self {
     Node => logger.write_string("Node")
     Deno => logger.write_string("Deno")

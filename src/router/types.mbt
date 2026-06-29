@@ -57,7 +57,7 @@ pub fn Params::clone(self : Params) -> Params {
 }
 
 ///|
-pub impl Show for Params with output(self, logger) {
+pub impl Show for Params with fn output(self, logger) {
   logger.write_string("Params(")
   logger.write_object(self.data)
   logger.write_string(")")
@@ -99,7 +99,7 @@ pub(all) enum Method {
 } derive(Eq, Hash)
 
 ///|
-pub impl Show for Method with output(self, logger) {
+pub impl Show for Method with fn output(self, logger) {
   let s = match self {
     Get => "GET"
     Post => "POST"

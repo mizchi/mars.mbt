@@ -14,7 +14,7 @@ pub(all) enum TrailingSlashMode {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for TrailingSlashMode with output(self, logger) {
+pub impl Show for TrailingSlashMode with fn output(self, logger) {
   match self {
     Add => logger.write_string("Add")
     Remove => logger.write_string("Remove")
