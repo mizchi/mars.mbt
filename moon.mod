@@ -1,6 +1,6 @@
 name = "mizchi/mars"
 
-version = "0.3.10"
+version = "0.3.11"
 
 import {
   "moonbitlang/async@0.20.0",
