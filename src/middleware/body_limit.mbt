@@ -16,25 +16,25 @@ pub(all) struct BodyLimitOptions {
 ///|
 /// Default body limit (1MB)
 pub fn BodyLimitOptions::default() -> BodyLimitOptions {
-  { max_size: 1048576, message: "Request body too large", status: 413 }
+  { max_size: 1048576, message: "Request body too large", status: 413, }
 }
 
 ///|
 /// Create body limit options with size in bytes
 pub fn BodyLimitOptions::bytes(size : Int) -> BodyLimitOptions {
-  { ..BodyLimitOptions::default(), max_size: size }
+  { ..BodyLimitOptions::default(), max_size: size, }
 }
 
 ///|
 /// Create body limit options with size in kilobytes
 pub fn BodyLimitOptions::kb(size : Int) -> BodyLimitOptions {
-  { ..BodyLimitOptions::default(), max_size: size * 1024 }
+  { ..BodyLimitOptions::default(), max_size: size * 1024, }
 }
 
 ///|
 /// Create body limit options with size in megabytes
 pub fn BodyLimitOptions::mb(size : Int) -> BodyLimitOptions {
-  { ..BodyLimitOptions::default(), max_size: size * 1024 * 1024 }
+  { ..BodyLimitOptions::default(), max_size: size * 1024 * 1024, }
 }
 
 ///|

@@ -6,9 +6,8 @@ pub fn split_path(path : String) -> Array[String] {
   let paths : Array[String] = []
   let parts = path.split("/")
   for part in parts {
-    let s = part.to_owned()
-    if s != "" {
-      paths.push(s)
+    if !part.is_empty() {
+      paths.push(part.to_owned())
     }
   }
   paths
@@ -18,6 +17,9 @@ pub fn split_path(path : String) -> Array[String] {
 /// Split a routing path with group marker preservation
 /// This handles regex patterns in braces like :id{[0-9]+}
 pub fn split_routing_path(route_path : String) -> Array[String] {
+  if !route_path.contains("{") {
+    return split_path(route_path)
+  }
   let (groups, processed_path) = extract_groups_from_path(route_path)
   let paths = split_path(processed_path)
   replace_group_marks(paths, groups)

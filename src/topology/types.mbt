@@ -20,7 +20,7 @@ pub(all) struct EphemeralStore {
 
 ///|
 pub fn EphemeralStore::new() -> EphemeralStore {
-  { data: Map::from_array([]) }
+  { data: Map::from_array([]), }
 }
 
 ///|
@@ -48,7 +48,7 @@ pub fn EphemeralStore::set(
   peer : String,
 ) -> Unit {
   let ns_map = self.get_or_create_ns(ns)
-  ns_map[key] = { value, timestamp, peer }
+  ns_map[key] = { value, timestamp, peer, }
 }
 
 ///|
@@ -164,7 +164,7 @@ pub(all) struct SimNode {
 
 ///|
 pub fn SimNode::new(id : String) -> SimNode {
-  { id, store: EphemeralStore::new() }
+  { id, store: EphemeralStore::new(), }
 }
 
 // --- Xorshift32 PRNG ---
@@ -176,7 +176,7 @@ pub(all) struct Rng {
 
 ///|
 pub fn Rng::new(seed : Int) -> Rng {
-  { state: if seed == 0 { 1 } else { seed } }
+  { state: if seed == 0 { 1 } else { seed }, }
 }
 
 ///|
@@ -216,7 +216,7 @@ pub(all) struct NetPipe {
 pub fn NetPipe::new(ping_ms : Int) -> NetPipe {
   let delay = ping_ms / 2 / tick_ms
   let delay = if ping_ms > 0 && delay == 0 { 1 } else { delay }
-  { delay_ticks: delay, queue: [] }
+  { delay_ticks: delay, queue: [], }
 }
 
 ///|
@@ -226,7 +226,7 @@ pub fn NetPipe::send_entries(
   entries : Array[(String, String, EphemeralEntry)],
 ) -> Unit {
   if entries.length() > 0 {
-    self.queue.push({ arrival_tick: current_tick + self.delay_ticks, entries })
+    self.queue.push({ arrival_tick: current_tick + self.delay_ticks, entries, })
   }
 }
 

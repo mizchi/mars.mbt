@@ -10,12 +10,17 @@ import {
 
 warnings = "-29-0020"
 
+import {
+  "moonbitlang/async",
+} for "wbtest"
+
 options(
   targets: {
     "context_js.mbt": [ "js" ],
     "context_native.mbt": [ "native" ],
     "context_native_wbtest.mbt": [ "native" ],
     "mars_js.mbt": [ "js" ],
+    "mars_js_wbtest.mbt": [ "js" ],
     "mars_native.mbt": [ "native" ],
     "mars_native_wbtest.mbt": [ "native" ],
   },

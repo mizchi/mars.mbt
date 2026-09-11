@@ -61,4 +61,3 @@ pub impl @router.Router for TrieRouter
 // Type aliases
 
 // Traits
-

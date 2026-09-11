@@ -1,7 +1,7 @@
 ///|
 /// Global debug mode flag
 /// When enabled, logs warnings for unknown HTTP methods, etc.
-let debug_enabled : Ref[Bool] = { val: false }
+let debug_enabled : Ref[Bool] = { val: false, }
 
 ///|
 /// Enable or disable debug mode globally
@@ -41,7 +41,12 @@ priv enum RequestDispatchResult {
 ///|
 /// Create a new Server application
 pub fn Server::new() -> Server {
-  { router: @trie.TrieRouter::new(), handlers: [], middlewares: [], routes: [] }
+  {
+    router: @trie.TrieRouter::new(),
+    handlers: [],
+    middlewares: [],
+    routes: [],
+  }
 }
 
 ///|
@@ -142,7 +147,7 @@ async fn Server::dispatch_to_context(
     mw(ctx) catch {
       e => {
         println("Middleware error: \{e}")
-        break
+        return { response_sent: ctx.is_response_sent(), handler_error: true, }
       }
     }
   }
@@ -156,7 +161,7 @@ async fn Server::dispatch_to_context(
       }
     }
   }
-  { response_sent: ctx.is_response_sent(), handler_error }
+  { response_sent: ctx.is_response_sent(), handler_error, }
 }
 
 ///|
@@ -234,19 +239,9 @@ fn wrap_with_middlewares(
   if middlewares.is_empty() {
     return handler
   }
-  // Compose middlewares with handler
-  let Handler(h) = handler
-  let mut current : async (Context) -> Unit raise Error = h
-  // Apply middlewares in reverse order
-  for i = middlewares.length() - 1; i >= 0; i = i - 1 {
-    let Handler(mw) = middlewares[i]
-    let next = current
-    current = async fn(ctx) {
-      mw(ctx)
-      next(ctx)
-    }
-  }
-  Handler(current)
+  let handlers = middlewares.copy()
+  handlers.push(handler)
+  compose(handlers)
 }
 
 ///|

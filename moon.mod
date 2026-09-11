@@ -1,11 +1,11 @@
 name = "mizchi/mars"
 
-version = "0.3.11"
+version = "0.3.12"
 
 import {
-  "moonbitlang/async@0.20.0",
-  "moonbitlang/x@0.4.46",
-  "mizchi/x@0.5.1",
+  "moonbitlang/async@0.21.3",
+  "moonbitlang/x@0.5.5",
+  "mizchi/x@0.6.1",
 }
 
 readme = "README.mbt.md"
@@ -29,6 +29,4 @@ description = "Hono-inspired MoonBit web framework with trie routing, middleware
 
 preferred_target = "native"
 
-options(
-  source: "src",
-)
+source = "src"

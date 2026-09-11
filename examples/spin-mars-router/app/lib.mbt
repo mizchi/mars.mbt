@@ -5,7 +5,7 @@ pub(all) struct RouteResponse {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for RouteResponse with output(self, logger) {
+pub impl Show for RouteResponse with fn output(self, logger) {
   logger.write_string("{status: ")
   logger.write_string(self.status.to_string())
   logger.write_string(", body: \"")
@@ -32,21 +32,21 @@ pub fn route(method_name : String, path : String) -> RouteResponse {
   let router = build_router()
   let matched = router.match_(meth, path)
   if matched.is_empty() {
-    return { status: 404, body: "not found: " + path }
+    return { status: 404, body: "not found: " + path, }
   }
   let (handler_id, params) = matched.handlers[0]
   let @router.HandlerId(id) = handler_id
   match id {
-    1 => { status: 200, body: "mars-router: top" }
+    1 => { status: 200, body: "mars-router: top", }
     2 => {
       let user_id = match params.get("id") {
         Some(v) => v
         None => "unknown"
       }
-      { status: 200, body: "mars-router: user=" + user_id }
+      { status: 200, body: "mars-router: user=" + user_id, }
     }
-    3 => { status: 200, body: "mars-router: wildcard=" + path }
-    4 => { status: 200, body: "ok" }
-    _ => { status: 500, body: "unexpected handler id" }
+    3 => { status: 200, body: "mars-router: wildcard=" + path, }
+    4 => { status: 200, body: "ok", }
+    _ => { status: 500, body: "unexpected handler id", }
   }
 }

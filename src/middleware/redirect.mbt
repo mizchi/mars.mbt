@@ -43,13 +43,13 @@ pub(all) struct RedirectRule {
 ///|
 /// Create permanent redirect rule (301)
 pub fn RedirectRule::permanent(from : String, to : String) -> RedirectRule {
-  { from, to, status: MovedPermanently }
+  { from, to, status: MovedPermanently, }
 }
 
 ///|
 /// Create temporary redirect rule (302)
 pub fn RedirectRule::temporary(from : String, to : String) -> RedirectRule {
-  { from, to, status: Found }
+  { from, to, status: Found, }
 }
 
 ///|

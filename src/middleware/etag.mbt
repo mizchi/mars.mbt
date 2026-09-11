@@ -12,13 +12,13 @@ pub(all) struct ETagOptions {
 ///|
 /// Default ETag options
 pub fn ETagOptions::default() -> ETagOptions {
-  { weak: true }
+  { weak: true, }
 }
 
 ///|
 /// Strong ETag options
 pub fn ETagOptions::strong() -> ETagOptions {
-  { weak: false }
+  { weak: false, }
 }
 
 ///|

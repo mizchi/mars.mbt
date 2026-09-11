@@ -34,13 +34,13 @@ pub(all) struct CompressOptions {
 ///|
 /// Default compression options
 pub fn CompressOptions::default() -> CompressOptions {
-  { threshold: 1024, encodings: [Gzip, Deflate, Br] }
+  { threshold: 1024, encodings: [Gzip, Deflate, Br], }
 }
 
 ///|
 /// Gzip only
 pub fn CompressOptions::gzip_only() -> CompressOptions {
-  { threshold: 1024, encodings: [Gzip] }
+  { threshold: 1024, encodings: [Gzip], }
 }
 
 ///|

@@ -3,7 +3,8 @@ import {
   "moonbitlang/async",
 }
 
+pkgtype(kind: "executable")
+
 options(
-  "is-main": true,
   targets: { "main.mbt": [ "native" ], "main_js.mbt": [ "js" ] },
 )

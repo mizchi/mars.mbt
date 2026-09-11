@@ -49,7 +49,7 @@ pub fn BasicAuthOptions::custom(
   validate : (String, String) -> Bool,
   realm? : String = "Restricted",
 ) -> BasicAuthOptions {
-  { realm, validate }
+  { realm, validate, }
 }
 
 ///|

@@ -185,7 +185,7 @@ struct TestExecCtx {
 
 ///|
 fn TestExecCtx::new() -> TestExecCtx {
-  { task_count: 0 }
+  { task_count: 0, }
 }
 
 ///|

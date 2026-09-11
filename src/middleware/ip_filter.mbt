@@ -14,25 +14,25 @@ pub(all) struct TrustedProxyConfig {
 ///|
 /// Default: trust no proxies (most secure)
 pub fn TrustedProxyConfig::none() -> TrustedProxyConfig {
-  { proxies: [], enabled: false }
+  { proxies: [], enabled: false, }
 }
 
 ///|
 /// Trust localhost proxies only
 pub fn TrustedProxyConfig::localhost() -> TrustedProxyConfig {
-  { proxies: ["127.0.0.1", "::1"], enabled: true }
+  { proxies: ["127.0.0.1", "::1"], enabled: true, }
 }
 
 ///|
 /// Trust specific proxy IPs
 pub fn TrustedProxyConfig::trust(proxies : Array[String]) -> TrustedProxyConfig {
-  { proxies, enabled: true }
+  { proxies, enabled: true, }
 }
 
 ///|
 /// Trust all proxies (INSECURE - only for development)
 pub fn TrustedProxyConfig::trust_all() -> TrustedProxyConfig {
-  { proxies: ["0.0.0.0/0"], enabled: true }
+  { proxies: ["0.0.0.0/0"], enabled: true, }
 }
 
 ///|
@@ -258,7 +258,7 @@ pub fn ip_whitelist(
   ip_header? : String = "X-Forwarded-For",
   trusted_proxies? : TrustedProxyConfig = TrustedProxyConfig::none(),
 ) -> @mars.Handler {
-  ip_filter({ ips, ip_header, whitelist: true, trusted_proxies })
+  ip_filter({ ips, ip_header, whitelist: true, trusted_proxies, })
 }
 
 ///|
@@ -268,5 +268,5 @@ pub fn ip_blacklist(
   ip_header? : String = "X-Forwarded-For",
   trusted_proxies? : TrustedProxyConfig = TrustedProxyConfig::none(),
 ) -> @mars.Handler {
-  ip_filter({ ips, ip_header, whitelist: false, trusted_proxies })
+  ip_filter({ ips, ip_header, whitelist: false, trusted_proxies, })
 }

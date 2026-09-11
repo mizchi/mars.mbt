@@ -26,7 +26,7 @@ pub(all) struct EmptyEnv {}
 
 ///|
 pub fn EmptyEnv::new() -> EmptyEnv {
-  EmptyEnv::{  }
+  EmptyEnv::{ }
 }
 
 ///|
@@ -48,7 +48,7 @@ pub(all) struct MapEnv {
 
 ///|
 pub fn MapEnv::new() -> MapEnv {
-  { vars: {}, bindings: {} }
+  { vars: {}, bindings: {}, }
 }
 
 ///|
@@ -143,7 +143,7 @@ pub(all) struct Variables {
 
 ///|
 pub fn Variables::new() -> Variables {
-  { data: {} }
+  { data: {}, }
 }
 
 ///|

@@ -1,0 +1,27 @@
+import {
+  "spin-mars-router-demo/gen/cabi",
+  "spin-mars-router-demo/app",
+}
+
+supported_targets = "wasm+wasm-gc"
+
+pkgtype(kind: "executable")
+
+options(
+  link: {
+    "wasm": {
+      "exports": [
+        "cabi_realloc:cabi_realloc",
+        "wasmExportRun:wasi:cli/run@0.2.9#run",
+      ],
+      "export-memory-name": "memory",
+    },
+    "wasm-gc": {
+      "exports": [
+        "cabi_realloc:cabi_realloc",
+        "wasmExportRun:wasi:cli/run@0.2.9#run",
+      ],
+      "export-memory-name": "memory",
+    },
+  },
+)

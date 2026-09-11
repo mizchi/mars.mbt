@@ -40,9 +40,9 @@ fn parse_class_char(pattern : String, index : Int) -> ParsedChar? {
     return None
   }
   if pattern[index] == '\\'.to_int().to_uint16() && index + 1 < pattern.length() {
-    Some({ char: pattern[index + 1], next: index + 2 })
+    Some({ char: pattern[index + 1], next: index + 2, })
   } else {
-    Some({ char: pattern[index], next: index + 1 })
+    Some({ char: pattern[index], next: index + 1, })
   }
 }
 
@@ -82,7 +82,7 @@ fn parse_char_class(pattern : String, start : Int) -> ParsedAtom? {
   if index >= pattern.length() || pattern[index] != ']'.to_int().to_uint16() {
     return None
   }
-  Some({ atom: CharClass(ranges, negated), next: index + 1 })
+  Some({ atom: CharClass(ranges, negated), next: index + 1, })
 }
 
 ///|
@@ -95,16 +95,16 @@ fn parse_atom(pattern : String, start : Int) -> ParsedAtom? {
     parse_char_class(pattern, start)
   } else if c == '\\'.to_int().to_uint16() {
     if start + 1 < pattern.length() {
-      Some({ atom: Literal(pattern[start + 1]), next: start + 2 })
+      Some({ atom: Literal(pattern[start + 1]), next: start + 2, })
     } else {
       None
     }
   } else if c == '.'.to_int().to_uint16() {
-    Some({ atom: Any, next: start + 1 })
+    Some({ atom: Any, next: start + 1, })
   } else if is_regex_meta_char(c) {
     None
   } else {
-    Some({ atom: Literal(c), next: start + 1 })
+    Some({ atom: Literal(c), next: start + 1, })
   }
 }
 
@@ -147,7 +147,7 @@ fn parse_brace_quantifier(pattern : String, start : Int) -> ParsedQuantifier? {
   }
   if comma < 0 {
     match parse_number_until(pattern, start + 1, index) {
-      Some(n) => Some({ min: n, max: n, next: index + 1 })
+      Some(n) => Some({ min: n, max: n, next: index + 1, })
       None => None
     }
   } else {
@@ -166,7 +166,7 @@ fn parse_brace_quantifier(pattern : String, start : Int) -> ParsedQuantifier? {
     if max >= 0 && max < min {
       None
     } else {
-      Some({ min, max, next: index + 1 })
+      Some({ min, max, next: index + 1, })
     }
   }
 }
@@ -174,22 +174,22 @@ fn parse_brace_quantifier(pattern : String, start : Int) -> ParsedQuantifier? {
 ///|
 fn parse_quantifier(pattern : String, start : Int) -> ParsedQuantifier {
   if start >= pattern.length() {
-    return { min: 1, max: 1, next: start }
+    return { min: 1, max: 1, next: start, }
   }
   let c = pattern[start]
   if c == '+'.to_int().to_uint16() {
-    { min: 1, max: -1, next: start + 1 }
+    { min: 1, max: -1, next: start + 1, }
   } else if c == '*'.to_int().to_uint16() {
-    { min: 0, max: -1, next: start + 1 }
+    { min: 0, max: -1, next: start + 1, }
   } else if c == '?'.to_int().to_uint16() {
-    { min: 0, max: 1, next: start + 1 }
+    { min: 0, max: 1, next: start + 1, }
   } else if c == '{'.to_int().to_uint16() {
     match parse_brace_quantifier(pattern, start) {
       Some(q) => q
-      None => { min: 1, max: 1, next: start }
+      None => { min: 1, max: 1, next: start, }
     }
   } else {
-    { min: 1, max: 1, next: start }
+    { min: 1, max: 1, next: start, }
   }
 }
 
@@ -239,18 +239,18 @@ fn match_sequence_from(
     None => return false
   }
   let quantifier = parse_quantifier(pattern, parsed.next)
-  let positions : Array[Int] = [s_index]
   let mut cursor = s_index
   let mut count = 0
   while (quantifier.max < 0 || count < quantifier.max) &&
         atom_matches(parsed.atom, s, cursor) {
     cursor += 1
     count += 1
-    positions.push(cursor)
   }
-  let mut reps = positions.length() - 1
+  // Every atom consumes exactly one UTF-16 code unit, so backtracking offsets
+  // can be calculated without allocating an array for every atom.
+  let mut reps = count
   while reps >= quantifier.min {
-    if match_sequence_from(pattern, quantifier.next, s, positions[reps]) {
+    if match_sequence_from(pattern, quantifier.next, s, s_index + reps) {
       return true
     }
     reps -= 1

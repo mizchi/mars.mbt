@@ -41,7 +41,7 @@ pub fn CorsOptions::allow_origin(origin : String) -> CorsOptions {
 ///|
 /// CORS options with credentials
 pub fn CorsOptions::with_credentials(origin : String) -> CorsOptions {
-  { ..CorsOptions::default(), origin, credentials: true }
+  { ..CorsOptions::default(), origin, credentials: true, }
 }
 
 ///|

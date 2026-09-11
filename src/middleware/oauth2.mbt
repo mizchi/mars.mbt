@@ -168,7 +168,7 @@ pub fn oauth2_parse_token(
     Some(String(s)) => s
     _ => ""
   }
-  Ok({ access_token, token_type, expires_in, refresh_token, scope })
+  Ok({ access_token, token_type, expires_in, refresh_token, scope, })
 }
 
 ///|

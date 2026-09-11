@@ -21,7 +21,7 @@ pub(all) struct RateLimitOptions {
 ///|
 /// Default rate limit options (100 requests per window)
 pub fn RateLimitOptions::default() -> RateLimitOptions {
-  { limit: 100, window_size: 1 }
+  { limit: 100, window_size: 1, }
 }
 
 ///|
@@ -74,11 +74,11 @@ pub fn rate_limit(
     let entry = match store.get(key) {
       Some(entry) =>
         if entry.window == current_window {
-          { count: entry.count + 1, window: current_window }
+          { count: entry.count + 1, window: current_window, }
         } else {
-          { count: 1, window: current_window }
+          { count: 1, window: current_window, }
         }
-      None => { count: 1, window: current_window }
+      None => { count: 1, window: current_window, }
     }
     store.set(key, entry)
     if entry.count > options.limit {

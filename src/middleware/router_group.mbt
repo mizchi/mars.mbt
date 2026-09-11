@@ -22,7 +22,7 @@ pub(all) struct RouterGroup {
 ///|
 /// Create a new router group
 pub fn RouterGroup::new(prefix : String) -> RouterGroup {
-  { prefix, middlewares: [], routes: [], groups: [] }
+  { prefix, middlewares: [], routes: [], groups: [], }
 }
 
 ///|
@@ -42,7 +42,7 @@ pub fn RouterGroup::get(
   path : String,
   handler : @mars.Handler,
 ) -> RouterGroup {
-  self.routes.push({ meth: "GET", path, handler })
+  self.routes.push({ meth: "GET", path, handler, })
   self
 }
 
@@ -53,7 +53,7 @@ pub fn RouterGroup::post(
   path : String,
   handler : @mars.Handler,
 ) -> RouterGroup {
-  self.routes.push({ meth: "POST", path, handler })
+  self.routes.push({ meth: "POST", path, handler, })
   self
 }
 
@@ -64,7 +64,7 @@ pub fn RouterGroup::put(
   path : String,
   handler : @mars.Handler,
 ) -> RouterGroup {
-  self.routes.push({ meth: "PUT", path, handler })
+  self.routes.push({ meth: "PUT", path, handler, })
   self
 }
 
@@ -75,7 +75,7 @@ pub fn RouterGroup::delete(
   path : String,
   handler : @mars.Handler,
 ) -> RouterGroup {
-  self.routes.push({ meth: "DELETE", path, handler })
+  self.routes.push({ meth: "DELETE", path, handler, })
   self
 }
 
@@ -86,7 +86,7 @@ pub fn RouterGroup::patch(
   path : String,
   handler : @mars.Handler,
 ) -> RouterGroup {
-  self.routes.push({ meth: "PATCH", path, handler })
+  self.routes.push({ meth: "PATCH", path, handler, })
   self
 }
 

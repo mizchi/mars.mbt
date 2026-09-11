@@ -25,7 +25,7 @@ pub(all) struct LoggerOptions {
 ///|
 /// Default logger options
 pub fn LoggerOptions::default() -> LoggerOptions {
-  { level: LogLevel::Info, headers: false, query: false }
+  { level: LogLevel::Info, headers: false, query: false, }
 }
 
 ///|

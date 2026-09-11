@@ -1,5 +1,7 @@
 {
-  "name": "flame-bench",
+  "name": "mars-bench",
+  "private": true,
+  "engines": { "node": ">=24" },
   "type": "module",
   "scripts": {
     "bench": "node --expose-gc bench.mjs"

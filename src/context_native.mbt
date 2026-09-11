@@ -13,7 +13,7 @@ pub fn PlatformContext::new(
   conn : @http.ServerConnection,
   body_reader : &@async_io.Reader,
 ) -> PlatformContext {
-  { conn, body_reader }
+  { conn, body_reader, }
 }
 
 ///|

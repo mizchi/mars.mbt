@@ -20,7 +20,7 @@ pub(all) struct RequestIdOptions {
 ///|
 /// Default request ID options
 pub fn RequestIdOptions::default() -> RequestIdOptions {
-  { header_name: "X-Request-ID", prefix: "req-", use_existing: true }
+  { header_name: "X-Request-ID", prefix: "req-", use_existing: true, }
 }
 
 ///|

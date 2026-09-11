@@ -13,7 +13,7 @@ pub(all) struct HttpError {
 ///|
 /// Create HTTP error
 pub fn HttpError::new(status : Int, message : String) -> HttpError {
-  { status, message, details: "" }
+  { status, message, details: "", }
 }
 
 ///|
@@ -23,7 +23,7 @@ pub fn HttpError::with_details(
   message : String,
   details : String,
 ) -> HttpError {
-  { status, message, details }
+  { status, message, details, }
 }
 
 ///|
@@ -94,19 +94,19 @@ pub(all) struct ErrorHandlerOptions {
 ///|
 /// Default error handler options
 pub fn ErrorHandlerOptions::default() -> ErrorHandlerOptions {
-  { show_details: false, render: default_error_render, json: false }
+  { show_details: false, render: default_error_render, json: false, }
 }
 
 ///|
 /// Development error handler options (shows details)
 pub fn ErrorHandlerOptions::development() -> ErrorHandlerOptions {
-  { show_details: true, render: default_error_render, json: false }
+  { show_details: true, render: default_error_render, json: false, }
 }
 
 ///|
 /// JSON error handler options
 pub fn ErrorHandlerOptions::json_api() -> ErrorHandlerOptions {
-  { show_details: false, render: default_error_render, json: true }
+  { show_details: false, render: default_error_render, json: true, }
 }
 
 ///|

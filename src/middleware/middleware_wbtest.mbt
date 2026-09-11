@@ -717,7 +717,7 @@ test "redirect_all_status_codes" {
 ///|
 test "session_data_operations" {
   session_clear()
-  let data = SessionData::{ id: "test_session" }
+  let data = SessionData::{ id: "test_session", }
   // Initially empty
   inspect(data.get("user"), content="None")
   // Set and get
@@ -736,7 +736,7 @@ test "session_data_operations" {
 ///|
 test "session_data_multiple_keys" {
   session_clear()
-  let data = SessionData::{ id: "multi_key_session" }
+  let data = SessionData::{ id: "multi_key_session", }
   data.set("name", "Alice")
   data.set("role", "admin")
   data.set("theme", "dark")
@@ -763,7 +763,7 @@ test "session_data_multiple_keys" {
 ///|
 test "session_clear_all" {
   session_clear()
-  let data = SessionData::{ id: "clear_test" }
+  let data = SessionData::{ id: "clear_test", }
   data.set("key1", "value1")
   data.set("key2", "value2")
   data.clear_all()

@@ -5,7 +5,7 @@ test "star: 5 peers converge after drain phase" {
   let config : @topology.SimConfig = {
     num_peers: 5,
     ticks: 50,
-    ping_config: [{ ping_ms: 30, count: 5 }],
+    ping_config: [{ ping_ms: 30, count: 5, }],
     write_interval: 1,
     namespaces: ["state"],
   }
@@ -21,7 +21,7 @@ test "star: 5 peers mixed latency converge" {
   let config : @topology.SimConfig = {
     num_peers: 5,
     ticks: 80,
-    ping_config: [{ ping_ms: 30, count: 2 }, { ping_ms: 200, count: 3 }],
+    ping_config: [{ ping_ms: 30, count: 2, }, { ping_ms: 200, count: 3, }],
     write_interval: 1,
     namespaces: ["state"],
   }
@@ -36,7 +36,7 @@ test "gossip: 10 peers (fanout=3) converge after drain" {
     base: {
       num_peers: 10,
       ticks: 100,
-      ping_config: [{ ping_ms: 30, count: 10 }],
+      ping_config: [{ ping_ms: 30, count: 10, }],
       write_interval: 1,
       namespaces: ["state"],
     },
@@ -55,7 +55,7 @@ test "gossip vs star: both converge" {
   let star_config : @topology.SimConfig = {
     num_peers: 8,
     ticks: 60,
-    ping_config: [{ ping_ms: 30, count: 8 }],
+    ping_config: [{ ping_ms: 30, count: 8, }],
     write_interval: 3,
     namespaces: ["data"],
   }
@@ -63,7 +63,7 @@ test "gossip vs star: both converge" {
     base: {
       num_peers: 8,
       ticks: 60,
-      ping_config: [{ ping_ms: 30, count: 8 }],
+      ping_config: [{ ping_ms: 30, count: 8, }],
       write_interval: 3,
       namespaces: ["data"],
     },
@@ -86,7 +86,7 @@ test "mesh: 5 peers converge" {
   let config : @topology.SimConfig = {
     num_peers: 5,
     ticks: 50,
-    ping_config: [{ ping_ms: 30, count: 5 }],
+    ping_config: [{ ping_ms: 30, count: 5, }],
     write_interval: 1,
     namespaces: ["state"],
   }
@@ -101,7 +101,7 @@ test "mesh: message count > star" {
   let config : @topology.SimConfig = {
     num_peers: 5,
     ticks: 50,
-    ping_config: [{ ping_ms: 30, count: 5 }],
+    ping_config: [{ ping_ms: 30, count: 5, }],
     write_interval: 1,
     namespaces: ["state"],
   }
@@ -126,7 +126,7 @@ test "filtered_star: peers see only subscribed ns" {
     base: {
       num_peers: 5,
       ticks: 50,
-      ping_config: [{ ping_ms: 30, count: 5 }],
+      ping_config: [{ ping_ms: 30, count: 5, }],
       write_interval: 1,
       namespaces: ["pos", "hp"],
     },
@@ -152,7 +152,7 @@ test "filtered_star: filtered convergence" {
     base: {
       num_peers: 3,
       ticks: 40,
-      ping_config: [{ ping_ms: 30, count: 3 }],
+      ping_config: [{ ping_ms: 30, count: 3, }],
       write_interval: 1,
       namespaces: ["alpha", "beta"],
     },
@@ -169,7 +169,7 @@ test "partition: diverge during partition" {
     base: {
       num_peers: 4,
       ticks: 80,
-      ping_config: [{ ping_ms: 30, count: 4 }],
+      ping_config: [{ ping_ms: 30, count: 4, }],
       write_interval: 1,
       namespaces: ["state"],
     },
@@ -189,7 +189,7 @@ test "partition: reconverge after reconnect" {
     base: {
       num_peers: 4,
       ticks: 80,
-      ping_config: [{ ping_ms: 30, count: 4 }],
+      ping_config: [{ ping_ms: 30, count: 4, }],
       write_interval: 1,
       namespaces: ["state"],
     },
@@ -208,7 +208,7 @@ test "partition: convergence report" {
     base: {
       num_peers: 4,
       ticks: 80,
-      ping_config: [{ ping_ms: 30, count: 4 }],
+      ping_config: [{ ping_ms: 30, count: 4, }],
       write_interval: 2,
       namespaces: ["state"],
     },
@@ -217,7 +217,7 @@ test "partition: convergence report" {
     partitioned_peers: [2, 3],
   }
   let result = @topology.run_partition(config, 42)
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("=== Partition Report ===\n")
   buf.write_string(
     "partition: tick \{config.partition_at_tick}-\{config.reconnect_at_tick}, peers: [2, 3]\n",
@@ -239,7 +239,7 @@ test "partition: convergence report" {
 
 ///|
 test "mesh: benchmark scaling" {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("=== Mesh Benchmark ===\n")
   buf.write_string(
     "peers | mesh_msgs | star_msgs | gossip_msgs | mesh_conv | star_conv | gossip_conv\n",
@@ -249,7 +249,7 @@ test "mesh: benchmark scaling" {
     let config : @topology.SimConfig = {
       num_peers: n,
       ticks: 100,
-      ping_config: [{ ping_ms: 30, count: n }],
+      ping_config: [{ ping_ms: 30, count: n, }],
       write_interval: 2,
       namespaces: ["state"],
     }
@@ -280,12 +280,12 @@ test "star: convergence report" {
   let config : @topology.SimConfig = {
     num_peers: 5,
     ticks: 60,
-    ping_config: [{ ping_ms: 30, count: 3 }, { ping_ms: 200, count: 2 }],
+    ping_config: [{ ping_ms: 30, count: 3, }, { ping_ms: 200, count: 2, }],
     write_interval: 2,
     namespaces: ["pos", "hp"],
   }
   let result = @topology.run_star(config, 42)
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("=== Star Relay Report ===\n")
   buf.write_string(
     "convergence_tick: \{result.convergence_tick}, total_messages: \{result.total_messages}\n",

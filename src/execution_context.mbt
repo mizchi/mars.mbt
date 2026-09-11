@@ -23,7 +23,7 @@ pub(all) struct ExecutionContext {
 ///|
 /// Create a new ExecutionContext
 pub fn ExecutionContext::new() -> ExecutionContext {
-  { tasks: [], active: true }
+  { tasks: [], active: true, }
 }
 
 ///|
@@ -35,7 +35,7 @@ pub fn ExecutionContext::wait_until(
   name? : String = "background",
 ) -> Unit {
   if self.active {
-    self.tasks.push({ task, name })
+    self.tasks.push({ task, name, })
   }
 }
 

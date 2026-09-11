@@ -1,17 +1,17 @@
 supported_targets = "js+native"
 
 import {
-  "mizchi/mars" @mars,
-  "mizchi/x/http" @http,
+  "mizchi/mars",
+  "mizchi/x/http",
+  "mizchi/x/websocket",
   "moonbitlang/async",
-  "moonbitlang/async/http" @async_http,
-  "moonbitlang/async/websocket" @websocket,
 }
 
 warnings = "-0020-0029-0067"
 
+pkgtype(kind: "executable")
+
 options(
-  "is-main": true,
   targets: {
     "main.mbt": [ "native" ],
     "main_js.mbt": [ "js" ],

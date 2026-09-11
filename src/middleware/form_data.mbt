@@ -26,7 +26,7 @@ pub(all) struct FormData {
 ///|
 /// Create empty form data
 pub fn FormData::new() -> FormData {
-  { fields: {} }
+  { fields: {}, }
 }
 
 ///|

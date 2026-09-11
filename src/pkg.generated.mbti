@@ -174,4 +174,3 @@ pub impl Var for Bool
 pub impl Var for Double
 pub impl Var for String
 pub impl Var for Json
-

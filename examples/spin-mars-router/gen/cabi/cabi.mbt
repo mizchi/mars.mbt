@@ -121,7 +121,7 @@ pub fn cabi_reset() -> Unit {
 ///|
 /// Lift a string from linear memory
 pub fn cabi_lift_string(ptr : Int, len : Int) -> String {
-  let bytes : Array[Byte] = Array::new(capacity=len)
+  let bytes : Array[Byte] = Array(capacity=len)
   for i in 0..<len {
     bytes.push(mem_load8(ptr + i).to_byte())
   }

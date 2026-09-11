@@ -36,19 +36,19 @@ pub(all) struct TrailingSlashOptions {
 ///|
 /// Default: remove trailing slash with redirect
 pub fn TrailingSlashOptions::default() -> TrailingSlashOptions {
-  { mode: Remove, redirect: true, exclude: [] }
+  { mode: Remove, redirect: true, exclude: [], }
 }
 
 ///|
 /// Add trailing slash with redirect
 pub fn TrailingSlashOptions::add() -> TrailingSlashOptions {
-  { mode: Add, redirect: true, exclude: [] }
+  { mode: Add, redirect: true, exclude: [], }
 }
 
 ///|
 /// Remove trailing slash with redirect
 pub fn TrailingSlashOptions::remove() -> TrailingSlashOptions {
-  { mode: Remove, redirect: true, exclude: [] }
+  { mode: Remove, redirect: true, exclude: [], }
 }
 
 ///|

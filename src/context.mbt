@@ -203,7 +203,7 @@ pub fn Context::delete_cookie(self : Context, name : String) -> Unit {
 ///|
 /// Parse query string from path
 fn parse_query_string(path : String) -> Map[String, String] {
-  let result : Map[String, String] = {}
+  let result : Map[String, String] = Map::new()
   // Find query string start
   let query_start = find_char(path, '?')
   if query_start < 0 || query_start + 1 >= path.length() {
@@ -227,7 +227,7 @@ fn parse_query_string(path : String) -> Map[String, String] {
 ///|
 /// Parse cookies from Cookie header
 fn parse_cookies(header : String) -> Map[String, String] {
-  let result : Map[String, String] = {}
+  let result : Map[String, String] = Map::new()
   let pairs = split_by_char(header, ';')
   for pair in pairs {
     let trimmed = trim(pair)
@@ -275,7 +275,7 @@ fn merge_headers(
   base : Map[String, String],
   extra : Map[String, String],
 ) -> Map[String, String] {
-  let result : Map[String, String] = {}
+  let result : Map[String, String] = Map::new()
   // First, add defaults
   for key, value in extra {
     result.set(key, value)

@@ -23,7 +23,7 @@ pub(all) struct ValidationResult {
 ///|
 /// Create a new validation result
 pub fn ValidationResult::new() -> ValidationResult {
-  { errors: [] }
+  { errors: [], }
 }
 
 ///|
@@ -75,7 +75,7 @@ pub(all) struct Validator {
 ///|
 /// Create a validator from JSON
 pub fn Validator::new(data : Json) -> Validator {
-  { result: ValidationResult::new(), data }
+  { result: ValidationResult::new(), data, }
 }
 
 ///|

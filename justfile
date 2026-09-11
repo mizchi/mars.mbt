@@ -18,6 +18,18 @@ check:
 test:
     moon test --target {{target}}
 
+# Router microbenchmarks (release build; native or js)
+bench-router target="native":
+    moon bench src/router/trie --target {{target}} --release --no-parallelize
+
+# Mars/Hono comparison with identical inputs, validation, and timing
+bench *args:
+    cd bench && pnpm install --frozen-lockfile && pnpm bench {{args}}
+
+# Measure a Git revision and the working tree in the same process
+bench-compare revision="HEAD" *args:
+    cd bench && pnpm install --frozen-lockfile && node compare.mjs {{revision}} {{args}}
+
 # Update snapshot tests
 test-update:
     moon test --update --target {{target}}

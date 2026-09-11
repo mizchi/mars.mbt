@@ -8,7 +8,7 @@ pub(all) struct TrieRouter {
 ///|
 /// Create a new TrieRouter
 pub fn TrieRouter::new() -> TrieRouter {
-  { root: Node::new(), order: 0 }
+  { root: Node::new(), order: 0, }
 }
 
 ///|

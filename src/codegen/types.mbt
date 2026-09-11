@@ -23,7 +23,14 @@ pub fn RouteSpec::get(
   output_type : String,
   description? : String,
 ) -> RouteSpec {
-  { http_method: "GET", path, input_type: None, output_type, name, description }
+  {
+    http_method: "GET",
+    path,
+    input_type: None,
+    output_type,
+    name,
+    description,
+  }
 }
 
 ///|
@@ -166,7 +173,7 @@ pub fn extract_path_params(path : String) -> Array[PathParam] {
   for i, segment in segments {
     if segment.length() > 0 && segment[0] == ':' {
       let name = substring(segment, 1, segment.length())
-      params.push({ name, position: i })
+      params.push({ name, position: i, })
     }
   }
   params

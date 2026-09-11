@@ -1,0 +1,27 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/mars_bench"
+
+import {
+  "mizchi/mars",
+  "mizchi/mars/router/trie",
+  "moonbitlang/async/js_async",
+}
+
+// Values
+pub fn add_route(@trie.TrieRouter, String, String) -> Int
+
+pub fn match_count(@trie.TrieRouter, String, String) -> Int
+
+pub fn match_json(@trie.TrieRouter, String, String) -> String
+
+pub fn new_app(Bool) -> (@mars.JsRequest) -> @js_async.Promise[@mars.JsResponse]
+
+pub fn new_router() -> @trie.TrieRouter
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

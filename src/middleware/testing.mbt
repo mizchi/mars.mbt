@@ -15,7 +15,7 @@ pub(all) struct MockRequest {
 ///|
 /// Create a new mock request
 pub fn MockRequest::new(meth : String, path : String) -> MockRequest {
-  { meth, path, headers: {}, body: "", query: {} }
+  { meth, path, headers: {}, body: "", query: {}, }
 }
 
 ///|
@@ -133,7 +133,7 @@ pub(all) struct MockResponse {
 ///|
 /// Create empty mock response
 pub fn MockResponse::new() -> MockResponse {
-  { status: 200, headers: {}, body: "", sent: false }
+  { status: 200, headers: {}, body: "", sent: false, }
 }
 
 ///|
@@ -179,7 +179,7 @@ pub(all) struct MockContext {
 ///|
 /// Create mock context from request
 pub fn MockContext::from_request(request : MockRequest) -> MockContext {
-  { request, response: MockResponse::new(), data: {}, params: {} }
+  { request, response: MockResponse::new(), data: {}, params: {}, }
 }
 
 ///|

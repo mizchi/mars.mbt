@@ -18,13 +18,13 @@ pub(all) struct SessionOptions {
 ///|
 /// Default session options (development mode - no Secure flag)
 pub fn SessionOptions::default(secret : String) -> SessionOptions {
-  { secret, cookie_name: "session", max_age: 86400, secure: false }
+  { secret, cookie_name: "session", max_age: 86400, secure: false, }
 }
 
 ///|
 /// Production session options (with Secure flag for HTTPS)
 pub fn SessionOptions::production(secret : String) -> SessionOptions {
-  { secret, cookie_name: "session", max_age: 86400, secure: true }
+  { secret, cookie_name: "session", max_age: 86400, secure: true, }
 }
 
 ///|
@@ -64,7 +64,7 @@ pub fn SessionData::set(
   let data = match store.get(self.id) {
     Some(d) => d
     None => {
-      let d : Map[String, String] = {}
+      let d : Map[String, String] = Map::new()
       store.set(self.id, d)
       d
     }
@@ -293,7 +293,7 @@ pub fn get_session(
   }
   // Store session ID in context data for later use
   ctx.set("session_id", session_id)
-  SessionData::{ id: session_id }
+  SessionData::{ id: session_id, }
 }
 
 ///|

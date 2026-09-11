@@ -74,7 +74,7 @@ pub fn ApiKeyOptions::custom(
   validate : (String) -> ApiKeyResult,
   location? : ApiKeyLocation = Header("X-API-Key"),
 ) -> ApiKeyOptions {
-  { location, validate, error_message: "Invalid API key", error_status: 401 }
+  { location, validate, error_message: "Invalid API key", error_status: 401, }
 }
 
 ///|

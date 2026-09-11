@@ -39,7 +39,7 @@ fn decode_environment_as_lines_by_string_list(
   mem_bytes : Int,
 ) -> Array[String] {
   let lines : Array[String] = []
-  if result_len <= 0 || !(is_valid_memory_range(result_ptr, 0, mem_bytes)) {
+  if result_len <= 0 || !is_valid_memory_range(result_ptr, 0, mem_bytes) {
     return lines
   }
   let max_entries = (mem_bytes - result_ptr) / 8
@@ -64,7 +64,7 @@ fn decode_environment_as_lines_by_tuple_list(
   mem_bytes : Int,
 ) -> Array[String] {
   let lines : Array[String] = []
-  if result_len <= 0 || !(is_valid_memory_range(result_ptr, 0, mem_bytes)) {
+  if result_len <= 0 || !is_valid_memory_range(result_ptr, 0, mem_bytes) {
     return lines
   }
   let max_entries = (mem_bytes - result_ptr) / 16
@@ -148,7 +148,7 @@ fn read_arguments() -> Array[String] {
   let _ = ffi_get_arguments(retptr)
   let result_ptr = @cabi.cabi_read_i32(retptr)
   let result_len = @cabi.cabi_read_i32(retptr + 4)
-  let arr = Array::new(capacity=result_len)
+  let arr = Array(capacity=result_len)
   for i = 0; i < result_len; i = i + 1 {
     let elem_ptr = result_ptr + i * 8
     let ptr = @cabi.cabi_read_i32(elem_ptr)

@@ -18,13 +18,13 @@ pub(all) struct SseEvent {
 ///|
 /// Create a simple SSE event with just data
 pub fn SseEvent::data(data : String) -> SseEvent {
-  { event: "", data, id: "", retry: 0 }
+  { event: "", data, id: "", retry: 0, }
 }
 
 ///|
 /// Create an SSE event with type and data
 pub fn SseEvent::new(event : String, data : String) -> SseEvent {
-  { event, data, id: "", retry: 0 }
+  { event, data, id: "", retry: 0, }
 }
 
 ///|
@@ -35,7 +35,7 @@ pub fn SseEvent::full(
   id : String,
   retry : Int,
 ) -> SseEvent {
-  { event, data, id, retry }
+  { event, data, id, retry, }
 }
 
 ///|
@@ -96,7 +96,7 @@ pub(all) struct SseStream {
 ///|
 /// Create a new SSE stream
 pub fn SseStream::new(ctx : @mars.Context) -> SseStream {
-  { ctx, closed: false }
+  { ctx, closed: false, }
 }
 
 ///|

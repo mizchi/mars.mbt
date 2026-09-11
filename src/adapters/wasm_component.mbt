@@ -26,7 +26,7 @@ pub fn wasm_component_adapter(
   app : @mars.Server,
   config? : WasmComponentConfig = WasmComponentConfig::default(),
 ) -> WasmComponentAdapter {
-  { app, config }
+  { app, config, }
 }
 
 ///|

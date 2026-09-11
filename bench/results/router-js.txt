@@ -1,0 +1,68 @@
+moon bench src/router/trie --target js --release --no-parallelize
+[mizchi/mars] bench router/trie/trie_bench.mbt:5 ("bench: add static route") ok
+time (mean ± σ)         range (min … max) 
+ 346.10 ns ±  10.89 ns   331.56 ns … 365.87 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:14 ("bench: add dynamic route") ok
+time (mean ± σ)         range (min … max) 
+ 584.45 ns ± 177.49 ns   475.41 ns …   1.05 µs  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:23 ("bench: add wildcard route") ok
+time (mean ± σ)         range (min … max) 
+ 319.50 ns ±   6.82 ns   310.10 ns … 330.79 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:32 ("bench: add regex route") ok
+time (mean ± σ)         range (min … max) 
+ 924.19 ns ± 158.39 ns   829.93 ns …   1.24 µs  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:41 ("bench: match static route (short)") ok
+time (mean ± σ)         range (min … max) 
+ 174.12 ns ±   5.20 ns   166.22 ns … 182.18 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:50 ("bench: match static route (long)") ok
+time (mean ± σ)         range (min … max) 
+ 313.91 ns ±   4.37 ns   306.66 ns … 321.98 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:59 ("bench: match dynamic route (:id)") ok
+time (mean ± σ)         range (min … max) 
+ 271.45 ns ±   5.70 ns   261.81 ns … 280.38 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:66 ("bench: match nested dynamic routes") ok
+time (mean ± σ)         range (min … max) 
+ 372.97 ns ±  12.10 ns   357.34 ns … 391.12 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:75 ("bench: match wildcard route") ok
+time (mean ± σ)         range (min … max) 
+ 249.28 ns ±   4.16 ns   243.45 ns … 257.02 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:84 ("bench: match regex route") ok
+time (mean ± σ)         range (min … max) 
+ 466.50 ns ±  98.36 ns   345.08 ns … 653.77 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:91 ("bench: match regex route (UUID)") ok
+time (mean ± σ)         range (min … max) 
+   1.03 µs ±  29.18 ns   992.24 ns …   1.09 µs  in 10 ×  93877 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:108 ("bench: multi-match (middleware pattern)") ok
+time (mean ± σ)         range (min … max) 
+ 435.76 ns ±  72.44 ns   377.41 ns … 562.58 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:118 ("bench: no match") ok
+time (mean ± σ)         range (min … max) 
+ 121.44 ns ±   5.07 ns   115.73 ns … 130.65 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:126 ("bench: large router (100 routes) static match") ok
+time (mean ± σ)         range (min … max) 
+ 225.68 ns ±   3.52 ns   222.34 ns … 232.83 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:135 ("bench: large router (100 routes) dynamic match") ok
+time (mean ± σ)         range (min … max) 
+ 313.29 ns ±  10.32 ns   300.09 ns … 327.35 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:149 ("bench: mixed routes priority") ok
+time (mean ± σ)         range (min … max) 
+ 406.22 ns ±  12.59 ns   387.98 ns … 428.15 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:159 ("bench: optional parameter") ok
+time (mean ± σ)         range (min … max) 
+ 214.05 ns ±   7.53 ns   207.02 ns … 229.79 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:166 ("bench: optional parameter with value") ok
+time (mean ± σ)         range (min … max) 
+ 273.00 ns ±  10.09 ns   261.44 ns … 288.97 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:173 ("bench: deep nesting (5 levels)") ok
+time (mean ± σ)         range (min … max) 
+ 897.22 ns ±  13.08 ns   880.70 ns … 921.06 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:184 ("bench: ALL method matching") ok
+time (mean ± σ)         range (min … max) 
+ 210.64 ns ±   3.42 ns   205.34 ns … 216.42 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:191 ("bench: router creation") ok
+time (mean ± σ)         range (min … max) 
+  71.67 ns ±   2.72 ns    69.13 ns …  76.47 ns  in 10 × 100000 runs
+[mizchi/mars] bench router/trie/trie_bench.mbt:196 ("bench: typical REST API setup") ok
+time (mean ± σ)         range (min … max) 
+   1.92 µs ±  28.88 ns     1.88 µs …   1.96 µs  in 10 ×  49726 runs
+Total tests: 22, passed: 22, failed: 0.

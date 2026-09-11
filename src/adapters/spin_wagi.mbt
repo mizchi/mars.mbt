@@ -9,7 +9,7 @@ pub(all) struct SpinWagiConfig {
 
 ///|
 pub fn SpinWagiConfig::default() -> SpinWagiConfig {
-  { component: "mars-app", route: "/...", executor: "wagi" }
+  { component: "mars-app", route: "/...", executor: "wagi", }
 }
 
 ///|
@@ -23,7 +23,7 @@ pub fn spin_wagi_adapter(
   app : @mars.Server,
   config? : SpinWagiConfig = SpinWagiConfig::default(),
 ) -> SpinWagiAdapter {
-  { app, config }
+  { app, config, }
 }
 
 ///|

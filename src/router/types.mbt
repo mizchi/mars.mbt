@@ -7,7 +7,7 @@ pub(all) struct Params {
 ///|
 /// Create a new empty Params
 pub fn Params::new() -> Params {
-  { data: Map::new() }
+  { data: Map::new(), }
 }
 
 ///|
@@ -18,10 +18,9 @@ pub fn Params::with_param(
   key : String,
   value : String,
 ) -> Params {
-  let new_data : Map[String, String] = Map::new()
-  self.data.each(fn(k, v) { new_data.set(k, v) })
+  let new_data = self.data.copy()
   new_data.set(key, value)
-  { data: new_data }
+  { data: new_data, }
 }
 
 ///|
@@ -51,9 +50,7 @@ pub fn Params::to_map(self : Params) -> Map[String, String] {
 ///|
 /// Clone params
 pub fn Params::clone(self : Params) -> Params {
-  let new_data : Map[String, String] = Map::new()
-  self.data.each(fn(k, v) { new_data.set(k, v) })
-  { data: new_data }
+  { data: self.data.copy(), }
 }
 
 ///|
@@ -73,7 +70,7 @@ pub(all) struct MatchResult[H] {
 ///|
 /// Create an empty match result
 pub fn[H] MatchResult::empty() -> MatchResult[H] {
-  { handlers: [] }
+  { handlers: [], }
 }
 
 ///|

@@ -1,0 +1,22 @@
+import {
+  "mizchi/mars",
+  "mizchi/mars/router",
+  "mizchi/mars/router/trie",
+}
+
+supported_targets = "js"
+
+options(
+  link: {
+    "js": {
+      "exports": [
+        "new_router",
+        "add_route",
+        "match_count",
+        "match_json",
+        "new_app",
+      ],
+      "format": "esm",
+    },
+  },
+)

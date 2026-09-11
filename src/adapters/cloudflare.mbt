@@ -11,7 +11,7 @@ pub(all) struct KVNamespace {
 
 ///|
 pub fn KVNamespace::new(name : String) -> KVNamespace {
-  { name, data: {} }
+  { name, data: {}, }
 }
 
 ///|
@@ -73,7 +73,7 @@ pub(all) struct CloudflareEnv {
 
 ///|
 pub fn CloudflareEnv::new() -> CloudflareEnv {
-  { vars: {}, kv: {}, d1: {}, r2: {} }
+  { vars: {}, kv: {}, d1: {}, r2: {}, }
 }
 
 ///|
@@ -158,7 +158,7 @@ pub fn CloudflareEnv::to_map_env(self : CloudflareEnv) -> @mars.MapEnv {
     env.vars.set(name, value)
   }
   // Store bindings info as JSON
-  let bindings : Map[String, Json] = {}
+  let bindings : Map[String, Json] = Map::new()
   for name, _ in self.kv {
     bindings.set("kv:" + name, Json::string("KVNamespace"))
   }

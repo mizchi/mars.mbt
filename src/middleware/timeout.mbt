@@ -18,7 +18,7 @@ pub(all) struct TimeoutOptions {
 ///|
 /// Default timeout options (30 seconds)
 pub fn TimeoutOptions::default() -> TimeoutOptions {
-  { timeout_ms: 30000, message: "Request Timeout", status: 408 }
+  { timeout_ms: 30000, message: "Request Timeout", status: 408, }
 }
 
 ///|
@@ -48,7 +48,7 @@ fn timeout_now() -> Int {
 ///|
 /// Create timeout context
 pub fn TimeoutContext::new(timeout_ms : Int) -> TimeoutContext {
-  { start_time: timeout_now(), timeout_ms, timed_out: false }
+  { start_time: timeout_now(), timeout_ms, timed_out: false, }
 }
 
 ///|

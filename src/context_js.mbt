@@ -140,7 +140,7 @@ pub fn PlatformContext::new(
   js_request : JsRequest,
   response_resolve : (JsResponse) -> Unit,
 ) -> PlatformContext {
-  { js_request, js_headers: js_request_headers(js_request), response_resolve }
+  { js_request, js_headers: js_request_headers(js_request), response_resolve, }
 }
 
 ///|
@@ -375,7 +375,7 @@ fn parse_path_from_url(url : String) -> String {
 /// Parse headers from JsHeaders to Map
 /// Note: Use ctx.raw_header() for headers not in this list
 fn parse_js_headers(js_headers : JsHeaders) -> Map[String, String] {
-  let headers : Map[String, String] = {}
+  let headers : Map[String, String] = Map::new()
   // Common headers to check
   // For custom headers, use ctx.raw_header("X-Custom-Header")
   let common_headers = [
@@ -409,5 +409,5 @@ pub fn js_request_to_http_request(js_req : JsRequest) -> @http.Request {
   let url = js_request_url(js_req)
   let path = parse_path_from_url(url)
   let headers = parse_js_headers(js_request_headers(js_req))
-  { meth, path, headers }
+  { meth, path, headers, }
 }

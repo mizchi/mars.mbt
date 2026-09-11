@@ -77,7 +77,7 @@ pub fn run_gossip(config : GossipConfig, seed : Int) -> SimResult {
         }
         if any_new {
           let entries = collect_entries(nodes[j].store, ns)
-          re_gossip.push({ from: j, entries })
+          re_gossip.push({ from: j, entries, })
         }
       }
       if re_gossip.length() == 0 {
@@ -111,5 +111,5 @@ pub fn run_gossip(config : GossipConfig, seed : Int) -> SimResult {
       convergence_tick = tick
     }
   }
-  { topology_name: "gossip", convergence_tick, total_messages, per_tick }
+  { topology_name: "gossip", convergence_tick, total_messages, per_tick, }
 }

@@ -49,4 +49,3 @@ pub fn RouteSpec::query(String, String, String, String, description? : String) -
 // Type aliases
 
 // Traits
-

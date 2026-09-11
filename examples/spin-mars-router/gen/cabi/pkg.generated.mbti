@@ -41,4 +41,3 @@ pub fn cabi_write_u8(Int, Byte) -> Unit
 // Type aliases
 
 // Traits
-

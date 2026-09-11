@@ -20,16 +20,16 @@ pub(all) struct Node {
 ///|
 /// Create a new empty node
 pub fn Node::new() -> Node {
-  { methods: Map::new(), children: Map::new(), patterns: [] }
+  { methods: Map::new(), children: Map::new(), patterns: [], }
 }
 
 ///|
 /// Create a new node with an initial method and handler
 pub fn Node::with_handler(meth : String, handler_id : Int) -> Node {
   let methods : Map[String, Array[HandlerSet]] = Map::new()
-  let handler_set : HandlerSet = { handler_id, possible_keys: [], score: 0 }
+  let handler_set : HandlerSet = { handler_id, possible_keys: [], score: 0, }
   methods.set(meth, [handler_set])
-  { methods, children: Map::new(), patterns: [] }
+  { methods, children: Map::new(), patterns: [], }
 }
 
 ///|
@@ -45,12 +45,7 @@ pub fn Node::insert(
   let mut cur_node = self
   let parts = split_routing_path(path)
   let possible_keys : Array[String] = []
-  for i, part in parts {
-    let next_part : String? = if i + 1 < parts.length() {
-      Some(parts[i + 1])
-    } else {
-      None
-    }
+  for part in parts {
     let pattern = get_pattern(part)
     let key = match pattern {
       Some(Wildcard) => "*"
@@ -91,7 +86,6 @@ pub fn Node::insert(
         cur_node = child
       }
     }
-    ignore(next_part)
   }
 
   // Add handler to the final node
@@ -171,97 +165,75 @@ fn search_recursive(
   let part = parts[index]
   let is_last = index == parts.length() - 1
 
-  // Try exact match first
-  match node.children.get(part) {
-    Some(child) =>
-      if is_last {
-        // Check for wildcard at end: '/hello/*' => match '/hello'
-        match child.children.get("*") {
-          Some(wildcard_child) =>
-            collect_handlers(wildcard_child, meth, params, results)
-          None => ()
-        }
-        collect_handlers(child, meth, params, results)
-      } else {
+  // Pattern keys share the children map with static segments. A request
+  // containing ":id" or "*" must reach those nodes only through the pattern.
+  if part != "*" && !part.has_prefix(":") {
+    match node.children.get(part) {
+      Some(child) =>
         search_recursive(child, meth, parts, index + 1, params, results)
-      }
-    None => ()
+      None => ()
+    }
   }
 
-  // Try pattern matches
   for pattern in node.patterns {
     match pattern {
       Wildcard =>
-        // Wildcard behavior depends on whether it's terminal or not
         match node.children.get("*") {
-          Some(wildcard_child) =>
-            // If wildcard_child has children, it's a middle wildcard (e.g., /wild/*/card)
-            // Match one segment and continue recursing
-            if wildcard_child.children.length() > 0 {
-              search_recursive(
-                wildcard_child,
-                meth,
-                parts,
-                index + 1,
-                params,
-                results,
-              )
-            } else {
-              // Terminal wildcard - matches all remaining, collect immediately
-              collect_handlers(wildcard_child, meth, params, results)
-            }
-          None => ()
-        }
-      Param(name) => {
-        let key = ":" + name
-        match node.children.get(key) {
           Some(child) => {
-            let new_params = params.with_param(name, part)
-            if is_last {
-              collect_handlers(child, meth, new_params, results)
-              // Check for trailing wildcard
-              match child.children.get("*") {
-                Some(wildcard_child) =>
-                  collect_handlers(wildcard_child, meth, new_params, results)
-                None => ()
+            // A node can represent both /files/* and /files/*/meta. Its own
+            // handlers remain terminal wildcards even when children exist.
+            collect_handlers(child, meth, params, results)
+            if !child.children.is_empty() {
+              if is_last {
+                match child.children.get("*") {
+                  Some(trailing) =>
+                    collect_handlers(trailing, meth, params, results)
+                  None => ()
+                }
+              } else {
+                search_recursive(child, meth, parts, index + 1, params, results)
               }
-            } else {
-              search_recursive(
-                child,
-                meth,
-                parts,
-                index + 1,
-                new_params,
-                results,
-              )
             }
           }
           None => ()
         }
-      }
-      ParamWithRegex(name, regex) => {
-        let key = ":" + name + "{" + regex + "}"
-        match node.children.get(key) {
+      Param(name) =>
+        match node.children.get(":" + name) {
+          Some(child) =>
+            search_param(child, meth, parts, index, name, params, results)
+          None => ()
+        }
+      ParamWithRegex(name, regex) =>
+        match node.children.get(":" + name + "{" + regex + "}") {
           Some(child) =>
             if matches_segment_regex(part, regex) {
-              let new_params = params.with_param(name, part)
-              if is_last {
-                collect_handlers(child, meth, new_params, results)
-              } else {
-                search_recursive(
-                  child,
-                  meth,
-                  parts,
-                  index + 1,
-                  new_params,
-                  results,
-                )
-              }
+              search_param(child, meth, parts, index, name, params, results)
             }
           None => ()
         }
-      }
     }
+  }
+}
+
+///|
+/// Reuse the traversal map, restoring shadowed parameters on the way back.
+/// Only collected results own copies, so sibling handlers and later requests
+/// cannot observe mutations from another branch.
+fn search_param(
+  child : Node,
+  meth : String,
+  parts : Array[String],
+  index : Int,
+  name : String,
+  params : @router.Params,
+  results : Array[HandlerParamsSet],
+) -> Unit {
+  let previous = params.get(name)
+  params.set(name, parts[index])
+  search_recursive(child, meth, parts, index + 1, params, results)
+  match previous {
+    Some(value) => params.set(name, value)
+    None => params.to_map().remove(name)
   }
 }
 

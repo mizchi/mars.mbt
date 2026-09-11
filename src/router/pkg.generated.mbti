@@ -56,4 +56,3 @@ pub(open) trait Router {
   fn add(Self, Method, String) -> HandlerId
   fn match_(Self, Method, String) -> MatchResult[HandlerId]
 }
-

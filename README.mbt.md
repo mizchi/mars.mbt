@@ -108,6 +108,12 @@ Claims helper APIs are still available:
 - `/files/*` - Wildcard (matches any path)
 - `/api/:type?` - Optional parameter
 
+## Benchmarks
+
+Run `just bench` for the Mars/Hono comparison or `just bench-router native`
+for the native router microbenchmarks. The [implementation review](docs/implementation-benchmark.md)
+includes measured results, raw samples, and the `just bench-compare` baseline workflow.
+
 ## License
 
 MIT

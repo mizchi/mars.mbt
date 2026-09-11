@@ -156,10 +156,12 @@ Conditions / 条件:
 ## Reproducing / 再現方法
 
 ```bash
-cd mars
-moon test -p topology
+moon test src/topology --target native
 ```
 
 All topology tests including the benchmark are in `src/topology/topology_test.mbt`.
+
+Rechecked on 2026-09-11 with Moon 0.1.20260904: all 13 topology tests pass,
+and the message counts and convergence ticks in the tables above are unchanged.
 
 全トポロジーテスト（ベンチマーク含む）は `src/topology/topology_test.mbt` にあります。

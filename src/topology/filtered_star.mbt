@@ -104,5 +104,10 @@ pub fn run_filtered_star(config : FilteredStarConfig, seed : Int) -> SimResult {
       convergence_tick = tick
     }
   }
-  { topology_name: "filtered_star", convergence_tick, total_messages, per_tick }
+  {
+    topology_name: "filtered_star",
+    convergence_tick,
+    total_messages,
+    per_tick,
+  }
 }

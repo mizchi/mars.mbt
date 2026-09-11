@@ -393,6 +393,13 @@ src/
     └── generator.mbt
 ```
 
+## Benchmarks
+
+Run `just bench` for the Mars/Hono comparison, `just bench-compare a71bade`
+to include a Git baseline, or `just bench-router native` for the native router
+microbenchmarks. See the [implementation review and measured results](docs/implementation-benchmark.md)
+for conditions, raw samples, and reproduction commands.
+
 ## License
 
 MIT
