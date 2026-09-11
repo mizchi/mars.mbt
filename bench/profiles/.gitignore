@@ -1,0 +1,6 @@
+# Keep compact pprof files, summaries, and measurement metadata in Git.
+# Raw sampler output remains available locally for more detailed inspection.
+*.cpuprofile
+*.firefox.json
+*.firefox.syms.json
+*.server.log

@@ -1,0 +1,24 @@
+Profile: /Users/mz/ghq/github.com/mizchi/mars.mbt/bench/profiles/patched/js-fetch.pb.gz
+Total: 5020.54 ms (364 samples)
+Memory-management self time: 0.00 ms (0.0%)
+
+Top user functions by self time (mem-mgmt frames hidden)
+--------------------------------------------------------
+     586.70 ms   11.7%  (anonymous)
+     357.33 ms    7.1%  $make_array_len_and_init
+     313.47 ms    6.2%  createReadableStreamState
+     240.37 ms    4.8%  (program)
+     207.83 ms    4.1%  encode
+     204.38 ms    4.1%  set TextDecoder
+     193.85 ms    3.9%  __name
+     166.42 ms    3.3%  parse
+     119.22 ms    2.4%  _Request
+     107.71 ms    2.1%  extractBody
+     106.79 ms    2.1%  _HeadersList
+     103.46 ms    2.1%  (garbage collector)
+
+Top user functions by mem-mgmt-attributed time (callers of allocs)
+------------------------------------------------------------------
+
+Top mem-mgmt primitives by self time
+------------------------------------

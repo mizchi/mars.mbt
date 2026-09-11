@@ -1,0 +1,28 @@
+{
+  "layer": "mars",
+  "capture": "cpu",
+  "duration_seconds": 5,
+  "connections": 64,
+  "threads": 4,
+  "warmup_seconds": 1,
+  "exe_sha256": "dec9f32b12a1ba2256853ea903729ed0801e31c84981097b93419fe4fad75de2",
+  "command": [
+    "samply",
+    "record",
+    "--save-only",
+    "--unstable-presymbolicate",
+    "--main-thread-only",
+    "--rate",
+    "1000",
+    "--output",
+    "/Users/mz/ghq/github.com/mizchi/mars.mbt/bench/profiles/async-patched/native-mars-cpu.firefox.json",
+    "/private/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-profile-dcjo8s4z/_build/native/release/build/mizchi/mars_bench/http_server/http_server.exe",
+    "mars",
+    "52072",
+    "9000"
+  ],
+  "warmup": "Running 1s test @ http://127.0.0.1:52072/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   494.79us  161.82us   3.64ms   93.63%\n    Req/Sec    31.67k     3.05k   36.04k    54.55%\n  138489 requests in 1.10s, 13.34MB read\nRequests/sec: 125903.10\nTransfer/sec:     12.13MB\n",
+  "measured": "Running 5s test @ http://127.0.0.1:52072/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   648.77us    1.53ms  32.38ms   98.60%\n    Req/Sec    30.51k     5.23k   36.25k    83.50%\n  Latency Distribution\n     50%  463.00us\n     75%  523.00us\n     90%  649.00us\n     99%    4.42ms\n  607184 requests in 5.00s, 58.48MB read\nRequests/sec: 121362.72\nTransfer/sec:     11.69MB\n",
+  "server_log": "Stopping profile.\n",
+  "note": "Only time captures represent uninstrumented throughput. CPU/allocation captures include startup, readiness, warmup, measured load, and trailing idle time. Lower layers return the same response without Mars routing/context work."
+}

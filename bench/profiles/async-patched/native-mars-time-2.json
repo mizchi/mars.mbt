@@ -1,0 +1,21 @@
+{
+  "layer": "mars",
+  "capture": "time",
+  "duration_seconds": 5,
+  "connections": 64,
+  "threads": 4,
+  "warmup_seconds": 1,
+  "exe_sha256": "dec9f32b12a1ba2256853ea903729ed0801e31c84981097b93419fe4fad75de2",
+  "command": [
+    "/usr/bin/time",
+    "-lp",
+    "/private/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-profile-dcjo8s4z/_build/native/release/build/mizchi/mars_bench/http_server/http_server.exe",
+    "mars",
+    "49760",
+    "9000"
+  ],
+  "warmup": "Running 1s test @ http://127.0.0.1:49760/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   503.90us  283.74us   4.88ms   93.55%\n    Req/Sec    32.37k     5.02k   44.95k    74.42%\n  138463 requests in 1.10s, 13.34MB read\nRequests/sec: 125854.06\nTransfer/sec:     12.12MB\n",
+  "measured": "Running 5s test @ http://127.0.0.1:49760/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   630.78us  283.10us   6.25ms   85.13%\n    Req/Sec    25.18k     4.84k   33.64k    63.24%\n  Latency Distribution\n     50%  516.00us\n     75%  693.00us\n     90%    1.03ms\n     99%    1.55ms\n  511004 requests in 5.10s, 49.22MB read\nRequests/sec: 100200.65\nTransfer/sec:      9.65MB\n",
+  "server_log": "real 9.00\nuser 2.82\nsys 3.00\n             3014656  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 349  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              649585  messages sent\n              649585  messages received\n                   0  signals received\n                   1  voluntary context switches\n               65250  involuntary context switches\n         55456908690  instructions retired\n         21787705254  cycles elapsed\n             1818984  peak memory footprint\n",
+  "note": "Only time captures represent uninstrumented throughput. CPU/allocation captures include startup, readiness, warmup, measured load, and trailing idle time. Lower layers return the same response without Mars routing/context work."
+}

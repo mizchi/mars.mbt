@@ -1,5 +1,8 @@
 # Implementation review and benchmarks
 
+For the subsequent moon-pprof investigation of Mars, mizchi/x, and async, see
+[the profiling review](profiling-2026-09-11.md).
+
 Measured on 2026-09-11 against `a71bade` (Mars 0.3.11).
 
 The paired results below were measured before the dependency update described

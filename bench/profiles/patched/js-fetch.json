@@ -1,0 +1,14 @@
+{
+  "scenario": "fetch",
+  "measured_at": "2026-09-11T10:57:30.350Z",
+  "node": "v24.21.0",
+  "cpu": "Apple M5",
+  "arch": "arm64",
+  "module_sha256": "56b86e992c0b6af641695b5520670a9e60bbab33242bb6dd3035277794887286",
+  "operations": 1319000,
+  "elapsed_ms": 5003.121292,
+  "ns_per_op": 3793.1169764973465,
+  "profile": true,
+  "sampling_interval_us": 100,
+  "note": "Warmup excluded. Profiled timing includes sampling overhead; use the paired benchmark for performance comparisons."
+}

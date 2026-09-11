@@ -1,0 +1,21 @@
+{
+  "layer": "mars",
+  "capture": "time",
+  "duration_seconds": 5,
+  "connections": 64,
+  "threads": 4,
+  "warmup_seconds": 1,
+  "exe_sha256": "a31b9cd2aa55f03d0b7098231a9162ed2f6ae763358fcc6198aa92e6d83a1257",
+  "command": [
+    "/usr/bin/time",
+    "-lp",
+    "/private/tmp/mars-http-baseline.exe",
+    "mars",
+    "50588",
+    "9000"
+  ],
+  "warmup": "Running 1s test @ http://127.0.0.1:50588/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   491.91us  165.02us   2.29ms   92.45%\n    Req/Sec    32.48k     5.36k   38.17k    72.73%\n  142140 requests in 1.10s, 13.69MB read\nRequests/sec: 129250.85\nTransfer/sec:     12.45MB\n",
+  "measured": "Running 5s test @ http://127.0.0.1:50588/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   482.26us  136.04us   6.28ms   94.20%\n    Req/Sec    33.04k     3.95k   38.17k    63.24%\n  Latency Distribution\n     50%  450.00us\n     75%  492.00us\n     90%  541.00us\n     99%    1.13ms\n  670522 requests in 5.10s, 64.59MB read\nRequests/sec: 131473.64\nTransfer/sec:     12.66MB\n",
+  "server_log": "real 9.00\nuser 3.25\nsys 2.86\n             3014656  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 347  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              812779  messages sent\n              812779  messages received\n                   0  signals received\n                   1  voluntary context switches\n               16534  involuntary context switches\n         78164465266  instructions retired\n         24635775297  cycles elapsed\n             1786216  peak memory footprint\n",
+  "note": "Only time captures represent uninstrumented throughput. CPU/allocation captures include startup, readiness, warmup, measured load, and trailing idle time. Lower layers return the same response without Mars routing/context work."
+}

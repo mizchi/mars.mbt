@@ -1,0 +1,37 @@
+Profile: /Users/mz/ghq/github.com/mizchi/mars.mbt/bench/profiles/baseline/native-x-cpu.pb.gz
+Total: 8743.00 ms (1651 samples)
+Memory-management self time: 535.00 ms (6.1%)
+
+Top user functions by self time (mem-mgmt frames hidden)
+--------------------------------------------------------
+    3214.00 ms   36.8%  kevent
+    1921.00 ms   22.0%  write
+    1356.00 ms   15.5%  read
+     207.00 ms    2.4%  scan_regular_object
+     171.00 ms    2.0%  mi_malloc
+     131.00 ms    1.5%  mi_free_size
+      49.00 ms    0.6%  _M0MP311moonbitlang5async4http6Sender14send__responseN16_2aasync__driverS2535
+      47.00 ms    0.5%  _M0IP016_24default__implP311moonbitlang5async2io6Writer5writeGRP311moonbitlang5async4http6SenderE
+      45.00 ms    0.5%  OUTLINED_FUNCTION_9
+      41.00 ms    0.5%  _M0MP311moonbitlang5async4http6Server12run__foreverN16_2aasync__driverS2779
+      41.00 ms    0.5%  _M0MP311moonbitlang5async4http6Sender13send__headersN16_2aasync__driverS2466
+      38.00 ms    0.4%  _platform_memmove
+
+Top user functions by mem-mgmt-attributed time (callers of allocs)
+------------------------------------------------------------------
+     535.00 ms    6.1%  moonbitlang::async::run__async__main
+     535.00 ms    6.1%  moonbitlang::async::internal::event__loop::with__event__loop_2einner
+     535.00 ms    6.1%  main
+     535.00 ms    6.1%  start
+     535.00 ms    6.1%  moonbitlang::async::internal::event__loop::EventLoop::run__forever
+     532.00 ms    6.1%  moonbitlang::async::internal::coroutine::reschedule
+     396.00 ms    4.5%  _M0FP411moonbitlang5async8internal9coroutine29protect__from__cancel_2einnerGuEC19068
+     344.00 ms    3.9%  _M0MP411moonbitlang5async8internal11event__loop8IoHandle4readC19590
+     343.00 ms    3.9%  _M0MP311moonbitlang5async2io12ReaderBuffer11try__ensureN16_2aasync__driverS683GRP311moonbitlang5async6socket3TcpEC21441
+     342.00 ms    3.9%  _M0MP311moonbitlang5async2io12ReaderBuffer9find__optN16_2aasync__driverS709GRP311moonbitlang5async6socket3TcpEC21498
+     340.00 ms    3.9%  _M0IP016_24default__implP311moonbitlang5async2io6Reader11read__untilGRP311moonbitlang5async6socket3TcpEC21568
+     339.00 ms    3.9%  _M0MP411moonbitlang5async8internal11event__loop8IoHandle27read__via__event__bus__unixC19506
+
+Top mem-mgmt primitives by self time
+------------------------------------
+     535.00 ms    6.1%  moonbit_drop_object

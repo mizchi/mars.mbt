@@ -1,0 +1,109 @@
+{
+  "note": "Percentages use sampled time, including native startup/idle and kernel calls. Cumulative groups overlap; do not add them. Inlining and unresolved outlined symbols limit package self-time attribution. See the report for interpretation.",
+  "profiles": [
+    {
+      "profile": "profiles/baseline/js-fetch.pb.gz",
+      "sample_total_ns": 5067541000,
+      "percentages": {
+        "Mars header parsing cumulative": 20.28285513624853,
+        "Mars URL parsing cumulative": 1.8115097638085216,
+        "regex parsing self": 0.0,
+        "pattern alternatives scan self": 0.0,
+        "array initialization self": 4.825851433663783,
+        "garbage collector self": 3.091420473953738,
+        "async self": 3.040429273290537
+      }
+    },
+    {
+      "profile": "profiles/patched/js-fetch.pb.gz",
+      "sample_total_ns": 5020542000,
+      "percentages": {
+        "Mars header parsing cumulative": 1.4183329210272517,
+        "Mars URL parsing cumulative": 0.7700762188624256,
+        "regex parsing self": 0.0,
+        "pattern alternatives scan self": 0.0,
+        "array initialization self": 7.11735904211139,
+        "garbage collector self": 2.0607934362465246,
+        "async self": 4.1919378425675955
+      }
+    },
+    {
+      "profile": "profiles/baseline/js-regex.pb.gz",
+      "sample_total_ns": 5015875000,
+      "percentages": {
+        "Mars header parsing cumulative": 0.0,
+        "Mars URL parsing cumulative": 0.0,
+        "regex parsing self": 18.690936277319512,
+        "pattern alternatives scan self": 14.370653176165673,
+        "array initialization self": 5.015615421038204,
+        "garbage collector self": 3.343604057118648,
+        "async self": 0.0
+      }
+    },
+    {
+      "profile": "profiles/baseline/js-dynamic.pb.gz",
+      "sample_total_ns": 5013167000,
+      "percentages": {
+        "Mars header parsing cumulative": 0.0,
+        "Mars URL parsing cumulative": 0.0,
+        "regex parsing self": 0.0,
+        "pattern alternatives scan self": 0.0,
+        "array initialization self": 20.603502735895294,
+        "garbage collector self": 4.783223858291575,
+        "async self": 0.0
+      }
+    },
+    {
+      "profile": "profiles/baseline/native-mars-cpu.pb.gz",
+      "sample_total_ns": 8987000000,
+      "percentages": {
+        "kevent": 33.2146433737621,
+        "read/write": 34.104818070546344,
+        "memory management self": 15.967508623567376,
+        "Mars self": 1.9472571492155335,
+        "x self": 0.35606987871369755,
+        "Sender::send_response cumulative": 7.9670635362189826,
+        "Reader::read_headers cumulative": 3.0377211527762324
+      }
+    },
+    {
+      "profile": "profiles/async-patched/native-mars-cpu.pb.gz",
+      "sample_total_ns": 8917000000,
+      "percentages": {
+        "kevent": 34.933273522485145,
+        "read/write": 35.000560726701806,
+        "memory management self": 15.162050016821802,
+        "Mars self": 1.8279690478860602,
+        "x self": 0.4149377593360996,
+        "Sender::send_response cumulative": 3.039138723786027,
+        "Reader::read_headers cumulative": 3.4316474150499046
+      }
+    },
+    {
+      "profile": "profiles/baseline/native-x-cpu.pb.gz",
+      "sample_total_ns": 8743000000,
+      "percentages": {
+        "kevent": 36.76083724122155,
+        "read/write": 37.48141370239048,
+        "memory management self": 12.146860345419192,
+        "Mars self": 0.10293949445270502,
+        "x self": 0.7663273475923595,
+        "Sender::send_response cumulative": 7.262953219718632,
+        "Reader::read_headers cumulative": 3.637195470662244
+      }
+    },
+    {
+      "profile": "profiles/baseline/native-async-cpu.pb.gz",
+      "sample_total_ns": 8979000000,
+      "percentages": {
+        "kevent": 33.53380109143557,
+        "read/write": 40.694954894754424,
+        "memory management self": 12.139436462857779,
+        "Mars self": 0.0779596837064261,
+        "x self": 0.0,
+        "Sender::send_response cumulative": 9.600178193562757,
+        "Reader::read_headers cumulative": 4.042766455061811
+      }
+    }
+  ]
+}

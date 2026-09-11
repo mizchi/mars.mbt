@@ -344,41 +344,27 @@ pub fn js_method_to_request_method(meth : String) -> @http.RequestMethod {
 ///|
 /// Parse path from URL string
 fn parse_path_from_url(url : String) -> String {
-  // Find protocol end (://)
   let mut start = 0
-  let chars : Array[Char] = []
-  for c in url {
-    chars.push(c)
-  }
-  // Skip protocol
-  for i = 0; i < chars.length() - 2; i = i + 1 {
-    if chars[i] == ':' && chars[i + 1] == '/' && chars[i + 2] == '/' {
+  for i = 0; i + 2 < url.length(); i = i + 1 {
+    if url.code_unit_at(i) == ':' &&
+      url.code_unit_at(i + 1) == '/' &&
+      url.code_unit_at(i + 2) == '/' {
       start = i + 3
       break
     }
   }
-  // Find host end (first / after protocol)
-  for i = start; i < chars.length(); i = i + 1 {
-    if chars[i] == '/' {
-      // Return from this / to end
-      let buf = StringBuilder::new()
-      for j = i; j < chars.length(); j = j + 1 {
-        buf.write_char(chars[j])
-      }
-      return buf.to_string()
+  for i = start; i < url.length(); i = i + 1 {
+    if url.code_unit_at(i) == '/' {
+      return url[i:].to_owned()
     }
   }
   "/"
 }
 
 ///|
-/// Parse headers from JsHeaders to Map
-/// Note: Use ctx.raw_header() for headers not in this list
-fn parse_js_headers(js_headers : JsHeaders) -> Map[String, String] {
-  let headers : Map[String, String] = Map::new()
-  // Common headers to check
-  // For custom headers, use ctx.raw_header("X-Custom-Header")
-  let common_headers = [
+// Keep the canonical keys of the existing public Request.headers API.
+let common_header_names : Map[String, String] = {
+  let names = [
     // Standard request headers
     "Content-Type", "Accept", "Authorization", "Cookie", "User-Agent", "Host", "Origin",
     "Referer", "Content-Length",
@@ -393,12 +379,29 @@ fn parse_js_headers(js_headers : JsHeaders) -> Map[String, String] {
     // Common custom headers
      "X-Requested-With", "X-Request-ID", "X-Correlation-ID",
   ]
-  for name in common_headers {
-    match js_headers_get(js_headers, name) {
-      Some(value) => headers.set(name, value)
-      None => ()
-    }
+  let result : Map[String, String] = Map([])
+  for name in names {
+    result[name.to_lower()] = name
   }
+  result
+}
+
+///|
+extern "js" fn js_headers_for_each(
+  headers : JsHeaders,
+  f : (String, String) -> Unit,
+) -> Unit =
+  #| (headers, f) => headers.forEach((value, name) => f(name, value))
+
+///|
+/// Visit only present headers. Custom headers remain available via raw_header.
+fn parse_js_headers(js_headers : JsHeaders) -> Map[String, String] {
+  let headers : Map[String, String] = Map([])
+  js_headers_for_each(js_headers, fn(name, value) {
+    if common_header_names.get(name) is Some(canonical) {
+      headers[canonical] = value
+    }
+  })
   headers
 }
 

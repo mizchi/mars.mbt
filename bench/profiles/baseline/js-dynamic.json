@@ -1,0 +1,14 @@
+{
+  "scenario": "dynamic",
+  "measured_at": "2026-09-11T10:46:08.901Z",
+  "node": "v24.21.0",
+  "cpu": "Apple M5",
+  "arch": "arm64",
+  "module_sha256": "2b0e2ff20f7ccc9c283e983fb87fc12b8c9bdc179812a148ea90ed62ec5e91ff",
+  "operations": 18300000,
+  "elapsed_ms": 5000.870040999999,
+  "ns_per_op": 273.27158693989065,
+  "profile": true,
+  "sampling_interval_us": 100,
+  "note": "Warmup excluded. Profiled timing includes sampling overhead; use the paired benchmark for performance comparisons."
+}

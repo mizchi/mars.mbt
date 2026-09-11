@@ -1,0 +1,24 @@
+Profile: /Users/mz/ghq/github.com/mizchi/mars.mbt/bench/profiles/baseline/js-dynamic.pb.gz
+Total: 5013.17 ms (84 samples)
+Memory-management self time: 0.00 ms (0.0%)
+
+Top user functions by self time (mem-mgmt frames hidden)
+--------------------------------------------------------
+    1032.89 ms   20.6%  $make_array_len_and_init
+     892.30 ms   17.8%  mizchi::mars::router::trie::search__recursive
+     739.56 ms   14.8%  (anonymous)
+     258.20 ms    5.2%  mizchi::mars::router::trie::split__path
+     247.44 ms    4.9%  mizchi::mars::router::trie::Node::search
+     239.79 ms    4.8%  (garbage collector)
+     218.01 ms    4.3%  mizchi::mars::router::trie::collect__handlers
+     216.44 ms    4.3%  mizchi::mars::router::trie::TrieRouter::match__
+     207.05 ms    4.1%  mizchi::mars::router::trie::search__param
+     193.69 ms    3.9%  _M0MPB3Map3getGsRP46mizchi4mars6router4trie4NodeE
+     164.45 ms    3.3%  batch
+     160.24 ms    3.2%  Map::copy
+
+Top user functions by mem-mgmt-attributed time (callers of allocs)
+------------------------------------------------------------------
+
+Top mem-mgmt primitives by self time
+------------------------------------

@@ -1,0 +1,28 @@
+{
+  "layer": "async",
+  "capture": "cpu",
+  "duration_seconds": 5,
+  "connections": 64,
+  "threads": 4,
+  "warmup_seconds": 1,
+  "exe_sha256": "a31b9cd2aa55f03d0b7098231a9162ed2f6ae763358fcc6198aa92e6d83a1257",
+  "command": [
+    "samply",
+    "record",
+    "--save-only",
+    "--unstable-presymbolicate",
+    "--main-thread-only",
+    "--rate",
+    "1000",
+    "--output",
+    "/Users/mz/ghq/github.com/mizchi/mars.mbt/bench/profiles/baseline/native-async-cpu.firefox.json",
+    "/private/tmp/mars-http-baseline.exe",
+    "async",
+    "51738",
+    "9000"
+  ],
+  "warmup": "Running 1s test @ http://127.0.0.1:51738/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   643.09us    1.43ms  19.78ms   96.76%\n    Req/Sec    36.42k     5.15k   51.00k    74.42%\n  155647 requests in 1.10s, 14.99MB read\nRequests/sec: 141535.36\nTransfer/sec:     13.63MB\n",
+  "measured": "Running 5s test @ http://127.0.0.1:51738/api/users/123\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   410.64us   53.40us   2.96ms   85.33%\n    Req/Sec    37.74k     1.41k   40.41k    75.00%\n  Latency Distribution\n     50%  404.00us\n     75%  429.00us\n     90%  459.00us\n     99%  572.00us\n  766183 requests in 5.10s, 73.80MB read\nRequests/sec: 150227.37\nTransfer/sec:     14.47MB\n",
+  "server_log": "Stopping profile.\n",
+  "note": "Only time captures represent uninstrumented throughput. CPU/allocation captures include startup, readiness, warmup, measured load, and trailing idle time. Lower layers return the same response without Mars routing/context work."
+}

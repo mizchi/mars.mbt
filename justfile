@@ -30,6 +30,20 @@ bench *args:
 bench-compare revision="HEAD" *args:
     cd bench && pnpm install --frozen-lockfile && node compare.mjs {{revision}} {{args}}
 
+# Capture a warmed-up JS workload and convert the Node profile with moon-pprof
+profile-js *args:
+    cd bench && moon build --target js --release
+    cd bench && node --expose-gc profile-js.mjs {{args}}
+
+# Capture native server stacks (cpu), allocations (alloc), or throughput (time)
+profile-native layer="mars" capture="cpu" *args:
+    cd bench && moon build bridge/http_server --target native --release
+    cd bench && python3 profile-native.py --layer {{layer}} --capture {{capture}} {{args}}
+
+# Compare response-head allocations using disposable async builds (macOS)
+profile-buffer-memory async_repo *args:
+    python3 bench/buffer-memory/measure.py --async-repo {{quote(async_repo)}} {{args}}
+
 # Update snapshot tests
 test-update:
     moon test --update --target {{target}}

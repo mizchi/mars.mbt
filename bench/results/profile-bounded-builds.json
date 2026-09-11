@@ -1,0 +1,17 @@
+{
+  "async_base": "3e54be1f084b320aad774d6bb450f04bce560509",
+  "mars_base": "418123437691591487bbb45806494fef59f471ab",
+  "moon": "moon 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moon\nmoonc v0.10.12+1634b282e (2026-09-07) ~/.moon/bin/moonc\nmoonrun 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moonrun\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg\n",
+  "harness_sha256": "dd98c6160f5dd7cd7d319aeb7f2ce8e785ee94ab935d730af9d965cb98644dad",
+  "patch_sha256": "f687eccff0c3da5fffe1d0fc4fe1e85b9278e480c00229ce5e05f696f8511a28",
+  "binaries": {
+    "baseline": {
+      "path": "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-bounded-cpu-7qsuve3w/baseline/_build/native/release/build/mizchi/mars_bench/http_server/http_server.exe",
+      "sha256": "1efcf19aeca930c6727bbc2900896c832efa194fbd8cb6511508fc68f0575f32"
+    },
+    "bounded": {
+      "path": "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-bounded-cpu-7qsuve3w/bounded/_build/native/release/build/mizchi/mars_bench/http_server/http_server.exe",
+      "sha256": "7f7fa5e637d247cd8ee7a2d0eb920e1edf7b9f8c2bfdfc3406f8cbcbce14afea"
+    }
+  }
+}

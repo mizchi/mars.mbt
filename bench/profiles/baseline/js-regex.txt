@@ -1,0 +1,24 @@
+Profile: /Users/mz/ghq/github.com/mizchi/mars.mbt/bench/profiles/baseline/js-regex.pb.gz
+Total: 5015.88 ms (149 samples)
+Memory-management self time: 0.00 ms (0.0%)
+
+Top user functions by self time (mem-mgmt frames hidden)
+--------------------------------------------------------
+     840.78 ms   16.8%  mizchi4mars6router4trie21match__sequence__from
+     720.81 ms   14.4%  mizchi::mars::router::trie::matches__segment__regex
+     569.17 ms   11.3%  mizchi::mars::router::trie::parse__char__class
+     555.54 ms   11.1%  mizchi::mars::router::trie::search__recursive
+     520.59 ms   10.4%  _M0MPB3Map3getGsRP46mizchi4mars6router4trie4NodeE
+     406.37 ms    8.1%  (anonymous)
+     281.21 ms    5.6%  mizchi::mars::router::trie::parse__brace__quantifier
+     251.58 ms    5.0%  $make_array_len_and_init
+     167.71 ms    3.3%  (garbage collector)
+     123.61 ms    2.5%  batch
+     104.83 ms    2.1%  Hash::hash
+      86.67 ms    1.7%  mizchi::mars::router::trie::parse__atom
+
+Top user functions by mem-mgmt-attributed time (callers of allocs)
+------------------------------------------------------------------
+
+Top mem-mgmt primitives by self time
+------------------------------------

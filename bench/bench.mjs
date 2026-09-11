@@ -130,7 +130,16 @@ for (const scenario of matchCases) {
   ])), iterations);
 }
 
-for (const middleware of [false, true]) {
+const requestHeaders = {
+  accept: 'text/plain', authorization: 'Bearer benchmark', cookie: 'session=benchmark',
+  origin: 'http://localhost', 'user-agent': 'mars-benchmark', 'x-request-id': 'benchmark',
+};
+for (const { middleware, headers, name } of [
+  { middleware: false, name: 'dynamic response' },
+  { middleware: true, name: 'dynamic + middleware' },
+  { middleware: false, headers: requestHeaders, name: 'dynamic + 6 request headers' },
+  { middleware: true, headers: requestHeaders, name: 'middleware + 6 request headers' },
+]) {
   const hono = new Hono();
   if (middleware) hono.use('*', async (ctx, next) => { ctx.header('x-bench', '1'); await next(); });
   hono.get('/api/users/:id', (ctx) => ctx.text(ctx.req.param('id')));
@@ -138,7 +147,7 @@ for (const middleware of [false, true]) {
   let valid = true;
   for (const [engine, handler] of Object.entries(handlers)) {
     try {
-      const response = await handler(new Request('http://localhost/api/users/123'));
+      const response = await handler(new Request('http://localhost/api/users/123', { headers }));
       assert.equal(response.status, 200);
       assert.equal(await response.text(), '123');
       assert.equal(response.headers.get('x-bench'), middleware ? '1' : null);
@@ -150,9 +159,9 @@ for (const middleware of [false, true]) {
     }
   }
   if (!valid) continue;
-  await measure(middleware ? 'dynamic + middleware' : 'dynamic response', 'fetch', Object.fromEntries(Object.entries(handlers).map(([name, handler]) => [
+  await measure(name, 'fetch', Object.fromEntries(Object.entries(handlers).map(([name, handler]) => [
     name, async (i) => {
-      const response = await handler(new Request(`http://localhost/api/users/${i % 2 ? '123' : '456'}`));
+      const response = await handler(new Request(`http://localhost/api/users/${i % 2 ? '123' : '456'}`, { headers }));
       return response.text();
     },
   ])), fetchIterations, true);

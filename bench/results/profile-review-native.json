@@ -1,0 +1,143 @@
+{
+  "summarized_at": "2026-09-11T11:04:49.286993+00:00",
+  "environment": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "arch": "arm64",
+    "moon": "moon 0.1.20260904 (94521db 2026-09-04)\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg"
+  },
+  "reference_patch": {
+    "base_async_tag": "v0.21.3",
+    "path": "patches/async-0.21.3-response-head.patch",
+    "sha256": "45cfbe3b7dc8fe4e17f11e7ff559735f5cea29c22b7426911c47079cf9548de4",
+    "note": "Build provenance must be recorded separately; binary hashes identify the compared inputs."
+  },
+  "settings": {
+    "runs": 5,
+    "order": "alternating baseline/patched each round",
+    "duration_seconds": 5,
+    "warmup_seconds": 1,
+    "connections": 64,
+    "wrk_threads": 4,
+    "route": "GET /api/users/123",
+    "response": "200 text/plain; charset=utf-8, body 123",
+    "build": "native release",
+    "profiler": "none; /usr/bin/time -lp measures server process only",
+    "note": "CPU and instruction normalization includes warmup and one readiness request. Shared developer machine: other active workloads caused substantial RPS variance. These are exploratory results, not isolated throughput claims."
+  },
+  "results": [
+    {
+      "variant": "baseline",
+      "exe_sha256": "a31b9cd2aa55f03d0b7098231a9162ed2f6ae763358fcc6198aa92e6d83a1257",
+      "samples": [
+        {
+          "run": 1,
+          "rps": 113998.38,
+          "total_requests_including_warmup": 723146,
+          "user_us_per_request": 4.3836237772178785,
+          "cpu_us_per_request": 8.227937373642389,
+          "instructions_per_request": 96718.71190326712,
+          "raw": "profiles/baseline/native-mars-time-1.json"
+        },
+        {
+          "run": 2,
+          "rps": 79716.82,
+          "total_requests_including_warmup": 482060,
+          "user_us_per_request": 5.746172675600548,
+          "cpu_us_per_request": 10.994482014686968,
+          "instructions_per_request": 98181.93609924076,
+          "raw": "profiles/baseline/native-mars-time-2.json"
+        },
+        {
+          "run": 3,
+          "rps": 107677.61,
+          "total_requests_including_warmup": 649280,
+          "user_us_per_request": 4.712912764908822,
+          "cpu_us_per_request": 8.871365204534253,
+          "instructions_per_request": 97027.74863079103,
+          "raw": "profiles/baseline/native-mars-time-3.json"
+        },
+        {
+          "run": 4,
+          "rps": 131650.99,
+          "total_requests_including_warmup": 806303,
+          "user_us_per_request": 4.055547356266813,
+          "cpu_us_per_request": 7.577796436327286,
+          "instructions_per_request": 96186.02727138557,
+          "raw": "profiles/baseline/native-mars-time-4.json"
+        },
+        {
+          "run": 5,
+          "rps": 131473.64,
+          "total_requests_including_warmup": 812663,
+          "user_us_per_request": 3.9991976994153786,
+          "cpu_us_per_request": 7.518491674900911,
+          "instructions_per_request": 96183.122974714,
+          "raw": "profiles/baseline/native-mars-time-5.json"
+        }
+      ],
+      "median": {
+        "rps": 113998.38,
+        "user_us_per_request": 4.3836237772178785,
+        "cpu_us_per_request": 8.227937373642389,
+        "instructions_per_request": 96718.71190326712
+      }
+    },
+    {
+      "variant": "async-patched",
+      "exe_sha256": "dec9f32b12a1ba2256853ea903729ed0801e31c84981097b93419fe4fad75de2",
+      "samples": [
+        {
+          "run": 1,
+          "rps": 121150.43,
+          "total_requests_including_warmup": 744495,
+          "user_us_per_request": 3.828098241089598,
+          "cpu_us_per_request": 7.91140303158517,
+          "instructions_per_request": 84646.74767325503,
+          "raw": "profiles/async-patched/native-mars-time-1.json"
+        },
+        {
+          "run": 2,
+          "rps": 100200.65,
+          "total_requests_including_warmup": 649468,
+          "user_us_per_request": 4.3420153109929975,
+          "cpu_us_per_request": 8.961180535453632,
+          "instructions_per_request": 85388.20802564561,
+          "raw": "profiles/async-patched/native-mars-time-2.json"
+        },
+        {
+          "run": 3,
+          "rps": 117955.47,
+          "total_requests_including_warmup": 744588,
+          "user_us_per_request": 3.747038630759561,
+          "cpu_us_per_request": 7.641809967391361,
+          "instructions_per_request": 84679.07810896765,
+          "raw": "profiles/async-patched/native-mars-time-3.json"
+        },
+        {
+          "run": 4,
+          "rps": 128477.6,
+          "total_requests_including_warmup": 799359,
+          "user_us_per_request": 3.6153968367154183,
+          "cpu_us_per_request": 7.518524217529295,
+          "instructions_per_request": 84460.60360613943,
+          "raw": "profiles/async-patched/native-mars-time-4.json"
+        },
+        {
+          "run": 5,
+          "rps": 144510.48,
+          "total_requests_including_warmup": 890690,
+          "user_us_per_request": 3.401856987279525,
+          "cpu_us_per_request": 6.848622977691453,
+          "instructions_per_request": 84144.92098709989,
+          "raw": "profiles/async-patched/native-mars-time-5.json"
+        }
+      ],
+      "median": {
+        "rps": 121150.43,
+        "user_us_per_request": 3.747038630759561,
+        "cpu_us_per_request": 7.641809967391361,
+        "instructions_per_request": 84646.74767325503
+      }
+    }
+  ]
+}
