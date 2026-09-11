@@ -1,0 +1,73 @@
+diff --git i/src/internal/io_buffer/read_buffer.mbt w/src/internal/io_buffer/read_buffer.mbt
+index f2de310..3b6c6a7 100644
+--- i/src/internal/io_buffer/read_buffer.mbt
++++ w/src/internal/io_buffer/read_buffer.mbt
+@@ -46,8 +46,19 @@ pub fn Buffer::enlarge_to(self : Buffer, n : Int) -> Unit {
+     self.start = 0
+     return
+   }
+-  let padding = n % SEGMENT_SIZE
+-  let target_len = if padding == 0 { n } else { n - padding + SEGMENT_SIZE }
++  // Grow geometrically for small buffers, then add at most 16 KiB of spare
++  // capacity. Large lines avoid repeated 1 KiB growth without doubling the
++  // amount retained by an idle connection.
++  let increment = if capacity < 16384 { capacity } else { 16384 }
++  let grown = capacity + increment
++  let requested = if grown > n { grown } else { n }
++  let padding = requested % SEGMENT_SIZE
++  let rounded = if padding == 0 {
++    requested
++  } else {
++    requested - padding + SEGMENT_SIZE
++  }
++  let target_len = if rounded < requested { requested } else { rounded }
+   let new_buf = FixedArray::make(target_len, b'0')
+   self.buf.blit_to(new_buf, src_offset=self.start, dst_offset=0, len=self.len)
+   self.buf = new_buf
+diff --git i/src/internal/io_buffer/read_buffer_wbtest.mbt w/src/internal/io_buffer/read_buffer_wbtest.mbt
+new file mode 100644
+index 0000000..7b31f99
+--- /dev/null
++++ w/src/internal/io_buffer/read_buffer_wbtest.mbt
+@@ -0,0 +1,41 @@
++///|
++test "read buffer growth bounds copies and spare capacity" {
++  let b = Buffer::new(0)
++  let mut growths = 0
++  let mut copied = 0
++  for _ in 0..<65537 {
++    if b.len == b.buf.length() {
++      copied += b.len
++      growths += 1
++    }
++    b.enlarge_to(b.len + 1)
++    b.buf[b.len] = (b.len % 251).to_byte()
++    b.len += 1
++  }
++  assert_true(growths <= 10)
++  assert_true(copied < 262144)
++  assert_true(b.buf.length() - b.len < 16384)
++  for i in 0..<b.len {
++    assert_eq(b.buf[i], (i % 251).to_byte())
++  }
++}
++
++///|
++test "read buffer compaction preserves unconsumed bytes" {
++  let b = Buffer::new(1024)
++  for i in 0..<1024 {
++    b.buf[i] = (i % 251).to_byte()
++  }
++  b.len = 1024
++  b.drop(1000)
++  b.enlarge_to(100)
++  assert_eq(b.start, 0)
++  assert_eq(b.len, 24)
++  for i in 0..<24 {
++    assert_eq(b.buf[i], ((1000 + i) % 251).to_byte())
++  }
++  b.drop(24)
++  assert_eq(b.start, 0)
++  b.clear()
++  assert_eq(b.buf.length(), 0)
++}

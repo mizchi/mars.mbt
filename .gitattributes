@@ -1,2 +1,2 @@
-# Unified diff context lines can consist of a single space.
-bench/patches/*.patch whitespace=-blank-at-eol
+# Unified diff context can contain blank lines, including at the patch EOF.
+bench/patches/*.patch whitespace=-blank-at-eol,-blank-at-eof

@@ -1,0 +1,255 @@
+{
+  "async_base": "43e41261f99261f4030efbed1970388930229baa",
+  "parser_commit": "45bb565d21c47caa73c74f5198574221cf21fb01",
+  "variants": {
+    "parser-pr": {
+      "patch_sha256": "413be69e3e92320849ee4b77c66e67b2dc24a29354c7ad0900f9851fc3ad1915",
+      "checks": [
+        {
+          "label": "native",
+          "exit_code": 0,
+          "output": "Total tests: 115, passed: 115, failed: 0.\n",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "native",
+            "--release"
+          ]
+        },
+        {
+          "label": "debug",
+          "exit_code": 0,
+          "output": "Total tests: 104, passed: 104, failed: 0.\n",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "--target",
+            "native"
+          ]
+        },
+        {
+          "label": "test-js",
+          "exit_code": 0,
+          "output": "Total tests: 52, passed: 52, failed: 0.\n",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "--target",
+            "js"
+          ]
+        },
+        {
+          "label": "check-native",
+          "exit_code": 0,
+          "output": "Finished. moon: ran 116 tasks, now up to date\n",
+          "command": [
+            "moon",
+            "check",
+            "--target",
+            "native",
+            "--deny-warn"
+          ]
+        },
+        {
+          "label": "check-js",
+          "exit_code": 0,
+          "output": "Finished. moon: no work to do\n",
+          "command": [
+            "moon",
+            "check",
+            "--target",
+            "js",
+            "--deny-warn"
+          ]
+        },
+        {
+          "label": "check-wasm",
+          "exit_code": 0,
+          "output": "Finished. moon: ran 3 tasks, now up to date\n",
+          "command": [
+            "moon",
+            "check",
+            "--target",
+            "wasm",
+            "--deny-warn"
+          ]
+        },
+        {
+          "label": "check-wasm-gc",
+          "exit_code": 0,
+          "output": "Finished. moon: no work to do\n",
+          "command": [
+            "moon",
+            "check",
+            "--target",
+            "wasm-gc",
+            "--deny-warn"
+          ]
+        }
+      ]
+    },
+    "buffer-growth": {
+      "patch_sha256": "a08826c6041bc540486be269a4bd2252546568601af9baf165aa7767c90d3109",
+      "checks": [
+        {
+          "label": "native",
+          "exit_code": 0,
+          "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 103, passed: 103, failed: 0.\n",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "--target",
+            "native",
+            "--release"
+          ]
+        },
+        {
+          "label": "wasm",
+          "exit_code": 0,
+          "output": "Finished. moon: ran 29 tasks, now up to date\n",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "--target",
+            "wasm",
+            "--deny-warn"
+          ]
+        },
+        {
+          "label": "js",
+          "exit_code": 0,
+          "output": "Finished. moon: ran 27 tasks, now up to date\n",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "--target",
+            "js",
+            "--deny-warn"
+          ]
+        }
+      ]
+    },
+    "header-map": {
+      "patch_sha256": "1421dbf8e3459123ef6eff817a0be3858373e6a7c77bdffe4b4e7965e215d59f",
+      "checks": [
+        {
+          "label": "native",
+          "exit_code": 0,
+          "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 103, passed: 103, failed: 0.\n",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "--target",
+            "native",
+            "--release"
+          ]
+        },
+        {
+          "label": "wasm",
+          "exit_code": 0,
+          "output": "Finished. moon: ran 28 tasks, now up to date\n",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "--target",
+            "wasm",
+            "--deny-warn"
+          ]
+        },
+        {
+          "label": "js",
+          "exit_code": 0,
+          "output": "Finished. moon: ran 27 tasks, now up to date\n",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "--target",
+            "js",
+            "--deny-warn"
+          ]
+        }
+      ]
+    }
+  },
+  "mars_release_check": {
+    "command": "just release-check",
+    "exit_code": 0,
+    "output": "moon fmt\nFinished. moon: ran 1 task, now up to date\nmoon info\nFinished. moon: no work to do\nmoon check --deny-warn --target js\nFinished. moon: no work to do\nmoon test --target js\nMiddleware error: Failure(src/mars_js_wbtest.mbt:13:26-13:51@mizchi/mars FAILED: middleware failed)\nTotal tests: 331, passed: 331, failed: 0.\n"
+  },
+  "mars_native": {
+    "baseline": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "parser-pr": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "buffer-growth": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "header-map": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    }
+  }
+}

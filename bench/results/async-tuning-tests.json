@@ -1,0 +1,299 @@
+{
+  "async_base": "fcc109cc2cb82cbd122974b4e4718b3670ee04b6",
+  "variants": {
+    "body": {
+      "patch_sha256": "186632e30eb6efb09c16ff989de0d45d866cce1ca47ffc93deb2d6da5c1eb5e4",
+      "checks": [
+        {
+          "label": "native",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "native",
+            "--release"
+          ],
+          "exit_code": 0,
+          "output": "Total tests: 119, passed: 119, failed: 0.\n"
+        },
+        {
+          "label": "wasm",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "wasm"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: ran 3 tasks, now up to date\n"
+        },
+        {
+          "label": "js",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "--target",
+            "js"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: no work to do\n"
+        }
+      ]
+    },
+    "parser": {
+      "patch_sha256": "42052d2bc9f979ba605288156371a41f14313039331f9c637a76308aefd3c03f",
+      "checks": [
+        {
+          "label": "native",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "native",
+            "--release"
+          ],
+          "exit_code": 0,
+          "output": "Total tests: 118, passed: 118, failed: 0.\n"
+        },
+        {
+          "label": "wasm",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "wasm"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: ran 32 tasks, now up to date\n"
+        },
+        {
+          "label": "js",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "--target",
+            "js"
+          ],
+          "exit_code": 0,
+          "output": "Warning: [0029]\n   \u256d\u2500[ /Users/mz/ghq/github.com/moonbitlang/async-mars-exp-parser/src/http/moon.pkg:5:3 ]\n   \u2502\n 5 \u2502   \"moonbitlang/core/encoding/utf8\",\n   \u2502   \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500  \n   \u2502                   \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 Warning (unused_package): Unused package 'moonbitlang/core/encoding/utf8'\n\u2500\u2500\u2500\u256f\nFinished. moon: ran 27 tasks, now up to date (1 warnings, 0 errors)\n"
+        }
+      ]
+    },
+    "scheduler": {
+      "patch_sha256": "1e11a098c711439279f47a97ac90e27b2b69e9ea82edb5e487bf749ed20b15d6",
+      "checks": [
+        {
+          "label": "native",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "native",
+            "--release"
+          ],
+          "exit_code": 0,
+          "output": "Total tests: 119, passed: 119, failed: 0.\n"
+        },
+        {
+          "label": "wasm",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "wasm"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: ran 33 tasks, now up to date\n"
+        },
+        {
+          "label": "js",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "--target",
+            "js"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: ran 27 tasks, now up to date\n"
+        },
+        {
+          "label": "profile-public-native",
+          "command": [
+            "moon",
+            "test",
+            "src",
+            "src/socket",
+            "--target",
+            "native",
+            "--release"
+          ],
+          "exit_code": 0,
+          "output": "Total tests: 119, passed: 119, failed: 0.\n"
+        },
+        {
+          "label": "exp-scheduler-public-native",
+          "command": [
+            "moon",
+            "test",
+            "src",
+            "src/socket",
+            "--target",
+            "native",
+            "--release"
+          ],
+          "exit_code": 0,
+          "output": "Total tests: 119, passed: 119, failed: 0.\n"
+        }
+      ]
+    },
+    "buffer": {
+      "patch_sha256": "7efd3390ddb343ee4c940f7bd558c9ff74ae7a7f073baad2824d382827900144",
+      "checks": [
+        {
+          "label": "native",
+          "command": [
+            "moon",
+            "test",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "native",
+            "--release"
+          ],
+          "exit_code": 0,
+          "output": "Total tests: 119, passed: 119, failed: 0.\n"
+        },
+        {
+          "label": "wasm",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "src/internal/io_buffer",
+            "src/internal/coroutine",
+            "src/internal/event_loop",
+            "--target",
+            "wasm"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: ran 33 tasks, now up to date\n"
+        },
+        {
+          "label": "js",
+          "command": [
+            "moon",
+            "check",
+            "src/http",
+            "src/io",
+            "--target",
+            "js"
+          ],
+          "exit_code": 0,
+          "output": "Finished. moon: ran 27 tasks, now up to date\n"
+        }
+      ]
+    }
+  },
+  "mars_native": {
+    "baseline": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "body": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "parser": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "scheduler": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    "buffer": {
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "exit_code": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    }
+  }
+}

@@ -1,0 +1,153 @@
+diff --git i/src/internal/coroutine/coroutine.mbt w/src/internal/coroutine/coroutine.mbt
+index 08db5d0..83d893f 100644
+--- i/src/internal/coroutine/coroutine.mbt
++++ w/src/internal/coroutine/coroutine.mbt
+@@ -211,3 +211,22 @@ pub async fn[X] protect_from_cancel(f : async () -> X) -> X nocancel {
+ pub async fn[X] handle_cancellation(f : async () -> X) -> X? {
+   capture_cancellation(handler=() => None, () => Some(f()))
+ }
++
++///|
++/// Yield after an I/O operation has made progress. Preserve cancellation for
++/// the caller's next cancellation point without losing the completed result.
++pub async fn pause_after_io() -> Unit noraise + nocancel {
++  guard! scheduler.curr_coro is Some(coro)
++  let shielded = coro.shielded
++  coro.shielded = true
++  defer {
++    coro.shielded = shielded
++  }
++  let result = async_suspend() <| cont => {
++    guard! coro.state is Running
++    coro.state = Suspend(cont)
++    coro.ready = true
++    scheduler.run_later.push_back(coro)
++  }
++  guard! result is Continue
++}
+diff --git i/src/internal/coroutine/pause_wbtest.mbt w/src/internal/coroutine/pause_wbtest.mbt
+new file mode 100644
+index 0000000..770165c
+--- /dev/null
++++ w/src/internal/coroutine/pause_wbtest.mbt
+@@ -0,0 +1,85 @@
++///|
++test "IO pause preserves round robin scheduling" {
++  let log : Array[Int] = []
++  let a = spawn(() => {
++    for _ in 0..<3 {
++      log.push(1)
++      pause_after_io()
++    }
++  })
++  let b = spawn(() => {
++    for _ in 0..<3 {
++      log.push(2)
++      pause_after_io()
++    }
++  })
++  while has_immediately_ready_task() {
++    reschedule()
++  }
++  guard! a.unwrap() is Continue
++  guard! b.unwrap() is Continue
++  assert_eq(log, [1, 2, 1, 2, 1, 2])
++}
++
++///|
++test "IO pause delivers completed IO then preserves cancellation" {
++  let log : Array[String] = []
++  let a = spawn(() => {
++    log.push("started")
++    pause_after_io()
++    log.push("delivered")
++    assert_false(current_coroutine().shielded)
++    check_cancellation()
++    log.push("unreachable")
++  })
++  a.cancel()
++  while has_immediately_ready_task() {
++    reschedule()
++  }
++  guard! a.unwrap() is Cancelled
++  assert_eq(log, ["started", "delivered"])
++}
++
++///|
++test "IO pause restores an enclosing cancellation shield" {
++  let log : Array[String] = []
++  let a = spawn(() => {
++    protect_from_cancel(() => {
++      current_coroutine().cancel()
++      pause_after_io()
++      assert_true(current_coroutine().shielded)
++      assert_true(current_coroutine().cancelled)
++      log.push("delivered")
++    })
++    assert_false(current_coroutine().shielded)
++    check_cancellation()
++    log.push("unreachable")
++  })
++  while has_immediately_ready_task() {
++    reschedule()
++  }
++  guard! a.unwrap() is Cancelled
++  assert_eq(log, ["delivered"])
++}
++
++///|
++test "IO pause delivers completed IO when cancelled during suspension" {
++  let log : Array[String] = []
++  let a = spawn(() => {
++    log.push("started")
++    pause_after_io()
++    log.push("delivered")
++    check_cancellation()
++    log.push("unreachable")
++  })
++  let b = spawn(() => {
++    assert_eq(log, ["started"])
++    a.cancel()
++  })
++  while has_immediately_ready_task() {
++    reschedule()
++  }
++  guard! a.unwrap() is Cancelled
++  guard! b.unwrap() is Continue
++  assert_eq(log, ["started", "delivered"])
++}
+diff --git i/src/internal/coroutine/pkg.generated.mbti w/src/internal/coroutine/pkg.generated.mbti
+index 067d907..62b03a9 100644
+--- i/src/internal/coroutine/pkg.generated.mbti
++++ w/src/internal/coroutine/pkg.generated.mbti
+@@ -20,6 +20,8 @@ pub fn is_being_cancelled() -> Bool
+ 
+ pub async fn pause() -> Unit noraise
+ 
++pub async fn pause_after_io() -> Unit noraise + nocancel
++
+ pub async fn[X] protect_from_cancel(async () -> X) -> X nocancel
+ 
+ pub async fn[X] raise_cancellation_signal() -> X noraise
+diff --git i/src/internal/event_loop/io_unix.mbt w/src/internal/event_loop/io_unix.mbt
+index 79cae09..74cd0aa 100644
+--- i/src/internal/event_loop/io_unix.mbt
++++ w/src/internal/event_loop/io_unix.mbt
+@@ -77,7 +77,7 @@ async fn IoHandle::read_via_event_bus_unix(
+   if ret >= 0 {
+     // The `pause` here prevent a busy read loop from exhausting the whole program
+     // and give chance for other tasks to execute.
+-    @coroutine.protect_from_cancel(() => @coroutine.pause())
++    @coroutine.pause_after_io()
+     return ret
+   }
+   let ret = if @os_error.is_nonblocking_io_error() {
+@@ -138,7 +138,7 @@ async fn IoHandle::write_via_event_bus_unix(
+   if ret >= 0 {
+     // The `pause` here prevent a busy write loop from exhausting the whole program,
+     // and give chance for other tasks to execute.
+-    @coroutine.protect_from_cancel(() => @coroutine.pause())
++    @coroutine.pause_after_io()
+     return ret
+   }
+   let ret = if @os_error.is_nonblocking_io_error() {

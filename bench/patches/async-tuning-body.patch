@@ -1,0 +1,178 @@
+diff --git i/src/http/send.mbt w/src/http/send.mbt
+index 66688ad..814d4ee 100644
+--- i/src/http/send.mbt
++++ w/src/http/send.mbt
+@@ -117,6 +117,13 @@ impl @io.Writer for Sender with fn write_once(self, buf, offset~, len~) {
+     }
+     SendingFixed(remaining~) as mode => {
+       guard len.to_int64() <= remaining else { raise IncorrectBodyLength }
++      // Small writes still benefit from coalescing framing into the buffer.
++      if len >= 4096 {
++        self.flush()
++        let n = self.writer.write_once(buf, offset~, len~)
++        mode.remaining -= n.to_int64()
++        return n
++      }
+       if self.send_len >= self.send_buf.length() {
+         self.flush()
+       }
+@@ -142,6 +149,23 @@ impl @io.Writer for Sender with fn write_once(self, buf, offset~, len~) {
+       self.write_once(buf, offset~, len~)
+     }
+     SendingBody => {
++      if len >= 4096 {
++        let prefix = encode_int(len, base=16)
++        if self.send_len + prefix.length() + 2 > self.send_buf.length() {
++          self.flush()
++        }
++        self.send_buf.blit_from_bytes(self.send_len, prefix, 0, prefix.length())
++        self.send_len += prefix.length()
++        self.send_buf[self.send_len] = b'\r'
++        self.send_buf[self.send_len + 1] = b'\n'
++        self.send_len += 2
++        self.flush()
++        self.writer.write(buf[offset:offset + len])
++        self.send_buf[0] = b'\r'
++        self.send_buf[1] = b'\n'
++        self.send_len = 2
++        return len
++      }
+       // Reserve enough space for chunk length and '\r\n' in the buffer,
+       // so that we can commit the whole chunk in a single write to avoid small writes
+       if self.send_len + 7 >= self.send_buf.length() {
+diff --git i/src/http/send_wbtest.mbt w/src/http/send_wbtest.mbt
+index 417a903..e33d24c 100644
+--- i/src/http/send_wbtest.mbt
++++ w/src/http/send_wbtest.mbt
+@@ -1012,3 +1012,131 @@ async test "response head batching preserves UTF-8 at the batch boundary" {
+     )
+   }
+ }
++
++///|
++priv struct BulkCaptureWriter {
++  data : Buffer
++  mut calls : Int
++  max_write : Int
++}
++
++///|
++impl @io.Writer for BulkCaptureWriter with fn write_once(
++  self,
++  data,
++  offset~,
++  len~,
++) {
++  let n = @cmp.minimum(len, self.max_write)
++  self.calls += 1
++  self.data.write_bytes(data[offset:offset + n])
++  n
++}
++
++///|
++async test "large fixed body bypasses the staging buffer" {
++  let body = "x".repeat(65536)
++  let output = BulkCaptureWriter::{
++    data: Buffer(),
++    calls: 0,
++    max_write: 1000000,
++  }
++  let sender = Sender::new(output)
++  sender.send_response(
++    200,
++    "OK",
++    extra_headers={ "Content-Length": "65536" },
++    cookies=[],
++    request_method=Get,
++  )
++  sender.write(body)
++  sender.end_body()
++  assert_eq(
++    output.data.contents(),
++    @utf8.encode("HTTP/1.1 200 OK\r\nContent-Length: 65536\r\n\r\n" + body),
++  )
++  assert_true(output.calls <= 2)
++}
++
++///|
++async test "large chunk keeps framing across partial transport writes" {
++  let body = "x".repeat(65536)
++  for max_write in [1000000, 73] {
++    let output = BulkCaptureWriter::{ data: Buffer(), calls: 0, max_write, }
++    let sender = Sender::new(output)
++    sender.send_response(
++      200,
++      "OK",
++      extra_headers=Map([]),
++      cookies=[],
++      request_method=Get,
++    )
++    sender.write(body)
++    sender.end_body()
++    sender.send_response(
++      204,
++      "No Content",
++      extra_headers=Map([]),
++      cookies=[],
++      request_method=Get,
++    )
++    sender.end_body()
++    assert_eq(
++      output.data.contents(),
++      @utf8.encode(
++        "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n10000\r\n" +
++        body +
++        "\r\n0\r\n\r\nHTTP/1.1 204 No Content\r\n\r\n",
++      ),
++    )
++    if max_write == 1000000 {
++      assert_true(output.calls <= 4)
++    }
++  }
++}
++
++///|
++async test "fixed bulk writes preserve offsets and remaining length" {
++  let body = @utf8.encode("skip" + "x".repeat(4096) + "skip")
++  let output = BulkCaptureWriter::{ data: Buffer(), calls: 0, max_write: 73, }
++  let sender = Sender::new(output)
++  sender.send_response(
++    200,
++    "OK",
++    extra_headers={ "Content-Length": "4098" },
++    cookies=[],
++    request_method=Get,
++  )
++  sender.write(b"a")
++  sender.write(body[4:4100])
++  sender.write(b"z")
++  sender.end_body()
++  assert_eq(
++    output.data.contents(),
++    @utf8.encode(
++      "HTTP/1.1 200 OK\r\nContent-Length: 4098\r\n\r\na" +
++      "x".repeat(4096) +
++      "z",
++    ),
++  )
++}
++
++///|
++async test "one KiB body still coalesces framing" {
++  let output = BulkCaptureWriter::{
++    data: Buffer(),
++    calls: 0,
++    max_write: 1000000,
++  }
++  let sender = Sender::new(output)
++  sender.send_response(
++    200,
++    "OK",
++    extra_headers=Map([]),
++    cookies=[],
++    request_method=Get,
++  )
++  sender.write(Bytes::make(1024, b'x'))
++  sender.end_body()
++  assert_true(output.calls <= 2)
++}

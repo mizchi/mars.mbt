@@ -44,6 +44,14 @@ profile-native layer="mars" capture="cpu" *args:
 profile-buffer-memory async_repo *args:
     python3 bench/buffer-memory/measure.py --async-repo {{quote(async_repo)}} {{args}}
 
+# Measure four independent async tuning patches (native release, macOS)
+profile-async-tuning async_repo *args:
+    python3 bench/async-tuning/measure.py --async-repo {{quote(async_repo)}} {{args}}
+
+# Test the same disposable async builds through a native Mars HTTP server
+profile-async-network *args:
+    python3 bench/async-tuning/network.py {{args}}
+
 # Update snapshot tests
 test-update:
     moon test --update --target {{target}}

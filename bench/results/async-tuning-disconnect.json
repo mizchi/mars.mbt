@@ -1,0 +1,26 @@
+{
+  "note": "Baseline Mars 66277d4 + async fcc109c, native release. 64 KiB chunked response, wrk 4 threads / 16 connections / 1 second. Return code -6 is SIGABRT, not SIGPIPE. SIGPIPE inheritance does not prevent the abort.",
+  "runs": [
+    {
+      "wrapped": true,
+      "restore_signals": false,
+      "server_returncode": -6,
+      "server_output": "Handler error: OSError(\"@socket.Tcp::write(): Broken pipe\")\ntime: command terminated abnormally\nreal 1.23\nuser 0.60\nsys 0.46\n             4800512  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 457  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              254355  messages sent\n                3920  messages received\n                   0  signals received\n                   1  voluntary context switches\n                2841  involuntary context switches\n         16904401092  instructions retired\n          4482659757  cycles elapsed\n             3572072  peak memory footprint\n",
+      "wrk": "Running 1s test @ http://127.0.0.1:61908/bench\n  4 threads and 16 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     4.50ms    0.89ms  14.62ms   93.65%\n    Req/Sec     0.89k    96.65     0.97k    90.91%\n  3904 requests in 1.10s, 246.42MB read\nRequests/sec:   3547.68\nTransfer/sec:    223.93MB\n"
+    },
+    {
+      "wrapped": false,
+      "restore_signals": true,
+      "server_returncode": -6,
+      "server_output": "Handler error: OSError(\"@socket.Tcp::write(): Broken pipe\")\n",
+      "wrk": "Running 1s test @ http://127.0.0.1:61928/bench\n  4 threads and 16 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     4.75ms  656.27us   8.22ms   84.04%\n    Req/Sec   842.91     73.75     0.96k    47.73%\n  3690 requests in 1.10s, 232.92MB read\nRequests/sec:   3352.45\nTransfer/sec:    211.62MB\n"
+    },
+    {
+      "wrapped": false,
+      "restore_signals": false,
+      "server_returncode": -6,
+      "server_output": "Handler error: OSError(\"@socket.Tcp::write(): Broken pipe\")\n",
+      "wrk": "Running 1s test @ http://127.0.0.1:61946/bench\n  4 threads and 16 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     5.48ms  724.89us   9.15ms   72.72%\n    Req/Sec   730.34     43.04   828.00     59.09%\n  3200 requests in 1.10s, 201.81MB read\nRequests/sec:   2909.10\nTransfer/sec:    183.46MB\n"
+    }
+  ]
+}

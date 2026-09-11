@@ -1,0 +1,352 @@
+{
+  "measured_at": "2026-09-11T12:44:51.251530+00:00",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "mars_base": "66277d49502626d8c2f477d63d7eb285d1ba5157",
+  "async_base": "fcc109cc2cb82cbd122974b4e4718b3670ee04b6",
+  "duration_seconds": 3,
+  "runs": 3,
+  "warmup_seconds": 1,
+  "wrk_threads": 4,
+  "source_sha256": "c833dfb5e9ecf18452c4e7d36ac771acd6a9ad086454f4bc04b6fc6895507002",
+  "load_generator_sha256": "bc133ea5ed72f6ebed61f9718a8ae887e792ae8f07028c708e8a8cfe9d55b71a",
+  "variants": {
+    "baseline": {
+      "exe_sha256": "8cd751efa6cc541d2d0c1e1cc7482db2dd70c96fad1acd0cdea5671bb5e5cab9",
+      "patch_sha256": null
+    },
+    "body": {
+      "exe_sha256": "9f4596bca3c0fd61198b4a2ca4f620f4a5fc8483fc6d9d5e4425c313837faa74",
+      "patch_sha256": "186632e30eb6efb09c16ff989de0d45d866cce1ca47ffc93deb2d6da5c1eb5e4"
+    },
+    "parser": {
+      "exe_sha256": "4c02f89f9659cc5a96b9dde9df71ea861dfc84a4bd137fc6f4e8af4327d3ddad",
+      "patch_sha256": "42052d2bc9f979ba605288156371a41f14313039331f9c637a76308aefd3c03f"
+    },
+    "scheduler": {
+      "exe_sha256": "bf732af9ff520e7dd8fa4e19901a7bcba573a732e7015d8cedd5b37b10945799",
+      "patch_sha256": "1e11a098c711439279f47a97ac90e27b2b69e9ea82edb5e487bf749ed20b15d6"
+    },
+    "buffer": {
+      "exe_sha256": "b7a7c1004c51f4adc66825f054b5fda42c2d4754691402472e24671af4f5828d",
+      "patch_sha256": "7efd3390ddb343ee4c940f7bd558c9ff74ae7a7f073baad2824d382827900144"
+    }
+  },
+  "method": "Native release, server-only /usr/bin/time -lp; reverse variant order every other round. Normalize CPU/instructions by wrk completed requests including warmup + readiness. Outstanding requests at wrk shutdown are not included. Bulk cases use a Node HTTP load generator that drains responses before closing; all completed requests are counted. This avoids the existing Mars SIGABRT when fallback sends a second response after a partially sent body encounters EPIPE. Shared developer machine; short exploratory runs, not isolated throughput claims. Response bytes and framing validated before each run; wrk checks HTTP/socket errors during load.",
+  "cases": [
+    {
+      "name": "body-64k",
+      "size": 65536,
+      "framing": "chunked",
+      "headers": 0,
+      "connections": 16,
+      "variants": [
+        "baseline",
+        "body"
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "warmup": "{\"requests\":2800,\"elapsed_seconds\":1.001480833,\"rps\":2795.8597985469382,\"body_bytes\":183500800,\"p50_ms\":5.7430420000000595,\"p99_ms\":7.426582999999937}\n",
+            "measured": "{\"requests\":7552,\"elapsed_seconds\":3.001410625,\"rps\":2516.150218532661,\"body_bytes\":494927872,\"p50_ms\":5.6710000000002765,\"p99_ms\":26.744042000000036}\n",
+            "server_log": "real 7.34\nuser 1.88\nsys 1.53\n             4997120  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 468  page reclaims\n                   3  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              672945  messages sent\n               10353  messages received\n                   0  signals received\n                   2  voluntary context switches\n               72160  involuntary context switches\n         45363020871  instructions retired\n         12971194699  cycles elapsed\n             3785064  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62068",
+              "7000",
+              "65536",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 10353,
+            "rps": 2516.150218532661,
+            "user_us_per_request": 181.58987733024244,
+            "cpu_us_per_request": 329.37312856176953,
+            "instructions_per_request": 4381630.529411765
+          },
+          {
+            "warmup": "{\"requests\":3488,\"elapsed_seconds\":1.004967,\"rps\":3470.7607314469033,\"body_bytes\":228589568,\"p50_ms\":4.5039580000000115,\"p99_ms\":5.966666999999973}\n",
+            "measured": "{\"requests\":8960,\"elapsed_seconds\":3.004476417,\"rps\":2982.2167846957677,\"body_bytes\":587202560,\"p50_ms\":4.964917000000014,\"p99_ms\":10.740458000000217}\n",
+            "server_log": "real 7.00\nuser 2.11\nsys 1.64\n             4997120  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 470  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              809185  messages sent\n               12449  messages received\n                   0  signals received\n                   1  voluntary context switches\n               39499  involuntary context switches\n         54045492660  instructions retired\n         14644344330  cycles elapsed\n             3785064  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62206",
+              "7000",
+              "65536",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 12449,
+            "rps": 2982.2167846957677,
+            "user_us_per_request": 169.4915254237288,
+            "cpu_us_per_request": 301.22901437866494,
+            "instructions_per_request": 4341352.129488313
+          },
+          {
+            "warmup": "{\"requests\":3177,\"elapsed_seconds\":1.003409625,\"rps\":3166.2044302196127,\"body_bytes\":208207872,\"p50_ms\":4.8982090000000085,\"p99_ms\":7.834333000000015}\n",
+            "measured": "{\"requests\":9040,\"elapsed_seconds\":3.0031665419999998,\"rps\":3010.156071457725,\"body_bytes\":592445440,\"p50_ms\":4.992416000000048,\"p99_ms\":8.144124999999917}\n",
+            "server_log": "real 7.00\nuser 2.13\nsys 1.65\n             4653056  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 449  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              794170  messages sent\n               12218  messages received\n                   0  signals received\n                   1  voluntary context switches\n               42485  involuntary context switches\n         53089321825  instructions retired\n         14601218614  cycles elapsed\n             3441000  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62243",
+              "7000",
+              "65536",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 12218,
+            "rps": 3010.156071457725,
+            "user_us_per_request": 174.3329513832051,
+            "cpu_us_per_request": 309.37960386315274,
+            "instructions_per_request": 4345172.845392045
+          }
+        ],
+        "body": [
+          {
+            "warmup": "{\"requests\":7118,\"elapsed_seconds\":1.001367708,\"rps\":7108.277951379674,\"body_bytes\":466485248,\"p50_ms\":2.2037090000000035,\"p99_ms\":3.216041000000004}\n",
+            "measured": "{\"requests\":20211,\"elapsed_seconds\":3.000765375,\"rps\":6735.28166126617,\"body_bytes\":1324548096,\"p50_ms\":2.2516669999999976,\"p99_ms\":3.624084000000039}\n",
+            "server_log": "real 7.28\nuser 3.60\nsys 0.32\n             4571136  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 444  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n               81990  messages sent\n               27330  messages received\n                   0  signals received\n                   1  voluntary context switches\n               12786  involuntary context switches\n         85875468325  instructions retired\n         15797942689  cycles elapsed\n             3359080  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-body/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62122",
+              "7000",
+              "65536",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 27330,
+            "rps": 6735.28166126617,
+            "user_us_per_request": 131.72338090010976,
+            "cpu_us_per_request": 143.43212586900842,
+            "instructions_per_request": 3142168.6178192464
+          },
+          {
+            "warmup": "{\"requests\":6713,\"elapsed_seconds\":1.001102833,\"rps\":6705.604837700024,\"body_bytes\":439943168,\"p50_ms\":2.2660419999999704,\"p99_ms\":3.579582999999957}\n",
+            "measured": "{\"requests\":21021,\"elapsed_seconds\":3.0015178750000002,\"rps\":7003.456542800032,\"body_bytes\":1377632256,\"p50_ms\":2.2372089999998934,\"p99_ms\":2.8084590000000844}\n",
+            "server_log": "real 7.00\nuser 3.55\nsys 0.36\n             4669440  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 450  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n               83205  messages sent\n               27735  messages received\n                   0  signals received\n                   1  voluntary context switches\n               17497  involuntary context switches\n         87210985422  instructions retired\n         15751020581  cycles elapsed\n             3457384  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-body/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62171",
+              "7000",
+              "65536",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 27735,
+            "rps": 7003.456542800032,
+            "user_us_per_request": 127.99711555795926,
+            "cpu_us_per_request": 140.9771047413016,
+            "instructions_per_request": 3144437.909572742
+          },
+          {
+            "warmup": "{\"requests\":6262,\"elapsed_seconds\":1.001625625,\"rps\":6251.836857708188,\"body_bytes\":410386432,\"p50_ms\":2.3400420000000395,\"p99_ms\":4.607499999999959}\n",
+            "measured": "{\"requests\":20069,\"elapsed_seconds\":3.001139375,\"rps\":6687.126951576515,\"body_bytes\":1315241984,\"p50_ms\":2.2447919999999613,\"p99_ms\":4.464291000000003}\n",
+            "server_log": "real 7.00\nuser 3.61\nsys 0.32\n             4669440  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 452  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n               78996  messages sent\n               26332  messages received\n                   0  signals received\n                   1  voluntary context switches\n               12932  involuntary context switches\n         82733934490  instructions retired\n         15764598426  cycles elapsed\n             3457384  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-body/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62278",
+              "7000",
+              "65536",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 26332,
+            "rps": 6687.126951576515,
+            "user_us_per_request": 137.0955491417287,
+            "cpu_us_per_request": 149.24806319307305,
+            "instructions_per_request": 3141954.0669147805
+          }
+        ]
+      },
+      "median": {
+        "baseline": {
+          "rps": 2982.2167846957677,
+          "user_us_per_request": 174.3329513832051,
+          "cpu_us_per_request": 309.37960386315274,
+          "instructions_per_request": 4345172.845392045
+        },
+        "body": {
+          "rps": 6735.28166126617,
+          "user_us_per_request": 131.72338090010976,
+          "cpu_us_per_request": 143.43212586900842,
+          "instructions_per_request": 3142168.6178192464
+        }
+      }
+    },
+    {
+      "name": "body-1m-fixed",
+      "size": 1048576,
+      "framing": "fixed",
+      "headers": 0,
+      "connections": 16,
+      "variants": [
+        "baseline",
+        "body"
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "warmup": "{\"requests\":224,\"elapsed_seconds\":1.0291794589999999,\"rps\":217.64911652788828,\"body_bytes\":234881024,\"p50_ms\":68.63508300000001,\"p99_ms\":128.312167}\n",
+            "measured": "{\"requests\":640,\"elapsed_seconds\":3.053213542,\"rps\":209.61521072671832,\"body_bytes\":671088640,\"p50_ms\":72.4696670000003,\"p99_ms\":103.70624999999995}\n",
+            "server_log": "real 7.00\nuser 2.26\nsys 1.70\n            27213824  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                1826  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              886625  messages sent\n                 865  messages received\n                   0  signals received\n                   1  voluntary context switches\n               19351  involuntary context switches\n         58391762984  instructions retired\n         15509258279  cycles elapsed\n            26018176  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62314",
+              "7000",
+              "1048576",
+              "fixed",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 865,
+            "rps": 209.61521072671832,
+            "user_us_per_request": 2612.71676300578,
+            "cpu_us_per_request": 4578.0346820809245,
+            "instructions_per_request": 67504928.3052023
+          },
+          {
+            "warmup": "{\"requests\":240,\"elapsed_seconds\":1.05436175,\"rps\":227.62585991003562,\"body_bytes\":251658240,\"p50_ms\":69.04387499999996,\"p99_ms\":77.06887500000005}\n",
+            "measured": "{\"requests\":704,\"elapsed_seconds\":3.0079033749999997,\"rps\":234.0500715053721,\"body_bytes\":738197504,\"p50_ms\":68.21979099999999,\"p99_ms\":72.03383299999996}\n",
+            "server_log": "real 7.00\nuser 2.37\nsys 1.66\n            27213824  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                1826  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              968625  messages sent\n                 945  messages received\n                   0  signals received\n                   1  voluntary context switches\n                6263  involuntary context switches\n         63600637228  instructions retired\n         16280982793  cycles elapsed\n            26018176  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62425",
+              "7000",
+              "1048576",
+              "fixed",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 945,
+            "rps": 234.0500715053721,
+            "user_us_per_request": 2507.936507936508,
+            "cpu_us_per_request": 4264.550264550265,
+            "instructions_per_request": 67302261.61693121
+          },
+          {
+            "warmup": "{\"requests\":192,\"elapsed_seconds\":1.0157272080000002,\"rps\":189.02713099322625,\"body_bytes\":201326592,\"p50_ms\":72.50274999999999,\"p99_ms\":124.552458}\n",
+            "measured": "{\"requests\":400,\"elapsed_seconds\":3.0096879170000004,\"rps\":132.90414522403785,\"body_bytes\":419430400,\"p50_ms\":95.18195800000001,\"p99_ms\":236.6248750000001}\n",
+            "server_log": "real 7.00\nuser 1.68\nsys 1.31\n            27230208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                1827  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              607825  messages sent\n                 593  messages received\n                   0  signals received\n                   1  voluntary context switches\n               15936  involuntary context switches\n         40110600390  instructions retired\n         11070921259  cycles elapsed\n            26034560  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62464",
+              "7000",
+              "1048576",
+              "fixed",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 593,
+            "rps": 132.90414522403785,
+            "user_us_per_request": 2833.0522765598653,
+            "cpu_us_per_request": 5042.158516020236,
+            "instructions_per_request": 67640135.56492412
+          }
+        ],
+        "body": [
+          {
+            "warmup": "{\"requests\":483,\"elapsed_seconds\":1.0327306660000002,\"rps\":467.6921252573707,\"body_bytes\":506462208,\"p50_ms\":34.03679100000011,\"p99_ms\":39.143125}\n",
+            "measured": "{\"requests\":1354,\"elapsed_seconds\":3.023690125,\"rps\":447.7972093783916,\"body_bytes\":1419771904,\"p50_ms\":34.122125000000096,\"p99_ms\":69.04320800000005}\n",
+            "server_log": "real 7.00\nuser 3.74\nsys 0.24\n            30146560  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                2005  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                3827  messages sent\n                1838  messages received\n                   0  signals received\n                   1  voluntary context switches\n                6896  involuntary context switches\n         88883018831  instructions retired\n         15799194057  cycles elapsed\n            28934504  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-body/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62350",
+              "7000",
+              "1048576",
+              "fixed",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 1838,
+            "rps": 447.7972093783916,
+            "user_us_per_request": 2034.8204570184985,
+            "cpu_us_per_request": 2165.3971708378676,
+            "instructions_per_request": 48358552.13873776
+          },
+          {
+            "warmup": "{\"requests\":467,\"elapsed_seconds\":1.017462625,\"rps\":458.9849184877921,\"body_bytes\":489684992,\"p50_ms\":34.060833,\"p99_ms\":42.68320799999992}\n",
+            "measured": "{\"requests\":1432,\"elapsed_seconds\":3.0268564159999998,\"rps\":473.09809359652166,\"body_bytes\":1501560832,\"p50_ms\":33.51495799999998,\"p99_ms\":41.203791999999794}\n",
+            "server_log": "real 7.00\nuser 3.79\nsys 0.23\n            33718272  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                2223  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                3993  messages sent\n                1900  messages received\n                   0  signals received\n                   1  voluntary context switches\n                3051  involuntary context switches\n         91828893420  instructions retired\n         16296911361  cycles elapsed\n            32506216  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-body/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62389",
+              "7000",
+              "1048576",
+              "fixed",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 1900,
+            "rps": 473.09809359652166,
+            "user_us_per_request": 1994.7368421052631,
+            "cpu_us_per_request": 2115.789473684211,
+            "instructions_per_request": 48330996.53684211
+          },
+          {
+            "warmup": "{\"requests\":485,\"elapsed_seconds\":1.020123041,\"rps\":475.43284536007263,\"body_bytes\":508559360,\"p50_ms\":33.257791999999995,\"p99_ms\":39.571417}\n",
+            "measured": "{\"requests\":1412,\"elapsed_seconds\":3.010651042,\"rps\":469.0015482704355,\"body_bytes\":1480589312,\"p50_ms\":33.83879200000001,\"p99_ms\":47.47179199999994}\n",
+            "server_log": "real 7.00\nuser 3.78\nsys 0.22\n            32702464  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                2161  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                4044  messages sent\n                1898  messages received\n                   0  signals received\n                   1  voluntary context switches\n                1522  involuntary context switches\n         91714916750  instructions retired\n         16164034425  cycles elapsed\n            31490408  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-s72oloj3/network-body/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "62522",
+              "7000",
+              "1048576",
+              "fixed",
+              "0"
+            ],
+            "load_generator": "node-drained",
+            "total_requests_including_warmup": 1898,
+            "rps": 469.0015482704355,
+            "user_us_per_request": 1991.5700737618545,
+            "cpu_us_per_request": 2107.481559536354,
+            "instructions_per_request": 48321873.94625922
+          }
+        ]
+      },
+      "median": {
+        "baseline": {
+          "rps": 209.61521072671832,
+          "user_us_per_request": 2612.71676300578,
+          "cpu_us_per_request": 4578.0346820809245,
+          "instructions_per_request": 67504928.3052023
+        },
+        "body": {
+          "rps": 469.0015482704355,
+          "user_us_per_request": 1994.7368421052631,
+          "cpu_us_per_request": 2115.789473684211,
+          "instructions_per_request": 48330996.53684211
+        }
+      }
+    }
+  ],
+  "server_source": "///|\nasync fn main {\n  let args = @sys.get_cli_args()\n  let port = @string.parse_int(args[1])\n  let duration = @string.parse_int(args[2])\n  let size = @string.parse_int(args[3])\n  let fixed = args[4] == \"fixed\"\n  let header_count = @string.parse_int(args[5])\n  let body = \"x\".repeat(size)\n  let length = size.to_string()\n  let _ = @async.with_timeout_opt(duration, async fn() {\n    let app = @mars.Server::new()\n    app.get(\"/bench\", async fn(ctx) {\n      if header_count > 0 {\n        assert_eq(ctx.header(\"X-63\"), Some(\"x\".repeat(40)))\n      }\n      if fixed {\n        ctx.set_header(\"Content-Length\", length)\n      }\n      ctx.text(body)\n    })\n    app.serve(host=\"127.0.0.1\", port~)\n  }) catch {\n    @xhttp.HttpError::NetworkError(\"Cancelled\") => None\n    err => raise err\n  }\n}\n"
+}
