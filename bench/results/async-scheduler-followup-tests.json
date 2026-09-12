@@ -1,0 +1,157 @@
+{
+  "checked_at": "2026-09-11T13:43:35.262877+00:00",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "async_base": "43e41261f99261f4030efbed1970388930229baa",
+  "commands": [
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "test",
+        "src/http",
+        "src/io",
+        "src/internal/io_buffer",
+        "src/internal/coroutine",
+        "src/internal/event_loop",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "returncode": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 116, passed: 116, failed: 0.\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "test",
+        "src",
+        "src/socket",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "returncode": 0,
+      "output": "Total tests: 119, passed: 119, failed: 0.\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "test",
+        "src/internal/coroutine",
+        "src/internal/event_loop",
+        "src",
+        "src/socket",
+        "--target",
+        "native"
+      ],
+      "returncode": 0,
+      "output": "libtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'watch_windows.o' has no symbols\nTotal tests: 134, passed: 134, failed: 0.\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "test",
+        "src/internal/coroutine",
+        "--target",
+        "js"
+      ],
+      "returncode": 0,
+      "output": "Total tests: 5, passed: 5, failed: 0.\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "check",
+        "--target",
+        "native",
+        "--deny-warn"
+      ],
+      "returncode": 0,
+      "output": "Finished. moon: ran 117 tasks, now up to date\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "check",
+        "--target",
+        "js",
+        "--deny-warn"
+      ],
+      "returncode": 0,
+      "output": "Finished. moon: ran 66 tasks, now up to date\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "check",
+        "--target",
+        "wasm",
+        "--deny-warn"
+      ],
+      "returncode": 0,
+      "output": "Finished. moon: ran 69 tasks, now up to date\n"
+    },
+    {
+      "cwd": "/Users/mz/ghq/github.com/moonbitlang/async-mars-scheduler-pr",
+      "command": [
+        "moon",
+        "check",
+        "--target",
+        "wasm-gc",
+        "--deny-warn"
+      ],
+      "returncode": 0,
+      "output": "Finished. moon: ran 66 tasks, now up to date\n"
+    },
+    {
+      "checked_at": "2026-09-12T10:54:05.893754+00:00",
+      "variant": "baseline",
+      "cwd": "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline",
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "returncode": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    {
+      "checked_at": "2026-09-12T10:54:09.327142+00:00",
+      "variant": "scheduler",
+      "cwd": "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler",
+      "command": [
+        "moon",
+        "test",
+        "mars/src",
+        "--target",
+        "native",
+        "--release"
+      ],
+      "returncode": 0,
+      "output": "libtool: warning: 'watch_windows.o' has no symbols\nlibtool: warning: 'stub.o' has no symbols\nlibtool: warning: 'epoll.o' has no symbols\nlibtool: warning: 'iocp.o' has no symbols\nlibtool: warning: 'io_windows.o' has no symbols\nlibtool: warning: 'schannel.o' has no symbols\nTotal tests: 92, passed: 92, failed: 0.\n"
+    },
+    {
+      "checked_at": "2026-09-12T10:54:09.901814+00:00",
+      "variant": "mars-main",
+      "cwd": "/Users/mz/ghq/github.com/mizchi/mars.mbt",
+      "command": [
+        "just",
+        "release-check"
+      ],
+      "returncode": 0,
+      "output": "moon fmt\nFinished. moon: ran 1 task, now up to date\nmoon info\nFinished. moon: no work to do\nmoon check --deny-warn --target js\nFinished. moon: no work to do\nmoon test --target js\nMiddleware error: Failure(src/mars_js_wbtest.mbt:13:26-13:51@mizchi/mars FAILED: middleware failed)\nTotal tests: 331, passed: 331, failed: 0.\n"
+    }
+  ],
+  "async_head": "16037458e6552c17eb6c87933802ca75bc939a31",
+  "patch_sha256": "1e11a098c711439279f47a97ac90e27b2b69e9ea82edb5e487bf749ed20b15d6",
+  "moon": "moon 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moon\nmoonc v0.10.12+1634b282e (2026-09-07) ~/.moon/bin/moonc\nmoonrun 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moonrun\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg\n"
+}

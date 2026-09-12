@@ -2,6 +2,8 @@
 
 For the standalone parser proposal against upstream main and separate 4a/4b
 measurements, see the [follow-up report](async-header-followup.md).
+For standalone post-I/O yield measurements against upstream main, see the
+[scheduler follow-up](async-scheduler-followup.md).
 
 These experiments continue the measurements I collected while benchmarking
 Mars, my web server implementation. Each patch applies independently to async

@@ -1,0 +1,309 @@
+{
+  "measured_at": "2026-09-12T10:51:51.287820+00:00",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "mars_base": "66277d49502626d8c2f477d63d7eb285d1ba5157",
+  "async_base": "43e41261f99261f4030efbed1970388930229baa",
+  "duration_seconds": 5,
+  "runs": 6,
+  "warmup_seconds": 1,
+  "wrk_threads": 4,
+  "source_sha256": "f0d8d600371f84ab1f3b158c3891661d5841b938f2a66b7c3c5deafb6b655dad",
+  "server_source": "///|\nasync fn main {\n  let args = @sys.get_cli_args()\n  let port = @string.parse_int(args[1])\n  let duration = @string.parse_int(args[2])\n  let size = @string.parse_int(args[3])\n  let fixed = args[4] == \"fixed\"\n  let header_count = @string.parse_int(args[5])\n  let body = \"x\".repeat(size)\n  let length = size.to_string()\n  let _ = @async.with_timeout_opt(duration, async fn() {\n    let app = @mars.Server::new()\n    app.get(\"/bench\", async fn(ctx) {\n      if header_count > 0 {\n        assert_eq(ctx.header(\"x-63\"), Some(\"x\".repeat(40)))\n      }\n      if fixed {\n        ctx.set_header(\"Content-Length\", length)\n      }\n      ctx.text(body)\n    })\n    app.serve(host=\"127.0.0.1\", port~)\n  }) catch {\n    @xhttp.HttpError::NetworkError(\"Cancelled\") => None\n    err => raise err\n  }\n}\n",
+  "load_generator_sha256": "bc133ea5ed72f6ebed61f9718a8ae887e792ae8f07028c708e8a8cfe9d55b71a",
+  "variants": {
+    "baseline": {
+      "exe_sha256": "d3505a8f333c4b93693020e34cac3504be3fbe00113b1fe589b6b411428415a1",
+      "patch_sha256": null
+    },
+    "scheduler": {
+      "exe_sha256": "f84f4a504e3de34c6b769784e06e0fd30fc04601d28bcc50b40eeb926a3009a7",
+      "patch_sha256": "1e11a098c711439279f47a97ac90e27b2b69e9ea82edb5e487bf749ed20b15d6"
+    }
+  },
+  "method": "Native release, server-only /usr/bin/time -lp; reverse variant order every other round. Normalize CPU/instructions by wrk completed requests including warmup + readiness. Outstanding requests at wrk shutdown are not included. Bulk cases use a Node HTTP load generator that drains responses before closing; all completed requests are counted. This avoids the existing Mars SIGABRT when fallback sends a second response after a partially sent body encounters EPIPE. Shared developer machine; short exploratory runs, not isolated throughput claims. Response bytes and framing validated before each run; wrk checks HTTP/socket errors during load.",
+  "cases": [
+    {
+      "name": "small",
+      "size": 3,
+      "framing": "chunked",
+      "headers": 0,
+      "connections": 64,
+      "variants": [
+        "baseline",
+        "scheduler"
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:60322/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   452.25us  198.92us   5.11ms   95.23%\n    Req/Sec    36.35k     3.89k   39.52k    90.91%\n  159159 requests in 1.10s, 15.33MB read\nRequests/sec: 144720.79\nTransfer/sec:     13.94MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:60322/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   435.76us  154.99us   4.39ms   97.29%\n    Req/Sec    37.28k     2.72k   39.44k    90.20%\n  Latency Distribution\n     50%  411.00us\n     75%  427.00us\n     90%  455.00us\n     99%    1.01ms\n  756820 requests in 5.10s, 72.90MB read\nRequests/sec: 148397.50\nTransfer/sec:     14.29MB\n",
+            "server_log": "real 9.31\nuser 3.39\nsys 2.70\n             3080192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              916099  messages sent\n              916099  messages received\n                   0  signals received\n                   1  voluntary context switches\n               16508  involuntary context switches\n         85910066016  instructions retired\n         25601046957  cycles elapsed\n             1851752  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "60322",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 915980,
+            "rps": 148397.5,
+            "user_us_per_request": 3.7009541693050068,
+            "cpu_us_per_request": 6.648616782025808,
+            "instructions_per_request": 93790.32950064412
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:60743/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   428.75us   51.85us   1.59ms   95.32%\n    Req/Sec    37.34k     1.15k   38.34k    81.82%\n  163202 requests in 1.10s, 15.72MB read\nRequests/sec: 148399.86\nTransfer/sec:     14.29MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:60743/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   462.78us  159.35us   4.91ms   94.19%\n    Req/Sec    35.03k     2.82k   38.59k    76.47%\n  Latency Distribution\n     50%  426.00us\n     75%  448.00us\n     90%  514.00us\n     99%    1.17ms\n  711092 requests in 5.10s, 68.49MB read\nRequests/sec: 139431.09\nTransfer/sec:     13.43MB\n",
+            "server_log": "real 9.00\nuser 3.32\nsys 2.76\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              874414  messages sent\n              874414  messages received\n                   0  signals received\n                   1  voluntary context switches\n               21804  involuntary context switches\n         82102404584  instructions retired\n         25112321556  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "60743",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 874295,
+            "rps": 139431.09,
+            "user_us_per_request": 3.7973452896333617,
+            "cpu_us_per_request": 6.954174506316518,
+            "instructions_per_request": 93906.98172127256
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:60879/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   428.10us   63.90us   1.86ms   95.43%\n    Req/Sec    37.41k   661.17    38.69k    72.73%\n  163793 requests in 1.10s, 15.78MB read\nRequests/sec: 148882.02\nTransfer/sec:     14.34MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:60879/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   502.62us  320.43us   8.53ms   94.11%\n    Req/Sec    33.51k     5.73k   39.23k    81.86%\n  Latency Distribution\n     50%  426.00us\n     75%  457.00us\n     90%  620.00us\n     99%    1.62ms\n  679925 requests in 5.10s, 65.49MB read\nRequests/sec: 133308.85\nTransfer/sec:     12.84MB\n",
+            "server_log": "real 9.00\nuser 3.31\nsys 2.68\n             3080192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              843837  messages sent\n              843837  messages received\n                   0  signals received\n                   1  voluntary context switches\n               33171  involuntary context switches\n         79379259699  instructions retired\n         24411967509  cycles elapsed\n             1851752  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "60879",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 843719,
+            "rps": 133308.85,
+            "user_us_per_request": 3.9231071008238523,
+            "cpu_us_per_request": 7.09952010088667,
+            "instructions_per_request": 94082.5792698754
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61282/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   472.91us  187.67us   3.95ms   95.61%\n    Req/Sec    34.52k     3.31k   38.05k    72.73%\n  151046 requests in 1.10s, 14.55MB read\nRequests/sec: 137351.38\nTransfer/sec:     13.23MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61282/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   429.51us   54.06us   3.89ms   96.39%\n    Req/Sec    37.25k     1.35k   39.09k    90.69%\n  Latency Distribution\n     50%  424.00us\n     75%  436.00us\n     90%  455.00us\n     99%  555.00us\n  756045 requests in 5.10s, 72.82MB read\nRequests/sec: 148248.45\nTransfer/sec:     14.28MB\n",
+            "server_log": "real 9.00\nuser 3.42\nsys 2.73\n             3080192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              907206  messages sent\n              907206  messages received\n                   0  signals received\n                   1  voluntary context switches\n                9048  involuntary context switches\n         85000077685  instructions retired\n         25138329512  cycles elapsed\n             1851752  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61282",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 907092,
+            "rps": 148248.45,
+            "user_us_per_request": 3.7702901139024485,
+            "cpu_us_per_request": 6.77990766096493,
+            "instructions_per_request": 93706.12648441392
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61415/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   441.62us   67.96us   1.60ms   94.54%\n    Req/Sec    36.30k     1.66k   38.52k    72.73%\n  158803 requests in 1.10s, 15.30MB read\nRequests/sec: 144338.94\nTransfer/sec:     13.90MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61415/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   436.32us   66.69us   3.80ms   95.30%\n    Req/Sec    36.60k     1.75k   38.46k    82.84%\n  Latency Distribution\n     50%  426.00us\n     75%  443.00us\n     90%  473.00us\n     99%  610.00us\n  742784 requests in 5.10s, 71.55MB read\nRequests/sec: 145634.36\nTransfer/sec:     14.03MB\n",
+            "server_log": "real 9.00\nuser 3.40\nsys 2.74\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              901706  messages sent\n              901706  messages received\n                   0  signals received\n                   1  voluntary context switches\n               10471  involuntary context switches\n         84492123265  instructions retired\n         25092163080  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61415",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 901588,
+            "rps": 145634.36,
+            "user_us_per_request": 3.7711238392702655,
+            "cpu_us_per_request": 6.810205992093951,
+            "instructions_per_request": 93714.78243388333
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61820/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   478.69us  233.59us   4.79ms   94.01%\n    Req/Sec    34.47k     3.83k   38.46k    77.27%\n  151093 requests in 1.10s, 14.55MB read\nRequests/sec: 137334.05\nTransfer/sec:     13.23MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61820/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   446.37us  100.54us   3.98ms   96.25%\n    Req/Sec    36.06k     2.10k   38.02k    80.88%\n  Latency Distribution\n     50%  429.00us\n     75%  443.00us\n     90%  471.00us\n     99%    0.92ms\n  731899 requests in 5.10s, 70.50MB read\nRequests/sec: 143497.99\nTransfer/sec:     13.82MB\n",
+            "server_log": "real 9.00\nuser 3.39\nsys 2.73\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              883111  messages sent\n              883111  messages received\n                   0  signals received\n                   1  voluntary context switches\n               12936  involuntary context switches\n         82789984662  instructions retired\n         24773444277  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-baseline/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61820",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 882993,
+            "rps": 143497.99,
+            "user_us_per_request": 3.839215033414761,
+            "cpu_us_per_request": 6.930972272713373,
+            "instructions_per_request": 93760.63531873979
+          }
+        ],
+        "scheduler": [
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:60466/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   443.08us  110.27us   1.67ms   94.24%\n    Req/Sec    36.36k     2.36k   38.89k    61.36%\n  159134 requests in 1.10s, 15.33MB read\nRequests/sec: 144705.95\nTransfer/sec:     13.94MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:60466/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   428.67us   87.22us   4.82ms   96.30%\n    Req/Sec    37.44k     1.83k   39.39k    81.86%\n  Latency Distribution\n     50%  411.00us\n     75%  432.00us\n     90%  461.00us\n     99%  769.00us\n  759571 requests in 5.10s, 73.16MB read\nRequests/sec: 148949.48\nTransfer/sec:     14.35MB\n",
+            "server_log": "real 9.27\nuser 3.33\nsys 2.79\n             3047424  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 351  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              918827  messages sent\n              918827  messages received\n                   0  signals received\n                   1  voluntary context switches\n               14923  involuntary context switches\n         84565968355  instructions retired\n         25717462455  cycles elapsed\n             1818984  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "60466",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 918706,
+            "rps": 148949.48,
+            "user_us_per_request": 3.624663385239674,
+            "cpu_us_per_request": 6.661543518818861,
+            "instructions_per_request": 92048.99973985148
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:60608/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   424.13us   46.48us   1.51ms   94.83%\n    Req/Sec    37.71k     0.98k   38.68k    81.82%\n  165066 requests in 1.10s, 15.90MB read\nRequests/sec: 150036.81\nTransfer/sec:     14.45MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:60608/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   439.11us  209.79us   7.46ms   98.32%\n    Req/Sec    37.24k     2.73k   39.26k    93.63%\n  Latency Distribution\n     50%  414.00us\n     75%  432.00us\n     90%  463.00us\n     99%    0.86ms\n  756241 requests in 5.10s, 72.84MB read\nRequests/sec: 148274.20\nTransfer/sec:     14.28MB\n",
+            "server_log": "real 9.00\nuser 3.35\nsys 2.76\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              921428  messages sent\n              921428  messages received\n                   0  signals received\n                   1  voluntary context switches\n               13982  involuntary context switches\n         84838117699  instructions retired\n         25533122329  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "60608",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 921308,
+            "rps": 148274.2,
+            "user_us_per_request": 3.636134712821337,
+            "cpu_us_per_request": 6.631875550847273,
+            "instructions_per_request": 92084.42529425556
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61012/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   431.16us   85.30us   1.65ms   94.93%\n    Req/Sec    37.08k     3.20k   39.41k    81.82%\n  162403 requests in 1.10s, 15.64MB read\nRequests/sec: 147642.31\nTransfer/sec:     14.22MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61012/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   426.01us   39.54us   3.21ms   94.22%\n    Req/Sec    37.53k   773.66    38.75k    83.82%\n  Latency Distribution\n     50%  422.00us\n     75%  434.00us\n     90%  450.00us\n     99%  526.00us\n  761742 requests in 5.10s, 73.37MB read\nRequests/sec: 149368.53\nTransfer/sec:     14.39MB\n",
+            "server_log": "real 9.00\nuser 3.41\nsys 2.75\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              924265  messages sent\n              924265  messages received\n                   0  signals received\n                   1  voluntary context switches\n                7840  involuntary context switches\n         85032475716  instructions retired\n         25278096454  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61012",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 924146,
+            "rps": 149368.53,
+            "user_us_per_request": 3.6898931554105086,
+            "cpu_us_per_request": 6.665613442031887,
+            "instructions_per_request": 92011.95018536033
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61149/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   430.62us   42.52us   1.51ms   94.26%\n    Req/Sec    37.14k     1.05k   38.32k    81.82%\n  162656 requests in 1.10s, 15.67MB read\nRequests/sec: 147831.86\nTransfer/sec:     14.24MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61149/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   466.07us  371.81us  13.51ms   97.43%\n    Req/Sec    36.17k     4.20k   38.80k    88.24%\n  Latency Distribution\n     50%  419.00us\n     75%  434.00us\n     90%  472.00us\n     99%    1.42ms\n  733771 requests in 5.10s, 70.68MB read\nRequests/sec: 143871.62\nTransfer/sec:     13.86MB\n",
+            "server_log": "real 9.00\nuser 3.36\nsys 2.71\n             3047424  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 351  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              896548  messages sent\n              896548  messages received\n                   0  signals received\n                   1  voluntary context switches\n               15828  involuntary context switches\n         82616810357  instructions retired\n         24749323030  cycles elapsed\n             1818984  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61149",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 896428,
+            "rps": 143871.62,
+            "user_us_per_request": 3.7482095606116723,
+            "cpu_us_per_request": 6.771319057414539,
+            "instructions_per_request": 92162.23763313952
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61551/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   429.56us   45.15us   1.10ms   90.39%\n    Req/Sec    37.14k     1.48k   38.90k    72.73%\n  162393 requests in 1.10s, 15.64MB read\nRequests/sec: 147670.54\nTransfer/sec:     14.22MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61551/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   435.07us   96.98us   5.06ms   96.97%\n    Req/Sec    36.78k     2.06k   38.64k    81.37%\n  Latency Distribution\n     50%  423.00us\n     75%  439.00us\n     90%  467.00us\n     99%  680.00us\n  746025 requests in 5.10s, 71.86MB read\nRequests/sec: 146274.05\nTransfer/sec:     14.09MB\n",
+            "server_log": "real 9.00\nuser 3.35\nsys 2.75\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              908541  messages sent\n              908541  messages received\n                   0  signals received\n                   1  voluntary context switches\n               13601  involuntary context switches\n         83672926778  instructions retired\n         24994702680  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61551",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 908419,
+            "rps": 146274.05,
+            "user_us_per_request": 3.687725597989474,
+            "cpu_us_per_request": 6.714963029174863,
+            "instructions_per_request": 92108.29669788941
+          },
+          {
+            "warmup": "Running 1s test @ http://127.0.0.1:61685/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   526.08us  733.07us  12.00ms   97.59%\n    Req/Sec    35.85k     4.96k   38.93k    90.91%\n  157064 requests in 1.10s, 15.13MB read\nRequests/sec: 142836.36\nTransfer/sec:     13.76MB\n",
+            "measured": "Running 5s test @ http://127.0.0.1:61685/bench\n  4 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   428.62us   71.02us   4.57ms   96.86%\n    Req/Sec    37.24k     1.62k   38.62k    89.71%\n  Latency Distribution\n     50%  422.00us\n     75%  435.00us\n     90%  458.00us\n     99%  557.00us\n  755827 requests in 5.10s, 72.80MB read\nRequests/sec: 148206.72\nTransfer/sec:     14.28MB\n",
+            "server_log": "real 9.00\nuser 3.38\nsys 2.75\n             3063808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   1  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n              913007  messages sent\n              913007  messages received\n                   0  signals received\n                   1  voluntary context switches\n                8106  involuntary context switches\n         84009435725  instructions retired\n         24940221308  cycles elapsed\n             1835368  peak memory footprint\n",
+            "command": [
+              "/usr/bin/time",
+              "-lp",
+              "/var/folders/_h/_rf455xj4h3_3g6z86pg244c0000gn/T/mars-async-tuning-fdgp1h_2/network-scheduler/_build/native/release/build/mizchi/mars_tuning/server/server.exe",
+              "61685",
+              "9000",
+              "3",
+              "chunked",
+              "0"
+            ],
+            "load_generator": "wrk",
+            "total_requests_including_warmup": 912892,
+            "rps": 148206.72,
+            "user_us_per_request": 3.7025190274424578,
+            "cpu_us_per_request": 6.714923561604221,
+            "instructions_per_request": 92025.60185104042
+          }
+        ]
+      },
+      "median": {
+        "baseline": {
+          "rps": 144566.175,
+          "user_us_per_request": 3.784234564451814,
+          "cpu_us_per_request": 6.870589132403662,
+          "instructions_per_request": 93775.48240969196
+        },
+        "scheduler": {
+          "rps": 148240.46000000002,
+          "user_us_per_request": 3.688809376699991,
+          "cpu_us_per_request": 6.690268501818053,
+          "instructions_per_request": 92066.71251705353
+        }
+      }
+    }
+  ]
+}
