@@ -153,5 +153,13 @@
   ],
   "async_head": "16037458e6552c17eb6c87933802ca75bc939a31",
   "patch_sha256": "1e11a098c711439279f47a97ac90e27b2b69e9ea82edb5e487bf749ed20b15d6",
-  "moon": "moon 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moon\nmoonc v0.10.12+1634b282e (2026-09-07) ~/.moon/bin/moonc\nmoonrun 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moonrun\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg\n"
+  "moon": "moon 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moon\nmoonc v0.10.12+1634b282e (2026-09-07) ~/.moon/bin/moonc\nmoonrun 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moonrun\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg\n",
+  "final_pr_head": "b55b477caaf438ed6254beeca120298b29c9cd4e",
+  "post_measurement_verification": {
+    "checked_at": "2026-09-12T10:58:03.783082+00:00",
+    "changed_files_since_measured_commit": [
+      "src/internal/coroutine/pause_wbtest.mbt"
+    ],
+    "result": "Only the repository-standard license comment was prepended to the new regression test file. Production code and test bodies are byte-identical to the measured commit."
+  }
 }

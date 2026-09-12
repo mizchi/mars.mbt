@@ -10,7 +10,10 @@ is included in the baseline or the proposed variant.
 The [patch](../bench/patches/async-tuning-scheduler.patch) is unchanged from
 experiment 3 in the [earlier report](async-tuning-experiments.md). Its SHA-256 is
 `1e11a098c711439279f47a97ac90e27b2b69e9ea82edb5e487bf749ed20b15d6`.
-The standalone async commit is `16037458e6552c17eb6c87933802ca75bc939a31`.
+The implementation commit in [PR #605](https://github.com/moonbitlang/async/pull/605)
+is `16037458e6552c17eb6c87933802ca75bc939a31`. A subsequent commit adds the
+repository-required license comment to the new regression test file; production
+code and test bodies remain byte-identical to the measured implementation.
 
 ## Implementation and contract
 
@@ -111,7 +114,9 @@ The first command exports the common base into disposable directories and applie
 the patch to just the scheduler variant. Keep those directories until the network
 command finishes. Raw data includes build provenance, binary hashes, allocation
 samples, wrk output, and server counters. The measured patch matches the complete
-standalone PR diff byte for byte after normalizing diff path prefixes.
+implementation commit diff byte for byte after normalizing diff path prefixes.
+The validation log records the final PR head and the check that its only
+post-measurement change is the license comment described above.
 
 To run the relevant native tests in the proposed async checkout:
 
